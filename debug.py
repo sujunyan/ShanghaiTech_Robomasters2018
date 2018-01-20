@@ -10,10 +10,11 @@ ser = serial.Serial( #下面这些参数根据情况修改
 
 while (True):
 	while ser.inWaiting() > 0:
-		data = ser.read(6)
+		data = ser.read(1);
 		if data :
 			#ch=(struct.unpack('4h',data[1:]));
 			#print ([i/16384*20 for i in ch])
-			print(struct.unpack('3h',data))
+			s=struct.unpack('s',data)[0].decode('utf-8')
+			print(s)
 		
 		

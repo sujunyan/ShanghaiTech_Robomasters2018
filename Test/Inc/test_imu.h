@@ -32,7 +32,7 @@ typedef struct
 }IMUDataTypedef;
 
 extern uint8_t MPU_id;
-
+//extern imu_data
 uint8_t MPU6500_Init(void);
 uint8_t MPU6500_Write_Reg(uint8_t const reg, uint8_t const data);
 uint8_t MPU6500_Read_Reg(uint8_t const reg);

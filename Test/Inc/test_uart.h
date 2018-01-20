@@ -12,6 +12,7 @@
 
 extern uint8_t uart3_rx_buff[50];
 extern uint8_t uart6_rx_buff[50];
+extern uint8_t uart2_rx_buff[50];
 
 #endif
 

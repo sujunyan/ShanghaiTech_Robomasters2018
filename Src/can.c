@@ -4,8 +4,13 @@
   * Description        : This file provides code for the configuration
   *                      of the CAN instances.
   ******************************************************************************
+  * This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether 
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2016 STMicroelectronics International N.V. 
+  * Copyright (c) 2017 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -72,7 +77,7 @@ void MX_CAN1_Init(void)
   hcan1.Init.TXFP = ENABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -94,7 +99,7 @@ void MX_CAN2_Init(void)
   hcan2.Init.TXFP = ENABLE;
   if (HAL_CAN_Init(&hcan2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -110,7 +115,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
   /* USER CODE BEGIN CAN1_MspInit 0 */
 
   /* USER CODE END CAN1_MspInit 0 */
-    /* Peripheral clock enable */
+    /* CAN1 clock enable */
     HAL_RCC_CAN1_CLK_ENABLED++;
     if(HAL_RCC_CAN1_CLK_ENABLED==1){
       __HAL_RCC_CAN1_CLK_ENABLE();
@@ -127,7 +132,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     GPIO_InitStruct.Alternate = GPIO_AF9_CAN1;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-    /* Peripheral interrupt init */
+    /* CAN1 interrupt Init */
     HAL_NVIC_SetPriority(CAN1_TX_IRQn, 1, 1);
     HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
     HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 1, 1);
@@ -141,7 +146,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
   /* USER CODE BEGIN CAN2_MspInit 0 */
 
   /* USER CODE END CAN2_MspInit 0 */
-    /* Peripheral clock enable */
+    /* CAN2 clock enable */
     __HAL_RCC_CAN2_CLK_ENABLE();
     HAL_RCC_CAN1_CLK_ENABLED++;
     if(HAL_RCC_CAN1_CLK_ENABLED==1){
@@ -159,7 +164,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     GPIO_InitStruct.Alternate = GPIO_AF9_CAN2;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* Peripheral interrupt init */
+    /* CAN2 interrupt Init */
     HAL_NVIC_SetPriority(CAN2_TX_IRQn, 1, 1);
     HAL_NVIC_EnableIRQ(CAN2_TX_IRQn);
     HAL_NVIC_SetPriority(CAN2_RX0_IRQn, 1, 1);
@@ -179,10 +184,11 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 
   /* USER CODE END CAN1_MspDeInit 0 */
     /* Peripheral clock disable */
-    HAL_RCC_CAN1_CLK_ENABLED--;
-    if(HAL_RCC_CAN1_CLK_ENABLED==0){
-      __HAL_RCC_CAN1_CLK_DISABLE();
-    }
+    /* Be sure that all peripheral instances that share the same clock need to be disabled */
+    /**  HAL_RCC_CAN1_CLK_ENABLED--;
+    *  if(HAL_RCC_CAN1_CLK_ENABLED==0){
+    *    __HAL_RCC_CAN1_CLK_DISABLE();
+    **/
   
     /**CAN1 GPIO Configuration    
     PD0     ------> CAN1_RX
@@ -190,11 +196,9 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     */
     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_0|GPIO_PIN_1);
 
-    /* Peripheral interrupt Deinit*/
+    /* CAN1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(CAN1_TX_IRQn);
-
     HAL_NVIC_DisableIRQ(CAN1_RX0_IRQn);
-
   /* USER CODE BEGIN CAN1_MspDeInit 1 */
 
   /* USER CODE END CAN1_MspDeInit 1 */
@@ -206,10 +210,11 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
   /* USER CODE END CAN2_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_CAN2_CLK_DISABLE();
-    HAL_RCC_CAN1_CLK_ENABLED--;
-    if(HAL_RCC_CAN1_CLK_ENABLED==0){
-      __HAL_RCC_CAN1_CLK_DISABLE();
-    }
+    /* Be sure that all peripheral instances that share the same clock need to be disabled */
+    /**  HAL_RCC_CAN1_CLK_ENABLED--;
+    *  if(HAL_RCC_CAN1_CLK_ENABLED==0){
+    *    __HAL_RCC_CAN1_CLK_DISABLE();
+    **/
   
     /**CAN2 GPIO Configuration    
     PB12     ------> CAN2_RX
@@ -217,11 +222,9 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_12|GPIO_PIN_13);
 
-    /* Peripheral interrupt Deinit*/
+    /* CAN2 interrupt Deinit */
     HAL_NVIC_DisableIRQ(CAN2_TX_IRQn);
-
     HAL_NVIC_DisableIRQ(CAN2_RX0_IRQn);
-
   /* USER CODE BEGIN CAN2_MspDeInit 1 */
 
   /* USER CODE END CAN2_MspDeInit 1 */

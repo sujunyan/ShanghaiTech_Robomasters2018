@@ -565,11 +565,6 @@
               <FileType>1</FileType>
               <FilePath>..\Test\Src\test_motor.c</FilePath>
             </File>
-            <File>
-              <FileName>Serial_Debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Test\Src\Serial_Debug.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -639,6 +634,31 @@
               <FileName>tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/tim.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Debug</GroupName>
+          <Files>
+            <File>
+              <FileName>Serial_Debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Test\Src\Serial_Debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTT_Syscalls_KEIL.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RTT_Implementation\Syscalls\RTT_Syscalls_KEIL.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RTT_Implementation\RTT\SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RTT_Implementation\RTT\SEGGER_RTT_printf.c</FilePath>
             </File>
           </Files>
         </Group>

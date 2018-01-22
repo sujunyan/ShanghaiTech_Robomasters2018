@@ -62,7 +62,7 @@
 #include "test_app.h"
 #include "test_can.h"
 #include "test_uart.h"
-
+#include "Serial_Debug.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -154,6 +154,7 @@ int main(void)
 		
   /* USER CODE BEGIN 3 */
     IMU_Get_Data();
+		testSerialDebug();
     HAL_Delay(10);
   }
   /* USER CODE END 3 */

@@ -54,14 +54,14 @@ void Test_task(void)
   //can&usrt send mag in evry 500ms
   if(Timetick1ms % 500 == 0)
   {	
-		test_serial();
+		
     if(sTestResult.imuTest == 0x01)
     {
       LED_Green_Toggle();
       LED_Red_Off();
     }
 //    
-		//test_serial();
+		//testSerialDebug();
 		//uint8_t imu_data_list[]={imu_data.ax,imu_data.ay,imu_data.az};
 		//Send_Debug_Msg(imu_data_list,sizeof(imu_data_list));
 		//Set_CM_Speed(&hcan1,cnt,cnt,cnt,cnt);

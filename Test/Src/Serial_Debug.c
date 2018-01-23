@@ -2,7 +2,7 @@
 #include "test_app.h"
 #include "test_imu.h"
 extern IMUDataTypedef imu_data;
-#include "SEGGER_RTT.h"
+
 void testSerialDebug(void)
 {
 	static int cnt=0;

@@ -37,6 +37,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "test_app.h"
+#include "Serial_Debug.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -240,7 +241,7 @@ void CAN1_RX0_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+	printf("Data Recieved");
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

@@ -76,6 +76,7 @@ void MX_USART1_UART_Init(void)
   huart1.Init.Mode = UART_MODE_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+	huart1.gState = HAL_UART_STATE_RESET; // User Defined; Reset the UART1 for sure
   if (HAL_MultiProcessor_Init(&huart1, 0, UART_WAKEUPMETHOD_IDLELINE) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);

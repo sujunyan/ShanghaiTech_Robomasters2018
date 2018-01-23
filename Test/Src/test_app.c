@@ -16,6 +16,7 @@
 #include "test_motor.h"
 #include "test_imu.h"
 #include "stdio.h"
+#include "RemoteTask.h"
 extern IMUDataTypedef imu_data;
 uint32_t Timetick1ms = 0;
 uint32_t Startup_Success_music_index = 0;
@@ -40,25 +41,26 @@ void Test_task(void)
 			//MPU_id=1;
       if(MPU_id == 0)
       {
-        LED_Red_On();
-        LED_Green_On();
+        //LED_Red_On();
+        //LED_Green_On();
       }
     }
 		
    if(sTestResult.canTest == 0)
     {
-      LED_Red_Toggle();
+      //LED_Red_Toggle();
     }
   }
   
   //can&usrt send mag in evry 500ms
-  if(Timetick1ms % 500 == 0)
+  if(Timetick1ms % 5000 == 0)
   {	
-		
+		//LED_Red_Off();
+		//LED_Green_Off();
     if(sTestResult.imuTest == 0x01)
     {
-      LED_Green_Toggle();
-      LED_Red_Off();
+      //LED_Green_Toggle();
+      //LED_Red_Off();
     }
 //    
 		//testSerialDebug();
@@ -80,8 +82,8 @@ void Test_task(void)
   //check the key 
   if(KEY_PRESS)
   {
-    LED_Green_On();
-    LED_Red_Off();
+    //LED_Green_On();
+    //LED_Red_Off();
     sTestResult.keyTest = 0x01;
   }
   
@@ -99,7 +101,7 @@ void Test_task(void)
   //if all the peripheral have checked
   if(sTestResult.allTest)
   {
-    LED_Green_On();
+    //LED_Green_On();
     if(Timetick1ms % 80 == 0)
     {
       if(Startup_Success_music_index < Startup_Success_music_len)

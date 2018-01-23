@@ -7,6 +7,7 @@
 #include "test_app.h"
 #include "usart.h"
 #include "stdio.h"
+#include "SEGGER_RTT.h"
 typedef enum
 {
    CM_MSG,     	

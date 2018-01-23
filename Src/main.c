@@ -63,6 +63,7 @@
 #include "test_can.h"
 #include "test_uart.h"
 #include "Serial_Debug.h"
+#include "RemoteTask.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -154,8 +155,10 @@ int main(void)
 		
   /* USER CODE BEGIN 3 */
     IMU_Get_Data();
-		testSerialDebug();
-    HAL_Delay(10);
+		testRemoteTask();
+		
+		//testSerialDebug();
+    HAL_Delay(50);
   }
   /* USER CODE END 3 */
 

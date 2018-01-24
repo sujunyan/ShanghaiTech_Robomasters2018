@@ -23,6 +23,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     //HAL_UART_Transmit(huart, uart6_rx_buff, 1, 100);
     __HAL_UART_CLEAR_PEFLAG(&huart6);
     HAL_UART_Receive_IT(&huart6, uart6_rx_buff, 1);
+		
+		
 		//HAL_UART_Transmit_IT(&huart6,test_string,sizeof(test_string));
 		//HAL_UART_Transmit_IT(&huart6,uart6_rx_buff,1);
   }
@@ -30,16 +32,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   {
     __HAL_UART_CLEAR_PEFLAG(&huart2);
     HAL_UART_Receive_IT(&huart2, uart2_rx_buff, sizeof(uart2_rx_buff));
+		printf("USART2 Msg Recieved %s\n",uart2_rx_buff);
 		//HAL_UART_Transmit_IT(&huart2,test_string,sizeof(test_string));
 		//HAL_UART_Transmit_IT(&huart3,uart3_rx_buff,sizeof(uart3_rx_buff));
   }
 	if(huart == &huart1) //  Recieve data from 
   {
-		SEGGER_RTT_printf(0,"USART1 Recieved\n");
+		//SEGGER_RTT_printf(0,"USART1 Recieved\n");
 		LED_Green_Toggle();
     __HAL_UART_CLEAR_PEFLAG(&huart1);
-		
     HAL_UART_Receive(&huart1, RemoteData, sizeof(RemoteData),10);
+		
+  }
+	if(huart == &huart3) //  Recieve data from 
+  {
+		
+		LED_Green_Toggle();
+    __HAL_UART_CLEAR_PEFLAG(&huart3);
+		
+    HAL_UART_Receive(&huart3, uart3_rx_buff, sizeof(uart3_rx_buff),10);
+		printf("USART3 Recieved: %s\n",uart3_rx_buff);
 		
   }
 }

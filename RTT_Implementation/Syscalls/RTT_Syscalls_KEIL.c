@@ -21,7 +21,7 @@ Purpose : Retargeting module for KEIL MDK-CM3.
 #include <rt_sys.h>
 #include <rt_misc.h>
 
-#include "SEGGER_RTT.h"
+
 /*********************************************************************
 *
 *       #pragmas

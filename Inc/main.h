@@ -52,7 +52,39 @@
 
 /* Includes ------------------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+  /*
+#include "can.h"
+#include "dma.h"
+#include "RemoteTask.h"
+#include "gpio.h"
+#include "SEGGER_RTT.h"
+#include "SEGGER_RTT_Conf.h"
+#include "spi.h"
+#include "stm32f4xx_hal_conf.h"
+#include "stm32f4xx_it.h"
+#include "tim.h"
+#include "usart.h"
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
+#include "usbd_conf.h"
+#include "usbd_desc.h"
+#include "common.h"
+#include "fifo.h"
+#include "LostCounter.h"
+#include "pid_regulator.h"
+#include "ramp.h"
+#include "IST8310_reg.h"
+#include "mpu6500_reg.h"
+#include "Serial_Debug.h"
+#include "test_beep.h"
+#include "test_can.h"
+#include "test_imu.h"
+#include "test_led.h"
+#include "test_motor.h"
+#include "test_uart.h"
+#include "test_usb.h"
+#include "test_app.h"
+*/
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/

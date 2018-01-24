@@ -1,13 +1,13 @@
 #ifndef _SERIAL_DEBUG_H
 #define _SERIAL_DEBUG_H
-#define DEBUGSWD
-//#define DEBUGSERIAAL
+//#define DEBUGSWD
+#define DEBUGSERIAAL
 #include "test_uart.h"
 #include "test_can.h"
 #include "test_app.h"
 #include "usart.h"
 #include "stdio.h"
-#include "SEGGER_RTT.h"
+//#include "SEGGER_RTT.h"
 typedef enum
 {
    CM_MSG,     	
@@ -18,4 +18,5 @@ int fputc(int ch, FILE *f);  //  redirect the printf function
 int fgetc(FILE *f);  //  redirect the scanf function
 int fputs(const char * s /*s*/, FILE * f/*stream*/);//  redirect the printf function
 void testSerialDebug(void);
+void checkUART(void);
 #endif

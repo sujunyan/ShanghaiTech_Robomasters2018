@@ -52,6 +52,7 @@
 
 #include "gpio.h"
 #include "dma.h"
+#include "test_app.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -77,6 +78,7 @@ void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
 	huart1.gState = HAL_UART_STATE_RESET; // User Defined; Reset the UART1 for sure
+	LED_Green_Toggle();
   if (HAL_MultiProcessor_Init(&huart1, 0, UART_WAKEUPMETHOD_IDLELINE) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -184,7 +186,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
 
     /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 0, 2);
+    HAL_NVIC_SetPriority(USART1_IRQn, 0, 0); // origial 0, 2
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 

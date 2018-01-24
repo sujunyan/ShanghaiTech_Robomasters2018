@@ -133,14 +133,12 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);
   
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-  
+  HAL_MultiProcessor_Init(&huart1, 0, UART_WAKEUPMETHOD_IDLELINE);
   CanFilter_Init(&hcan1);
   CanFilter_Init(&hcan2);
-  HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
-  HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
+  //HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
+  //HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
   
-  //HAL_UART_Receive_IT(&huart3, uart3_rx_buff, 1);
-  //HAL_UART_Receive_IT(&huart6, uart6_rx_buff, 1);
   
   if(MPU_id != 0)sTestResult.imuTest = 0x01;
   /* USER CODE END 2 */
@@ -148,6 +146,7 @@ int main(void)
 	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	//testRemoteTask();
   while (1)
   {
   /* USER CODE END WHILE */
@@ -155,8 +154,8 @@ int main(void)
 		
   /* USER CODE BEGIN 3 */
     IMU_Get_Data();
-		testRemoteTask();
-		
+		//checkUART();
+		//LED_Green_Toggle();
 		//testSerialDebug();
     HAL_Delay(50);
   }

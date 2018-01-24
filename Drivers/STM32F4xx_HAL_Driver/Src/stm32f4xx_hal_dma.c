@@ -751,8 +751,10 @@ HAL_StatusTypeDef HAL_DMA_PollForTransfer(DMA_HandleTypeDef *hdma, HAL_DMA_Level
   *               the configuration information for the specified DMA Stream.  
   * @retval None
   */
+#include "Serial_Debug.h"
 void HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma)
 {
+	printf("DMAIRQ called\n");
   uint32_t tmpisr;
   __IO uint32_t count = 0;
   uint32_t timeout = SystemCoreClock / 9600;

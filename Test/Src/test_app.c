@@ -53,10 +53,11 @@ void Test_task(void)
   }
   
   //can&usrt send mag in evry 500ms
-  if(Timetick1ms % 5000 == 0)
+  if(Timetick1ms % 500 == 0)
   {	
 		//LED_Red_Off();
 		//LED_Green_Off();
+		testSerialDebug();
     if(sTestResult.imuTest == 0x01)
     {
       //LED_Green_Toggle();

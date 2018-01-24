@@ -25,6 +25,7 @@ Test_ResultTypedef sTestResult = {0, 0, 0, 1, 0, 0};
 uint8_t can1_tx_data[8] = {0};
 uint8_t can2_tx_data[8] = {0};
 int16_t cnt=0x0200;
+extern uint8_t uart2_rx_buff[50];
 //uint8_t test_string[]="";
 /*total task used to check all,it will be used in timer 6 interrupt*/
 void Test_task(void)
@@ -57,7 +58,7 @@ void Test_task(void)
   {	
 		//LED_Red_Off();
 		//LED_Green_Off();
-		testSerialDebug();
+		
     if(sTestResult.imuTest == 0x01)
     {
       //LED_Green_Toggle();

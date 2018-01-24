@@ -22,17 +22,26 @@ void testRemoteTask()
 	static int cnt=0;
 	static int cnt1=0;
 	cnt++;
-	if(cnt>20)
+	if(cnt>1)
 	{
 		cnt=0;
 	RemoteDataPrcess(RemoteData);
-	SEGGER_RTT_printf(0,"RC_CtrlData: ch0 %d, ch1 %d, ch2 %d, ch3 %d, s1 %d, s2 %d times %d\r\n",
+	printf("RC_CtrlData: ch0 %d, ch1 %d, ch2 %d, ch3 %d, s1 %d, s2 %d times %d\r\n",
 					RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,
 					RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,
 					RC_CtrlData.rc.s1,RC_CtrlData.rc.s2,cnt1++);
+		printf("Remote Raw Data:");
+		for(int i=0;i<18;i++)printf("%d,",RemoteData[i]);
+		printf("\n\r");
 	}
 }
 
+/*协议定义：
+
+
+
+
+*/
  
 void RemoteDataPrcess(uint8_t *pData)
 {
@@ -40,6 +49,7 @@ void RemoteDataPrcess(uint8_t *pData)
     { 
         return;
     }
+		for (int i=0;i<17;i++)pData[i]=pData[i+1];  // Matbe some bug with mouse-keyboard mode
     RC_CtrlData.rc.ch0 = ((int16_t)pData[0] | ((int16_t)pData[1] << 8)) & 0x07FF; 
     RC_CtrlData.rc.ch1 = (((int16_t)pData[1] >> 3) | ((int16_t)pData[2] << 5)) & 0x07FF;
     RC_CtrlData.rc.ch2 = (((int16_t)pData[2] >> 6) | ((int16_t)pData[3] << 2) |

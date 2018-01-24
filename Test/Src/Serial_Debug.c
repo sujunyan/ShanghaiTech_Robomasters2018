@@ -64,13 +64,13 @@ int fgetc(FILE *f)  //  redirect the scanf function
 
 int fputc(int ch, FILE *f)   //  redirect the printf function
 {
-		HAL_UART_Transmit(&huart2,(uint8_t *)&ch,sizeof(ch),10);
+		HAL_UART_Transmit(&huart2,(uint8_t *)&ch,sizeof(ch),1);
     return ch;
 }
 
 int fputs(const char * s , FILE * f)//redirect the printf function
 {
-	HAL_UART_Transmit(&huart2,(uint8_t *)&s,sizeof(s),10);
+	HAL_UART_Transmit(&huart2,(uint8_t *)&s,sizeof(s),1);
 	return 1;
 }
 

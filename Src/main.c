@@ -67,7 +67,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-
+extern uint8_t RemoteData[RC_FRAME_LENGTH];
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -147,6 +147,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	//testRemoteTask();
+	static int cnt=0;
   while (1)
   {
   /* USER CODE END WHILE */
@@ -154,10 +155,21 @@ int main(void)
 		
   /* USER CODE BEGIN 3 */
     IMU_Get_Data();
+		 //HAL_Delay(500);
+		int a=HAL_UART_Receive(&huart1,RemoteData,18,1000);
+		 //HAL_Delay(500);
+		//printf("index %d, data: %d \n\r",i,uart2_rx_buff[i]);
+		
+		HAL_Delay(100);
+		//for (int i=0;i<18;i++)printf("(%d,%d)\n\r",i,RemoteData[i]);
+		//printf("UART2 MSG: %d recieved:%d,cnt=%d \n\r",a,RemoteData[0],cnt++);
+		testRemoteTask();
+		// HAL_Delay(500);
+		//testSerialDebug();
 		//checkUART();
 		//LED_Green_Toggle();
 		//testSerialDebug();
-    HAL_Delay(50);
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 

@@ -38,6 +38,7 @@
 /* USER CODE BEGIN 0 */
 #include "test_app.h"
 #include "Serial_Debug.h"
+#include "RemoteTask.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -238,10 +239,15 @@ void CAN1_RX0_IRQHandler(void)
 /**
 * @brief This function handles USART1 global interrupt.
 */
+//extern uint8_t RemoteData[RC_FRAME_LENGTH];
+
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-	printf("Data Recieved");
+	
+	//HAL_UART_Receive_IT(&huart1,RemoteData,18);
+	//testRemoteTask();
+	//printf("USART1 Data Recieved\n\r");
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

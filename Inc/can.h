@@ -72,7 +72,7 @@ extern void _Error_Handler(char *, int);
 
 void MX_CAN1_Init(void);
 void MX_CAN2_Init(void);
-
+void can_device_init(void);
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */

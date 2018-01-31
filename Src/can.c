@@ -233,6 +233,38 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 
 /* USER CODE BEGIN 1 */
 
+void can_device_init(void)
+{
+  //can1 &can2 use same filter config
+  CAN_FilterConfTypeDef  can_filter;
+  static CanTxMsgTypeDef Tx1Message;
+  static CanRxMsgTypeDef Rx1Message;
+  static CanTxMsgTypeDef Tx2Message;
+  static CanRxMsgTypeDef Rx2Message;
+
+  can_filter.FilterNumber         = 0;
+  can_filter.FilterMode           = CAN_FILTERMODE_IDMASK;
+  can_filter.FilterScale          = CAN_FILTERSCALE_32BIT;
+  can_filter.FilterIdHigh         = 0x0000;
+  can_filter.FilterIdLow          = 0x0000;
+  can_filter.FilterMaskIdHigh     = 0x0000;
+  can_filter.FilterMaskIdLow      = 0x0000;
+  can_filter.FilterFIFOAssignment = CAN_FilterFIFO0;
+  can_filter.BankNumber           = 14;
+  can_filter.FilterActivation     = ENABLE;
+  HAL_CAN_ConfigFilter(&hcan1, &can_filter);
+  //while (HAL_CAN_ConfigFilter(&hcan1, &can_filter) != HAL_OK);
+  
+  can_filter.FilterNumber         = 14;
+  HAL_CAN_ConfigFilter(&hcan2, &can_filter);
+  //while (HAL_CAN_ConfigFilter(&hcan2, &can_filter) != HAL_OK);
+    
+  hcan1.pTxMsg = &Tx1Message;
+  hcan1.pRxMsg = &Rx1Message;
+  hcan2.pTxMsg = &Tx2Message;
+  hcan2.pRxMsg = &Rx2Message;
+}
+
 /* USER CODE END 1 */
 
 /**

@@ -64,10 +64,11 @@
 #include "test_uart.h"
 #include "Serial_Debug.h"
 #include "RemoteTask.h"
+#include "test_motor.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-extern uint8_t RemoteData[RC_FRAME_LENGTH];
+
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -133,11 +134,10 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);
   
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-  HAL_MultiProcessor_Init(&huart1, 0, UART_WAKEUPMETHOD_IDLELINE);
-  CanFilter_Init(&hcan1);
-  CanFilter_Init(&hcan2);
-  //HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
-  //HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
+	dbus_uart_init();
+  can_device_init();
+  HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
+  HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
   
   
   if(MPU_id != 0)sTestResult.imuTest = 0x01;
@@ -147,29 +147,21 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	//testRemoteTask();
-	static int cnt=0;
+	//static int cnt=0;
   while (1)
   {
   /* USER CODE END WHILE */
 		
-		
+		HAL_Delay(1);
   /* USER CODE BEGIN 3 */
-    IMU_Get_Data();
-		 //HAL_Delay(500);
-		int a=HAL_UART_Receive(&huart1,RemoteData,18,1000);
-		 //HAL_Delay(500);
-		//printf("index %d, data: %d \n\r",i,uart2_rx_buff[i]);
+    //IMU_Get_Data();
 		
-		HAL_Delay(100);
-		//for (int i=0;i<18;i++)printf("(%d,%d)\n\r",i,RemoteData[i]);
-		//printf("UART2 MSG: %d recieved:%d,cnt=%d \n\r",a,RemoteData[0],cnt++);
+		
+		test_motor();
 		testRemoteTask();
-		// HAL_Delay(500);
-		//testSerialDebug();
-		//checkUART();
-		//LED_Green_Toggle();
-		//testSerialDebug();
-    HAL_Delay(100);
+		HAL_Delay(1);
+		//testRemoteTask();
+    //HAL_Delay(200);
   }
   /* USER CODE END 3 */
 

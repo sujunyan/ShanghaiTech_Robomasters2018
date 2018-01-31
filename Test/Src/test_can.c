@@ -7,6 +7,7 @@
 
 #include "test_can.h"
 #include "can.h"
+#include "test_motor.h"
   
 uint8_t can1_rx_data[8];
 uint8_t can2_rx_data[8];
@@ -38,7 +39,7 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
   //use different filter for can1&can2
   if(hcan == &hcan1)
   {
-    canfilter.FilterNumber = 0;
+    canfilter.FilterNumber = 14;
     hcan->pTxMsg = &Tx1Message;
     hcan->pRxMsg = &Rx1Message;
   }
@@ -54,20 +55,28 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
 }
 
 //it will be auto callback when can receive msg completely
+// 
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {
+	printf("Can data Recieved with ID: 0x%x at time %d\r\n",hcan->pRxMsg->StdId,HAL_GetTick());
   switch(hcan->pRxMsg->StdId)
   {
-    case TEST_CAN1_ID:
-    {
-      can1_rx_data[0] = hcan->pRxMsg->Data[0];
-    }break;
-    case TEST_CAN2_ID:
-    {
-      can2_rx_data[0] = hcan->pRxMsg->Data[0];
-    }break;
+		case CAN_3510_M1_ID:
+    case CAN_3510_M2_ID:
+    case CAN_3510_M3_ID:
+    case CAN_3510_M4_ID:
+		{
+			static uint8_t i;
+      i = hcan->pRxMsg->StdId - CAN_3510_M1_ID+1;  // motor ID
+			encoder_data_handle(hcan,i);
+      
+		}
+		break;
+		
   }
   
+	//__HAL_CAN_ENABLE_IT(&hcan1, CAN_IT_FMP0);
+  //__HAL_CAN_ENABLE_IT(&hcan2, CAN_IT_FMP0);
   HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
   HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
 }

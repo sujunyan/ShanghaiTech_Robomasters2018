@@ -12,7 +12,7 @@
 uint8_t uart3_rx_buff[50];
 uint8_t uart2_rx_buff[50];
 uint8_t uart6_rx_buff[50];
-uint8_t RemoteData[RC_FRAME_LENGTH];
+
 
 //it will be auto callback when usart receive msg completely
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)

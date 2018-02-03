@@ -22,7 +22,7 @@ void testRemoteTask()
 					RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,
 					RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,
 					RC_CtrlData.rc.s1,RC_CtrlData.rc.s2,cnt1++);
-		printf("Remote Raw Data:");
+		printf("Remote Raw Data:"); 
 		for(int i=0;i<18;i++)printf("%d,",RemoteData[i]);
 		printf("\n\r");*/
 	}

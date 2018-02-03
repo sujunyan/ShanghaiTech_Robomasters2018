@@ -8,6 +8,8 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "pid.h"
+#include "test_motor.h"
 void sys_init()
 {
 	MX_GPIO_Init();
@@ -28,3 +30,26 @@ void sys_init()
   MX_USB_DEVICE_Init();
   MX_TIM3_Init();
 }
+
+void pram_init(void)
+{
+	chassis_param_init();
+}
+
+void chassis_param_init(void)
+{
+	memset(&chassis, 0, sizeof(chassis_t));
+#ifdef CHASSIS_EC60
+  for (int k = 0; k < 4; k++)
+  {
+    PID_struct_init(&pid_spd[k], POSITION_PID, 6000, 2000, 25, 0.1, 0);
+  }
+#else
+  for (int k = 0; k < 4; k++)
+  {
+    PID_struct_init(&pid_spd[k], POSITION_PID, 8000, 1000, 3.0f, 0, 0);
+  }
+#endif
+  
+}
+

@@ -65,6 +65,7 @@
 #include "Serial_Debug.h"
 #include "RemoteTask.h"
 #include "test_motor.h"
+#include "init.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -110,37 +111,17 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_CAN1_Init();
-  MX_CAN2_Init();
-  MX_SPI5_Init();
-  MX_TIM2_Init();
-  MX_TIM4_Init();
-  MX_TIM5_Init();
-  MX_TIM6_Init();
-  MX_TIM8_Init();
-  MX_TIM12_Init();
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_USART6_UART_Init();
-  MX_USB_DEVICE_Init();
-  MX_TIM3_Init();
-
+	sys_init();
+ 
   /* USER CODE BEGIN 2 */
   MPU6500_Init();
-  
   HAL_TIM_Base_Start_IT(&htim6);
-  
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	dbus_uart_init();
   can_device_init();
   HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
   HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
-  
-  
-  if(MPU_id != 0)sTestResult.imuTest = 0x01;
+	pram_init();
   /* USER CODE END 2 */
 	
 	
@@ -152,14 +133,12 @@ int main(void)
   {
   /* USER CODE END WHILE */
 		
-		HAL_Delay(1);
+		HAL_Delay(10);
   /* USER CODE BEGIN 3 */
     //IMU_Get_Data();
-		
-		
 		test_motor();
 		testRemoteTask();
-		HAL_Delay(1);
+		HAL_Delay(10);
 		//testRemoteTask();
     //HAL_Delay(200);
   }

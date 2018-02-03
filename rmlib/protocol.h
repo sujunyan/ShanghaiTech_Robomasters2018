@@ -14,40 +14,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file ramp.h
+/** @file protocol.h
  *  @version 1.0
- *  @date June 2017
+ *  @date Oct 2017
  *
- *  @brief ramp contrl realization
+ *  @brief the communication protocol of main control with 
+ *         judge system and computer
  *
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
 
-#ifndef __RAMP_H__
-#define __RAMP_H__
+#ifndef __PROTOCOL_H__
+#define __PROTOCOL_H__
 
 #include "stm32f4xx_hal.h"
 
-typedef struct ramp_t
-{
-  int32_t count;
-  int32_t scale;
-  float   out;
-  void  (*init)(struct ramp_t *ramp, int32_t scale);
-  float (*calc)(struct ramp_t *ramp);
-}ramp_t;
+#define UP_REG_ID    0xA0  //up layer regional id
+#define DN_REG_ID    0xA5  //down layer regional id
+#define HEADER_LEN   sizeof(frame_header_t)
+#define CMD_LEN      2    //cmdid bytes
+#define CRC_LEN      2    //crc16 bytes
 
-#define RAMP_GEN_DAFAULT \
-{ \
-              .count = 0, \
-              .scale = 0, \
-              .out = 0, \
-              .init = &ramp_init, \
-              .calc = &ramp_calc, \
-            } \
-            
-void  ramp_init(ramp_t *ramp, int32_t scale);
-float ramp_calc(ramp_t *ramp);
+#define PROTOCAL_FRAME_MAX_SIZE  200
+
+/** 
+  * @brief  frame header structure definition
+  */
+typedef __packed struct
+{
+  uint8_t  sof;
+  uint16_t data_length;
+  uint8_t  seq;
+  uint8_t  crc8;
+} frame_header_t;
+
+uint8_t verify_crc8_check_sum(uint8_t* pchMessage, uint16_t dwLength);
+uint8_t verify_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength);
+
+void append_crc8_check_sum(uint8_t* pchMessage, uint16_t dwLength);
+void append_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength);
+
 
 #endif

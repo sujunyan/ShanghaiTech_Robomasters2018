@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file ramp.h
+/** @file ramp.c
  *  @version 1.0
  *  @date June 2017
  *
@@ -24,30 +24,22 @@
  *
  */
 
-#ifndef __RAMP_H__
-#define __RAMP_H__
+#include "ramp.h"
 
-#include "stm32f4xx_hal.h"
-
-typedef struct ramp_t
+void ramp_init(ramp_t *ramp, int32_t scale)
 {
-  int32_t count;
-  int32_t scale;
-  float   out;
-  void  (*init)(struct ramp_t *ramp, int32_t scale);
-  float (*calc)(struct ramp_t *ramp);
-}ramp_t;
+  ramp->count = 0;
+  ramp->scale = scale;
+}
 
-#define RAMP_GEN_DAFAULT \
-{ \
-              .count = 0, \
-              .scale = 0, \
-              .out = 0, \
-              .init = &ramp_init, \
-              .calc = &ramp_calc, \
-            } \
-            
-void  ramp_init(ramp_t *ramp, int32_t scale);
-float ramp_calc(ramp_t *ramp);
-
-#endif
+float ramp_calc(ramp_t *ramp)
+{
+  if (ramp->scale <= 0)
+    return 0;
+  
+  if (ramp->count++ >= ramp->scale)
+    ramp->count = ramp->scale;
+  
+  ramp->out = ramp->count / ((float)ramp->scale);
+  return ramp->out;
+}

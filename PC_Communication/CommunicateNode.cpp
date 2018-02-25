@@ -61,6 +61,7 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 
       case STEP_LENGTH_HIGH:
       {
+          //printf("step_length_high header size %d \n",p_obj->p_header==NULL);
         p_obj->data_len |= (byte << 8);
         p_obj->protocol_packet[p_obj->index++] = byte;
 
@@ -94,7 +95,7 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
           {
             //p_obj->p_header->data_length=p_obj->data_len;
             p_obj->unpack_step = STEP_DATA_CRC16;
-            printf("Check CRC8 sucessfully with data_length %d  %d with data \n",p_obj->p_header->data_length,p_obj->data_len);
+            //printf("Check CRC8 sucessfully with data_length %d  %d with data \n",p_obj->p_header->data_length,p_obj->data_len);
             /*
               for (int i = 0; i < 5 ; ++i)
             {
@@ -124,8 +125,7 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
           p_obj->index = 0;
 
 
-          //if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
-            if(1)
+          if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
           {
             //printf("Check CRC16 sucessfully\n");
             if (sof == UP_REG_ID)
@@ -197,21 +197,20 @@ void CommunicateNode::judgement_data_handle(uint8_t * p_frame) {
 
   uint16_t data_length = p_frame[1]|p_frame[2]<<8;
   uint16_t cmd_id      = p_frame[HEADER_LEN]| (p_frame [HEADER_LEN+1])<<8;
+  //  uint16_t cmd_id      = *(uint16_t*)(p_frame+HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-  printf("handle judge data\n");
+#if 1
     if(cmd_id)
     {
+      printf("handle judge data\n");
+      //print_data(p_frame);
+      print_all_packet(p_frame);
       printf("judge_data handle with len %d cmd_id %x \n", data_length, cmd_id);
-      printf("HEADER_LEN= %d the data is ",HEADER_LEN);
-      //for (int i = 0; i < HEADER_LEN+data_length+CMD_LEN; ++i)
-        for (int i = 0; i < data_length; ++i)
-      {
-        printf("%x, ",*(data_addr+i));
-      }
-      printf("\n");
+      //printf("HEADER_LEN= %d the data is ",HEADER_LEN);
 
     }
+#endif
   switch (cmd_id)
   {
     case GAME_INFO_ID:
@@ -257,6 +256,9 @@ CommunicateNode::CommunicateNode(char *portname, int baudrate) {
       printf("Try to connect to the USB port\n");
       //usleep(10000);
     }
+
+    data.p_header=new frame_header_t;
+
     memset(&judge_rece_mesg,0,sizeof(judge_rece_mesg));
     memset(&board_rece_msg,0,sizeof(board_rece_msg));
     IsOpen=1;
@@ -271,15 +273,26 @@ void CommunicateNode::update() {
 
 void CommunicateNode::update_once() {
         //unpack_data(&data,UP_REG_ID);
+        //printf("update begin\n");
         unpack_data(&data,DN_REG_ID);
-    //    printf("data updated\n");
+        //printf("data updated\n");
 }
 
 void CommunicateNode::print_judge_info() {
-  printf("remain_hp is:%d max: %d\n",judge_rece_mesg.game_information.remain_hp,judge_rece_mesg.game_information.max_hp);
-  real_shoot_t shoot=judge_rece_mesg.real_shoot_data;
-  //printf("bullet speed is %f frequency is %f",shoot.bullet_speed,shoot.bullet_freq);
+
+    // cmd_id=1 game_info
 #if 0
+    game_robot_state_t state=judge_rece_mesg.game_information;
+    printf("stage_remain_time is %d\n",state.stage_remain_time);
+    printf("game process is %d\n",state.game_process);
+    printf("remain_hp is:%d max: %d\n",judge_rece_mesg.game_information.remain_hp,judge_rece_mesg.game_information.max_hp);
+#endif
+
+#if 0
+
+    real_shoot_t shoot=judge_rece_mesg.real_shoot_data;
+    printf("bullet speed is %f frequency is %d\n",shoot.bullet_speed,shoot.bullet_freq);
+
     printf("robot_hurt_data is:%d %d\n",
             judge_rece_mesg.blood_changed_data.armor_type,
             judge_rece_mesg.blood_changed_data.hurt_type
@@ -297,7 +310,6 @@ void CommunicateNode::test() {
 }
 
 CommunicateNode::~CommunicateNode() {
-
 }
 
 bool CommunicateNode::is_open() {

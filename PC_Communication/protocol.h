@@ -49,5 +49,7 @@ uint8_t verify_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength);
 void append_crc8_check_sum(uint8_t* pchMessage, uint16_t dwLength);
 void append_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength);
 
+void print_data(uint8_t * xdata);
+void print_all_packet(uint8_t * xdata);
 
 #endif

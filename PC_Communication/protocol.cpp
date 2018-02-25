@@ -27,7 +27,8 @@
 
 #include "protocol.h"
 #include <stdlib.h>
-
+#include <iostream>
+#include <cstring>
 //crc8 generator polynomial:G(x)=x8+x5+x4+1
 const uint8_t CRC8_INIT     = 0xff;
 const uint8_t CRC8_TAB[256] = {
@@ -132,8 +133,7 @@ void append_crc8_check_sum(uint8_t* pchMessage, uint16_t dwLength)
 ** Input: Data to check,Stream length, initialized checksum
 ** Output: CRC checksum
 */
-uint16_t get_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength, uint16_t wCRC)
-{
+uint16_t get_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength, uint16_t wCRC) {
   uint8_t chData;
   if (pchMessage == NULL)
   {
@@ -152,8 +152,7 @@ uint16_t get_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength, uint16_t wC
 ** Input: Data to Verify,Stream length = Data + checksum
 ** Output: True or False (CRC Verify Result)
 */
-uint8_t verify_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength)
-{
+uint8_t verify_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength) {
   uint16_t wExpected = 0;
   if ((pchMessage == NULL) || (dwLength <= 2))
   {
@@ -168,8 +167,7 @@ uint8_t verify_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength)
 ** Input: Data to CRC and append,Stream length = Data + checksum
 ** Output: True or False (CRC Verify Result)
 */
-void append_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength)
-{
+void append_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength) {
   uint16_t wCRC = 0;
   if ((pchMessage == NULL) || (dwLength <= 2))
   {
@@ -180,9 +178,30 @@ void append_crc16_check_sum(uint8_t* pchMessage, uint32_t dwLength)
   pchMessage[dwLength - 1] = (uint8_t)((wCRC >> 8) & 0x00ff);
 }
 
+void print_data(uint8_t * p_frame) {
 
+  uint16_t data_length = p_frame[1]|p_frame[2]<<8;
+  uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
+  printf("The data of packet is ");
 
+  for (uint16_t i = 0; i < (uint16_t)data_length ; ++i)
+  {
+    printf("%x, ",*(data_addr+i));
+  }
+  printf("\n");
+
+}
+void print_all_packet(uint8_t * p_frame){
+  uint16_t data_length = p_frame[1]|p_frame[2]<<8;
+  uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
+  printf("The data of all packet is ");
+  for (uint16_t i = 0; i <HEADER_LEN + data_length ; ++i)
+  {
+    printf("%x, ",*(p_frame+i));
+  }
+  printf("\n");
+}
 
 
 

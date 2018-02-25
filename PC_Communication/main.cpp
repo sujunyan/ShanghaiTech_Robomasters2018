@@ -8,14 +8,14 @@
 int main(void){
         char buffer[]="hello world\n";
         char portname[]="/dev/ttyUSB0";
-    printf("HEADER_LEN=%d\n",HEADER_LEN);
+    //printf("HEADER_LEN=%d\n",HEADER_LEN);
 #if 1
         CommunicateNode node(portname,115200);
         int cnt=0;
         while(node.is_open())
         {
                 node.update_once();
-     //           node.test();
+         //       node.test();
 #if 1
                 if(cnt++%10==0)
                 {

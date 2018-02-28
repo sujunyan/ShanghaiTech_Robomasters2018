@@ -370,7 +370,7 @@ void imu_task(void const *argu)
     
     imu_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     
-    osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);
+    osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);  
   }
 
 }

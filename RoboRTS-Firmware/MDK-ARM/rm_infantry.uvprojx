@@ -857,6 +857,21 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>SerialDebug</GroupName>
+          <Files>
+            <File>
+              <FileName>serial_debug.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app\serial_debug.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\serial_debug.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>

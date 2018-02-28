@@ -169,7 +169,7 @@ void detect_task(void const *argu)
     
     detect_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     
-    osDelayUntil(&detect_wake_time, DETECT_TASK_PERIOD);
+    osDelayUntil(&detect_wake_time, DETECT_TASK_PERIOD);  // 50 ms
   }
 }
 

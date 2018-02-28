@@ -239,7 +239,7 @@ void keyboard_global_hook(void)
   }
 }
 
-
+// km keyboard and mouse
 void keyboard_chassis_hook(void)
 {
   if (km.kb_enable)

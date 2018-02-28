@@ -151,9 +151,8 @@ int main(void)
   can_device_init();
   //gyro_device_init();
   
-  //open can receive it
+  
   can_receive_start();
-  //open dbus uart receive it
   dbus_uart_init();
 
   /* USER CODE END 2 */

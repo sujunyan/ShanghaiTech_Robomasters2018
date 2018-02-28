@@ -51,7 +51,8 @@ extern osTimerId chassis_timer_id;
 extern osTimerId gimbal_timer_id;
 void mode_switch_task(void const *argu)
 {
-  gimbal_self_check();
+	// TODO
+  //gimbal_self_check(); 
   
   osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
   osTimerStart(chassis_timer_id, CHASSIS_PERIOD);

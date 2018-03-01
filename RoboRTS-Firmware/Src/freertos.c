@@ -64,6 +64,7 @@
 #include "bsp_uart.h"
 #include "sys_config.h"
 #include "serial_debug.h"
+
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/

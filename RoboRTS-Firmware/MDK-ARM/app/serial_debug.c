@@ -40,20 +40,20 @@
 #include "cmsis_os.h"
 #include "string.h"
 #include "info_interactive.h"
-
+#include "communicate.h"
 #define SERIAL_DEBUG_PERIOD 20 
 
-uint8_t serial_debug_buffer[1000];
-uint8_t serial_debug_size=0;
+
 UBaseType_t serial_debug_stack_surplus;
+
+static fifo_s_t  serial_debug_fifo;
 void serial_debug_task(void const *argu)
 {
   
   uint32_t wake_time = osKernelSysTick();
   while(1)
   {
-    if(serial_debug_size>0)
-			write_uart_blocking(&COMPUTER_HUART,serial_debug_buffer,serial_debug_size);
+    send_packed_fifo_data(&serial_debug_fifo, UP_REG_ID);
     
     serial_debug_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     
@@ -63,6 +63,6 @@ void serial_debug_task(void const *argu)
 }
 
 int fputc(int ch, FILE *f) {
-	serial_debug_buffer[serial_debug_size++]=ch;
+	fifo_s_put(&serial_debug_fifo,ch);
   return(ch);
 }

@@ -423,7 +423,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/MDK-ARM</GroupName>
+          <GroupName>MDK-ARM</GroupName>
           <Files>
             <File>
               <FileName>startup_stm32f427xx.s</FileName>
@@ -543,7 +543,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FreeRTOS</GroupName>
+          <GroupName>FreeRTOS</GroupName>
           <Files>
             <File>
               <FileName>croutine.c</FileName>
@@ -593,7 +593,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User</GroupName>
+          <GroupName>User</GroupName>
           <Files>
             <File>
               <FileName>gpio.c</FileName>
@@ -673,7 +673,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/UserBsp</GroupName>
+          <GroupName>UserBsp</GroupName>
           <Files>
             <File>
               <FileName>bsp_can.c</FileName>
@@ -703,7 +703,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/Interactive</GroupName>
+          <GroupName>Interactive</GroupName>
           <Files>
             <File>
               <FileName>info_interactive.c</FileName>
@@ -718,7 +718,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/AppCtrl</GroupName>
+          <GroupName>ControlTask</GroupName>
           <Files>
             <File>
               <FileName>gimbal_task.c</FileName>
@@ -743,7 +743,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/ModeSw</GroupName>
+          <GroupName>ModeSw</GroupName>
           <Files>
             <File>
               <FileName>modeswitch_task.c</FileName>
@@ -753,7 +753,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/AppInfo</GroupName>
+          <GroupName>AppInfo</GroupName>
           <Files>
             <File>
               <FileName>info_get_task.c</FileName>
@@ -778,7 +778,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/Comm</GroupName>
+          <GroupName>Communication</GroupName>
           <Files>
             <File>
               <FileName>comm_task.c</FileName>
@@ -793,7 +793,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/Protocol</GroupName>
+          <GroupName>Protocol</GroupName>
           <Files>
             <File>
               <FileName>infantry_info.c</FileName>
@@ -813,7 +813,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/RmLib</GroupName>
+          <GroupName>RmLib</GroupName>
           <Files>
             <File>
               <FileName>ramp.c</FileName>

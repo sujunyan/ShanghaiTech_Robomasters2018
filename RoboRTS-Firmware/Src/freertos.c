@@ -63,6 +63,7 @@
 #include "info_get_task.h"
 #include "bsp_uart.h"
 #include "sys_config.h"
+#include "serial_debug.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -80,6 +81,7 @@ TaskHandle_t imu_task_t;
 TaskHandle_t freq_info_task_t;
 TaskHandle_t judge_unpack_task_t;
 TaskHandle_t pc_unpack_task_t;
+TaskHandle_t serial_debug_task_t;
 
 osTimerId chassis_timer_id;
 osTimerId gimbal_timer_id;
@@ -190,7 +192,11 @@ void MX_FREERTOS_Init(void) {
     osThreadDef(imuTask, imu_task, osPriorityNormal, 0, 128);  // 1ms
     imu_task_t = osThreadCreate(osThread(imuTask), NULL);
     
+		
+		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // wait for USART signal
+    serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
     /* unpack task */
+		
 		
 		#if 0 // not useful currently.
     osThreadDef(unpackTask, judge_unpack_task, osPriorityNormal, 0, 512);  // wait for USART signal
@@ -223,20 +229,6 @@ void StartDefaultTask(void const * argument)
   /* USER CODE END StartDefaultTask */
 }
 
-/* USER CODE BEGIN Application */
-//TaskHandle_t chassis_task_t;
-//TaskHandle_t gimbal_task_t;
-//TaskHandle_t record_task_t;
-
-//    osThreadDef(chassisTask, chassis_task, osPriorityAboveNormal, 0, 128);
-//    chassis_task_t = osThreadCreate(osThread(chassisTask), NULL);
-
-//    osThreadDef(gimbalTask, gimbal_task, osPriorityAboveNormal, 0, 128);
-//    gimbal_task_t = osThreadCreate(osThread(gimbalTask), NULL);
-
-//    osThreadDef(rcdTask, record_task, osPriorityNormal, 0, 512);
-//    record_task_t = osThreadCreate(osThread(rcdTask), NULL);
-//    
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

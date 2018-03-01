@@ -225,21 +225,25 @@ void CommunicateNode::judgement_data_handle(uint8_t * p_frame) {
       memcpy(&judge_rece_mesg.real_shoot_data, data_addr, data_length);
     break;
 
-    case REAL_FIELD_DATA_ID:
-      memcpy(&judge_rece_mesg.rfid_data, data_addr, data_length);
-    break;
-
-    case GAME_RESULT_ID:
-      memcpy(&judge_rece_mesg.game_result_data, data_addr, data_length);
-    break;
-
-    case GAIN_BUFF_ID:
-      memcpy(&judge_rece_mesg.get_buff_data, data_addr, data_length);
-    break;
-
-    case CLIENT_TO_ROBOT_ID:
+    case STU_CUSTOM_DATA_ID:
       memcpy(&judge_rece_mesg.student_download_data, data_addr, data_length);
     break;
+
+//    case REAL_FIELD_DATA_ID:
+//      memcpy(&judge_rece_mesg.rfid_data, data_addr, data_length);
+//    break;
+//
+//    case GAME_RESULT_ID:
+//      memcpy(&judge_rece_mesg.game_result_data, data_addr, data_length);
+//    break;
+//
+//    case GAIN_BUFF_ID:
+//      memcpy(&judge_rece_mesg.get_buff_data, data_addr, data_length);
+//    break;
+//
+//    case CLIENT_TO_ROBOT_ID:
+//      memcpy(&judge_rece_mesg.student_download_data, data_addr, data_length);
+//    break;
   }
 
   //printf("judge_data handle complete\n");

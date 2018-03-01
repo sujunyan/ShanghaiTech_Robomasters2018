@@ -300,8 +300,8 @@ typedef struct
   infantry_structure_t structure_data;
   cali_cmd_t           cali_cmd_data;
   /* receive to forward */
-  client_show_data_t   show_in_client_data;
-  user_to_server_t     pc_to_server_data;
+//  client_show_data_t   show_in_client_data;
+//  user_to_server_t     pc_to_server_data;
 } __attribute__((packed))send_board_t;
 
 #endif //PC_COMMUNICATION_BOARD_INFO_H

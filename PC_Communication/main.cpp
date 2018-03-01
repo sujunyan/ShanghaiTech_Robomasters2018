@@ -1,4 +1,3 @@
-
 #include "SerialPort.h"
 #include <iostream>
 #include <cstdlib>

@@ -199,10 +199,12 @@ void MX_FREERTOS_Init(void) {
     /* unpack task */
 		
 		
-		#if 0 // not useful currently.
+		#if 1 // not useful currently.
     osThreadDef(unpackTask, judge_unpack_task, osPriorityNormal, 0, 512);  // wait for USART signal
     judge_unpack_task_t = osThreadCreate(osThread(unpackTask), NULL);
-    
+		#endif
+		
+		#if 0
     osThreadDef(pcunpackTask, pc_unpack_task, osPriorityNormal, 0, 512);   // wait for USART signal
     pc_unpack_task_t = osThreadCreate(osThread(pcunpackTask), NULL);
     #endif

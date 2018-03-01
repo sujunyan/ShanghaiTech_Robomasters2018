@@ -48,7 +48,9 @@ void judgement_data_handle(uint8_t *p_frame)
   uint16_t data_length = p_header->data_length;
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
-  
+	
+  //TODO
+	printf("cmd_id of judge_frame is %d\n",cmd_id);
   switch (cmd_id)
   {
     case GAME_INFO_ID:

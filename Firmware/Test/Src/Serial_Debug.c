@@ -8,10 +8,9 @@ UBaseType_t serial_debug_stack_surplus;
 #define MAX_SERIAL_BUFFER_SIZE 1000
 uint8_t serial_debug_buffer[MAX_SERIAL_BUFFER_SIZE];
 uint16_t serial_debug_buffer_size=0;
-
 void serial_debug_task(void const *argu)
 {
-  static uint32_t cnt=0;
+ // static uint32_t cnt=0;
   uint32_t wake_time = osKernelSysTick();
   while(1)
   {

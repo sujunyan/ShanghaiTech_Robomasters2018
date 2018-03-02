@@ -52,7 +52,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
-
+#include "test.h"
 #include "sys_config.h"
 #include "serial_debug.h"
 #include "detect_task.h"
@@ -65,16 +65,10 @@ osThreadId defaultTaskHandle;
 TaskHandle_t shot_task_t;
 TaskHandle_t can_msg_send_task_t;
 
-TaskHandle_t mode_sw_task_t;
-TaskHandle_t info_get_task_t;
 TaskHandle_t detect_task_t;
 TaskHandle_t imu_task_t;
 
-TaskHandle_t freq_info_task_t;
-TaskHandle_t judge_unpack_task_t;
-TaskHandle_t pc_unpack_task_t;
 TaskHandle_t serial_debug_task_t;
-
 TaskHandle_t test_task_t;
 
 
@@ -175,8 +169,13 @@ void MX_FREERTOS_Init(void) {
    
     
     /* low priority task */
+		
+		
     osThreadDef(errTask, detect_task, osPriorityNormal, 0, 128);  // 50 ms
     detect_task_t = osThreadCreate(osThread(errTask), NULL);
+		
+		osThreadDef(testTask, test_task, osPriorityNormal, 0, 128);  // 50 ms
+    test_task_t = osThreadCreate(osThread(testTask), NULL);
 	
 		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // 20 ms
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);

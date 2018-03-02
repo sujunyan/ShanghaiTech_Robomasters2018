@@ -47,7 +47,8 @@
                                                  (REMOTE_SWITCH_VALUE_UP)) 
 
 #define REMOTE_SWITCH_VALUE_BUF_DEEP   16u
-#define  DBUS_MAX_LEN                            18u
+#define DBUS_MAX_LEN 50
+#define DBUS_BUFLEN  18
 
 //RC_CtrlData
 /*协议定义：
@@ -103,5 +104,7 @@ void testRemoteTask(void);
 void dbus_uart_init(void);
 static int UART_Receive_DMA_No_IT(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t Size);
 void RemoteDataPrcess(uint8_t *pData);
+
+extern uint8_t RemoteData[DBUS_MAX_LEN];
 #endif
 

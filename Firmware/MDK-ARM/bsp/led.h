@@ -14,19 +14,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file remote_ctrl.h
- *  @version 1.0
- *  @date June 2017
- *
- *  @brief remote control message handle
- *
- *  @copyright 2017 DJI RoboMaster. All rights reserved.
- *
- */
- 
-#ifndef __REMOTE_CTRL_H__
-#define __REMOTE_CTRL_H__
+#include "gpio.h"
 
 
-#endif
+#define LED_G_ON  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_RESET)
+#define LED_G_OFF HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_SET)
+
+#define LED_R_ON  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET)
+#define LED_R_OFF HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET)
+
+#define LED_INIT \
+{\
+  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_SET);\
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);\
+}\
+
 

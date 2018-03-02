@@ -90,7 +90,7 @@ void Test_task(void)
   }
   
   //if can&usrt receive msg,save they are well
-  if(can1_rx_data[0]&&can2_rx_data[0])sTestResult.canTest = 0x01;
+
   if(uart3_rx_buff[0]&&uart6_rx_buff[0])sTestResult.uartTest = 0x01;
 	
 	//debug..

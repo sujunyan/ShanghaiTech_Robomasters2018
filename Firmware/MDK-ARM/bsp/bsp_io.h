@@ -14,19 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file remote_ctrl.h
+/** @file bsp_io.h
  *  @version 1.0
  *  @date June 2017
  *
- *  @brief remote control message handle
+ *  @brief basic IO port operation
  *
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
- 
-#ifndef __REMOTE_CTRL_H__
-#define __REMOTE_CTRL_H__
 
+#ifndef __BSP_IO_H__
+#define __BSP_IO_H__
+
+#include "stm32f4xx_hal.h"
+
+
+void turn_on_laser(void);
+void turn_off_laser(void);
+void turn_on_friction_wheel(uint16_t spd);
+void turn_off_friction_wheel(void);
+
+void pwm_device_init(void);
+void mpu_heat_ctrl(uint16_t pwm_pulse);
+
+uint8_t get_trigger_key_state(void);
+uint8_t sd_insert(void);
 
 #endif
 

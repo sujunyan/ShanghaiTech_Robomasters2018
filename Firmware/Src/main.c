@@ -124,8 +124,10 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	dbus_uart_init();
   can_device_init();
+	
   HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
   HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
+	
 	pram_init();
   /* USER CODE END 2 */
 	

@@ -12,7 +12,7 @@ uint8_t RemoteData[DBUS_MAX_LEN];
 
 void testRemoteTask(){
 	static int cnt=0;
-	static int cnt1=0;
+//	static int cnt1=0;
 	cnt++;
 	if(cnt>1)
 	{

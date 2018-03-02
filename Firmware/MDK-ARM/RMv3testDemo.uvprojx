@@ -336,7 +336,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Test\Inc;../rmlib;..\FreeRTOS\Source\include;..\MDK-ARM</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Test\Inc;../rmlib;..\FreeRTOS\Source\include;..\MDK-ARM;.\bsp</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -518,6 +518,66 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>FreeRTOS</GroupName>
+          <Files>
+            <File>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\croutine.c</FilePath>
+            </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\event_groups.c</FilePath>
+            </File>
+            <File>
+              <FileName>list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\list.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>cmsis_os.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\portable\MemMang\heap_4.c</FilePath>
+            </File>
+            <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c</FilePath>
+            </File>
+            <File>
+              <FileName>freertos.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\freertos.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpu_utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeRTOS\Source\cpu_utils.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
@@ -528,18 +588,83 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Test</GroupName>
+          <GroupName>Library</GroupName>
           <Files>
             <File>
-              <FileName>test_can.c</FileName>
+              <FileName>pid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Test\Src\test_can.c</FilePath>
+              <FilePath>..\rmlib\pid.c</FilePath>
             </File>
             <File>
-              <FileName>test_imu.c</FileName>
+              <FileName>protocol.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Test\Src\test_imu.c</FilePath>
+              <FilePath>..\rmlib\protocol.c</FilePath>
             </File>
+            <File>
+              <FileName>ramp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\rmlib\ramp.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>UserBsp</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bsp\bsp_can.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bsp\bsp_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_imu.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_imu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bsp\bsp_imu.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bsp\bsp_uart.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Init</GroupName>
+          <Files>
+            <File>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Test</GroupName>
+          <Files>
             <File>
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
@@ -561,11 +686,6 @@
               <FilePath>..\Test\Src\test_usb.c</FilePath>
             </File>
             <File>
-              <FileName>test_motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Test\Src\test_motor.c</FilePath>
-            </File>
-            <File>
               <FileName>test.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\test.c</FilePath>
@@ -584,6 +704,11 @@
               <FileName>detect_task.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\detect_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>test_imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Test\Src\test_imu.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -693,96 +818,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Library</GroupName>
-          <Files>
-            <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\rmlib\pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>protocol.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\rmlib\protocol.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\rmlib\ramp.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Init</GroupName>
-          <Files>
-            <File>
-              <FileName>init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\init.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>FreeRTOS</GroupName>
-          <Files>
-            <File>
-              <FileName>croutine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\croutine.c</FilePath>
-            </File>
-            <File>
-              <FileName>event_groups.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\event_groups.c</FilePath>
-            </File>
-            <File>
-              <FileName>list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\list.c</FilePath>
-            </File>
-            <File>
-              <FileName>queue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\queue.c</FilePath>
-            </File>
-            <File>
-              <FileName>tasks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>cmsis_os.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</FilePath>
-            </File>
-            <File>
-              <FileName>heap_4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\portable\MemMang\heap_4.c</FilePath>
-            </File>
-            <File>
-              <FileName>port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c</FilePath>
-            </File>
-            <File>
-              <FileName>freertos.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\freertos.c</FilePath>
-            </File>
-            <File>
-              <FileName>cpu_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeRTOS\Source\cpu_utils.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>RemoteTask</GroupName>
           <Files>
             <File>
@@ -794,6 +829,21 @@
               <FileName>RemoteTask.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Inc\RemoteTask.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ControlTask</GroupName>
+          <Files>
+            <File>
+              <FileName>chasis_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\chasis_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>chasis_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\chasis_task.h</FilePath>
             </File>
           </Files>
         </Group>

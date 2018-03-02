@@ -55,38 +55,8 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
 }
 
 
-extern moto_measure_t moto_chassis[4];
-extern moto_measure_t moto_pit;
-extern moto_measure_t moto_yaw;
-//it will be auto callback when can receive msg completely
-// 
-void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
-{
-	//printf("Can data Recieved with ID: 0x%x at time %d\r\n",hcan->pRxMsg->StdId,HAL_GetTick());
-  switch(hcan->pRxMsg->StdId)
-  {
-		case CAN_3510_M1_ID:
-    case CAN_3510_M2_ID:
-    case CAN_3510_M3_ID:
-    case CAN_3510_M4_ID:
-		{
-			static uint8_t i;
-      i = hcan->pRxMsg->StdId - CAN_3510_M1_ID;  // motor ID
-			moto_chassis[i].msg_cnt++ <= 50? get_moto_offset(&moto_chassis[i],hcan):encoder_data_handle(hcan,&moto_chassis[i]);
-		}
-		break;
-		
-  }
-  
-	__HAL_CAN_ENABLE_IT(&hcan1, CAN_IT_FMP0);
-  __HAL_CAN_ENABLE_IT(&hcan2, CAN_IT_FMP0);
-  //HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
-  //HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
-}
 
-void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan)
-{
-    ptr->ecd        = (uint16_t)(hcan->pRxMsg->Data[0] << 8 | hcan->pRxMsg->Data[1]);
-    ptr->offset_ecd = ptr->ecd;
-}
+
+
+
 

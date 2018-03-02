@@ -14,19 +14,33 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file remote_ctrl.h
+/** @file bsp_uart.h
  *  @version 1.0
- *  @date June 2017
+ *  @date Apr 2017
  *
- *  @brief remote control message handle
+ *  @brief uart receive data from DBus/judge_system/manifold etc.
  *
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
- 
-#ifndef __REMOTE_CTRL_H__
-#define __REMOTE_CTRL_H__
 
+#ifndef __BSP_UART_H__
+#define __BSP_UART_H__
+
+#include "usart.h"
+
+#define UART_RX_DMA_SIZE       1024
+
+void dbus_uart_init(void);
+void computer_uart_init(void);
+void judgement_uart_init(void);
+
+void uart_receive_handler(UART_HandleTypeDef *huart);
+
+uint8_t dma_current_memory_target(DMA_Stream_TypeDef *dma_stream);
+uint16_t dma_current_data_counter(DMA_Stream_TypeDef *dma_stream);
+
+extern uint8_t judge_dma_rxbuff[2][UART_RX_DMA_SIZE];
+extern uint8_t pc_dma_rxbuff[2][UART_RX_DMA_SIZE];
 
 #endif
-

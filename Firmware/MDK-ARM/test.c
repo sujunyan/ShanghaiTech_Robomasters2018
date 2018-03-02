@@ -14,7 +14,7 @@ void test_task(const void* argu){
     
 		
       //IMU_Get_Data();
-		test_motor();
+		//test_motor();
 		testRemoteTask();
 		
 		

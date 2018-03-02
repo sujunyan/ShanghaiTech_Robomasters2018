@@ -39,6 +39,7 @@
 #include "math.h"
 #include "stdlib.h"
 #include "cmsis_os.h"
+#include "serial_debug.h"
 
 /* stack usage monitor */
 UBaseType_t mode_stack_surplus;
@@ -49,6 +50,7 @@ static infantry_mode_e glb_ctrl_mode;
 extern TaskHandle_t info_get_task_t;
 extern osTimerId chassis_timer_id;
 extern osTimerId gimbal_timer_id;
+extern osTimerId serial_debug_timer_id;
 void mode_switch_task(void const *argu)
 {
 	// TODO
@@ -56,7 +58,8 @@ void mode_switch_task(void const *argu)
   
   osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
   osTimerStart(chassis_timer_id, CHASSIS_PERIOD);
-  
+  //osTimerStart(serial_debug_timer_id, SERIAL_DEBUG_PERIOD);
+	
   uint32_t mode_wake_time = osKernelSysTick();
   while (1)
   {

@@ -99,7 +99,7 @@ void gimbal_task(void const *argu)
   switch (gim.ctrl_mode)
   {
     case GIMBAL_INIT:
-      init_mode_handle();
+      init_mode_handle(); // move gimbal to the center position and then switch to GIMBAL_FOLLOW_ZGYRO
     break;
     
     case GIMBAL_NO_ARTI_INPUT:
@@ -189,7 +189,7 @@ void init_mode_handle(void)
   /* lift gimbal pitch */
   gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle;
   gim.pid.pit_angle_ref = gim.sensor.pit_relative_angle * (1 - ramp_calc(&pit_ramp));
-  /* keep yaw unmove this time */
+  /* keep yaw not move this time */
   gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle;
   gim.pid.yaw_angle_ref = gim.ecd_offset_angle;
 
@@ -242,6 +242,7 @@ void close_loop_handle(void)
   
   /* chassis angle relative to gim.pid.yaw_angle_fdb */
   chassis_angle_tmp = gim.pid.yaw_angle_fdb - gim.sensor.yaw_relative_angle;
+	
   /* limit gimbal yaw axis angle */
   if ((gim.sensor.yaw_relative_angle >= YAW_ANGLE_MIN - limit_angle_range) && \
       (gim.sensor.yaw_relative_angle <= YAW_ANGLE_MAX + limit_angle_range))
@@ -250,6 +251,7 @@ void close_loop_handle(void)
                        + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);
   }
+	
   /* limit gimbal pitch axis angle */
   if ((gim.sensor.pit_relative_angle >= PIT_ANGLE_MIN - limit_angle_range) && \
       (gim.sensor.pit_relative_angle <= PIT_ANGLE_MAX + limit_angle_range))

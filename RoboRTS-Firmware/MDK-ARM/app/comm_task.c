@@ -200,7 +200,9 @@ void judge_unpack_task(void const *argu)
   
   while (1)
   {
-    
+		//LED_G_OFF;
+		//LED_R_OFF;
+    //printf("judge_unpack_task\n\r");
     event = osSignalWait(JUDGE_UART_TX_SIGNAL | \
                          JUDGE_UART_IDLE_SIGNAL | \
                          JUDGE_DMA_FULL_SIGNAL, osWaitForever);
@@ -274,12 +276,12 @@ void pc_unpack_task(void const *argu)
       //send data to pc system
       if (event.value.signals & PC_UART_TX_SIGNAL)
       {
-        send_packed_fifo_data(&pc_txdata_fifo, UP_REG_ID);
+        //send_packed_fifo_data(&pc_txdata_fifo, UP_REG_ID);
       }
       
       if (unpack_flag)
       {
-        unpack_fifo_data(&pc_unpack_obj, UP_REG_ID);
+        //unpack_fifo_data(&pc_unpack_obj, UP_REG_ID);
         unpack_flag = 0;
       }
     }

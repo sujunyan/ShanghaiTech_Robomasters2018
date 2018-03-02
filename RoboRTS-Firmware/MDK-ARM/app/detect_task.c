@@ -150,8 +150,7 @@ void detect_task(void const *argu)
     detect_time_ms = HAL_GetTick() - detect_time_last;
     detect_time_last = HAL_GetTick();
 		
-    // TODO
-		printf("TEST\n");
+    
 		
     /* module offline detect */
     module_offline_detect();

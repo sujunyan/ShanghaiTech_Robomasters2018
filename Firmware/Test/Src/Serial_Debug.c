@@ -1,12 +1,46 @@
 #include "Serial_Debug.h"
 #include "test_app.h"
 #include "test_imu.h"
-extern IMUDataTypedef imu_data;
-extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart2;
-extern UART_HandleTypeDef huart3;
-extern UART_HandleTypeDef huart6;
-extern DMA_HandleTypeDef hdma_usart1_rx;
+#include "sys_config.h"
+
+UBaseType_t serial_debug_stack_surplus;
+
+#define MAX_SERIAL_BUFFER_SIZE 1000
+uint8_t serial_debug_buffer[MAX_SERIAL_BUFFER_SIZE];
+uint16_t serial_debug_buffer_size=0;
+
+void serial_debug_task(void const *argu)
+{
+  static uint32_t cnt=0;
+  uint32_t wake_time = osKernelSysTick();
+  while(1)
+  {
+		// TODO
+		//printf("test %d\n\r",cnt++);
+		LED_G_ON;
+		if(serial_debug_buffer_size>0)
+		{
+			
+			write_uart_noblocking(&PC_HUART, serial_debug_buffer, serial_debug_buffer_size);
+			serial_debug_buffer_size=0;
+		}
+    
+    serial_debug_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
+    
+    osDelayUntil(&wake_time, SERIAL_DEBUG_PERIOD);  
+  }
+
+}
+int fputc(int ch, FILE *f)   //  redirect the printf function
+{
+		
+	if(serial_debug_buffer_size<MAX_SERIAL_BUFFER_SIZE)
+		serial_debug_buffer[serial_debug_buffer_size++]=ch;
+   return ch;
+}
+
+
+
 void testSerialDebug(void)
 {
 	static int cnt=0;
@@ -24,66 +58,11 @@ void checkUART()
 		printf("uart1 not Ready. gState=%d RxState=%d \r\n", huart1.gState,huart1.RxState);
 }
 
-/*
-	Redirect the printf function to SWO
-*/
-#ifdef DEBUGSWD
-
-
-int fputc(int ch, FILE *f) {
-  //ITM_SendChar(ch);
-	SEGGER_RTT_printf(0,(char *)&ch);
-  return(ch);
+void write_uart_noblocking(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size){
+	HAL_UART_Transmit_IT(huart,pData,Size);
+}
+void write_uart_blocking(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size){
+	HAL_UART_Transmit(huart,pData,Size,100);
 }
 
-
-
-
-int fputs(const char * s , FILE * f)//redirect the printf function
-{
-	HAL_UART_Transmit(&huart2,(uint8_t *)&s,sizeof(s),10);
-	return 1;
-}
-
-
-int fgetc(FILE *f)  //  redirect the scanf function
-{ 
-	uint8_t ch;
-	HAL_UART_Receive_IT(&huart2, &ch, 1);
-	return ch;
-}
-
-#endif
-
-
-/*
-	Redirect the printf function to serial uart2
-*/
-
-#ifdef DEBUGSERIAAL
-
-int fputc(int ch, FILE *f)   //  redirect the printf function
-{
-		HAL_UART_Transmit(&huart2,(uint8_t *)&ch,sizeof(ch),1);
-    return ch;
-}
-
-int fputs(const char * s , FILE * f)//redirect the printf function
-{
-	HAL_UART_Transmit(&huart2,(uint8_t *)&s,sizeof(s),1);
-	return 1;
-}
-
-
-int fgetc(FILE *f)  //  redirect the scanf function
-{ 
-	uint8_t ch;
-	HAL_UART_Receive_IT(&huart2, &ch, 1);
-	return ch;
-}
-
-#endif
-
-
-void Send_Debug_Msg(uint8_t* Msg,uint16_t Size){}
 

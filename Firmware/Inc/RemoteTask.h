@@ -48,7 +48,7 @@
 
 #define REMOTE_SWITCH_VALUE_BUF_DEEP   16u
 #define  DBUS_MAX_LEN                            18u
-#define DBUS_HUART huart1
+
 //RC_CtrlData
 /*协议定义：
 * ch0 右摇杆 364-1024-1684 左->右
@@ -91,6 +91,12 @@ typedef __packed struct
 	Key key;
 }RC_Ctl_t;
 
+enum
+{
+  RC_UP = 1,
+  RC_MI = 3,
+  RC_DN = 2,
+};
 
 
 void testRemoteTask(void);

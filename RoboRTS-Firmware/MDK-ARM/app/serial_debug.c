@@ -47,17 +47,24 @@
 
 UBaseType_t serial_debug_stack_surplus;
 
-uint8_t serial_debug_buffer[1000];
-uint8_t serial_debug_buffer_size=0;
+#define MAX_SERIAL_BUFFER_SIZE 1000
+uint8_t serial_debug_buffer[MAX_SERIAL_BUFFER_SIZE];
+uint16_t serial_debug_buffer_size=0;
+
 void serial_debug_task(void const *argu)
 {
-  
+  static uint32_t cnt=0;
   uint32_t wake_time = osKernelSysTick();
   while(1)
   {
-		if(serial_debug_buffer_size>0)
+		// TODO
+		//printf("test %d\n\r",cnt++);
+		LED_G_ON;
+		//if(serial_debug_buffer_size>0)
 		{
-			write_uart_blocking(&COMPUTER_HUART, serial_debug_buffer, serial_debug_buffer_size);
+			
+			//write_uart_noblocking(&COMPUTER_HUART, buffer, sizeof(buffer));
+			write_uart_noblocking(&COMPUTER_HUART, serial_debug_buffer, serial_debug_buffer_size);
 			serial_debug_buffer_size=0;
 		}
     
@@ -69,6 +76,18 @@ void serial_debug_task(void const *argu)
 }
 
 int fputc(int ch, FILE *f) {
-	serial_debug_buffer[serial_debug_buffer_size++]=ch;
+	LED_G_ON;
+	if(serial_debug_buffer_size<MAX_SERIAL_BUFFER_SIZE-1)
+		serial_debug_buffer[serial_debug_buffer_size++]=ch;
+	LED_G_OFF;
   return(ch);
+	
 }
+/*
+int fputs(const char * s , FILE * f)//redirect the printf function
+{
+	HAL_UART_Transmit(&COMPUTER_HUART,(uint8_t *)&s,sizeof(s),10);
+	return 1;
+}
+*/
+

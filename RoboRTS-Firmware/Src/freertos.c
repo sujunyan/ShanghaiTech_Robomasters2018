@@ -86,6 +86,7 @@ TaskHandle_t serial_debug_task_t;
 
 osTimerId chassis_timer_id;
 osTimerId gimbal_timer_id;
+//osTimerId serial_debug_timer_id;
 
 volatile int stack_over_flow_warning = 0;
 /* USER CODE END Variables */
@@ -162,6 +163,7 @@ void MX_FREERTOS_Init(void) {
     osTimerDef(gimTimer, gimbal_task);
     gimbal_timer_id = osTimerCreate(osTimer(gimTimer), osTimerPeriodic, NULL); // 5 ms
   
+		
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
@@ -194,17 +196,17 @@ void MX_FREERTOS_Init(void) {
     imu_task_t = osThreadCreate(osThread(imuTask), NULL);
     
 		
-		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // wait for USART signal
+		//#if 0
+		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // 20 ms
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
     /* unpack task */
-		
 		
 		#if 1 // not useful currently.
     osThreadDef(unpackTask, judge_unpack_task, osPriorityNormal, 0, 512);  // wait for USART signal
     judge_unpack_task_t = osThreadCreate(osThread(unpackTask), NULL);
 		#endif
 		
-		#if 0
+		#if 1
     osThreadDef(pcunpackTask, pc_unpack_task, osPriorityNormal, 0, 512);   // wait for USART signal
     pc_unpack_task_t = osThreadCreate(osThread(pcunpackTask), NULL);
     #endif

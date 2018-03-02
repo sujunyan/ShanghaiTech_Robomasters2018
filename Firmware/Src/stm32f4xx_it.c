@@ -136,6 +136,8 @@ void UsageFault_Handler(void)
 /**
 * @brief This function handles System service call via SWI instruction.
 */
+
+#if 0
 void SVC_Handler(void)
 {
   /* USER CODE BEGIN SVCall_IRQn 0 */
@@ -145,6 +147,7 @@ void SVC_Handler(void)
 
   /* USER CODE END SVCall_IRQn 1 */
 }
+#endif
 
 /**
 * @brief This function handles Debug monitor.
@@ -162,6 +165,7 @@ void DebugMon_Handler(void)
 /**
 * @brief This function handles Pendable request for system service.
 */
+#if 0
 void PendSV_Handler(void)
 {
   /* USER CODE BEGIN PendSV_IRQn 0 */
@@ -171,6 +175,7 @@ void PendSV_Handler(void)
 
   /* USER CODE END PendSV_IRQn 1 */
 }
+#endif
 
 /**
 * @brief This function handles System tick timer.
@@ -239,13 +244,13 @@ void CAN1_RX0_IRQHandler(void)
 /**
 * @brief This function handles USART1 global interrupt.
 */
-//extern uint8_t RemoteData[RC_FRAME_LENGTH];
+
 
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
 	
-	//HAL_UART_Receive_IT(&huart1,RemoteData,18);
+	
 	//testRemoteTask();
 	//printf("USART1 Data Recieved\n\r");
   /* USER CODE END USART1_IRQn 0 */

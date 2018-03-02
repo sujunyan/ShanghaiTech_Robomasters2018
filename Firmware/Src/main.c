@@ -57,6 +57,9 @@
 #include "usb_device.h"
 #include "gpio.h"
 
+#include "freeRTOS.h"
+#include "cmsis_os.h"
+
 /* USER CODE BEGIN Includes */
 #include "test_imu.h"
 #include "test_app.h"
@@ -66,10 +69,12 @@
 #include "RemoteTask.h"
 #include "test_motor.h"
 #include "init.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -124,23 +129,21 @@ int main(void)
 	pram_init();
   /* USER CODE END 2 */
 	
+	MX_FREERTOS_Init();
+	osKernelStart();
 	
+	
+	// We will NEVER reach here
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	//testRemoteTask();
-	//static int cnt=0;
+	
   while (1)
   {
   /* USER CODE END WHILE */
 		
-		HAL_Delay(10);
+		
   /* USER CODE BEGIN 3 */
-    //IMU_Get_Data();
-		test_motor();
-		testRemoteTask();
-		HAL_Delay(10);
-		//testRemoteTask();
-    //HAL_Delay(200);
+  
   }
   /* USER CODE END 3 */
 

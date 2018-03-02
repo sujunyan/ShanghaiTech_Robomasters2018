@@ -43,7 +43,9 @@ void unpack_fifo_data(unpack_data_t *p_obj, uint8_t sof)
   while ( fifo_used_count(p_obj->data_fifo) )
   {
     //independent thread, need not mutex
+		
     byte = fifo_s_get_no_mutex(p_obj->data_fifo);
+		//printf("data recieved\n");
     switch(p_obj->unpack_step)
     {
       case STEP_HEADER_SOF:
@@ -223,7 +225,7 @@ void data_upload_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t 
   
   protocol_packet_pack(cmd_id, p_data, len, sof, tx_buf);
   
-  if (sof == UP_REG_ID)
+  if (sof == UP_REG_ID)	
     write_uart_blocking(&COMPUTER_HUART, tx_buf, frame_length);
   else if (sof == DN_REG_ID)
     write_uart_blocking(&JUDGE_HUART, tx_buf, frame_length);

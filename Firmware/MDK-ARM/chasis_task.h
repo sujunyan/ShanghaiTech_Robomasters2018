@@ -11,7 +11,7 @@
 #define CAN_3510_M2_ID 0x202
 #define CAN_3510_M3_ID 0x203
 #define CAN_3510_M4_ID 0x204
-#define CHASIS_TASK_PERIOD 10
+#define CHASSIS_TASK_PERIOD 10
 
 typedef struct
 {

@@ -56,6 +56,7 @@
 #include "sys_config.h"
 #include "serial_debug.h"
 #include "detect_task.h"
+#include "chasis_task.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -145,10 +146,13 @@ void MX_FREERTOS_Init(void) {
     /* real time control task */
   taskENTER_CRITICAL();
   
-	/*
-    osTimerDef(chassisTimer, chassis_task);
+	
+    osTimerDef(chassisTimer, chasis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
-    
+		osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
+		
+		
+  /* 
     osTimerDef(gimTimer, gimbal_task);
     gimbal_timer_id = osTimerCreate(osTimer(gimTimer), osTimerPeriodic, NULL); // 5 ms
   */

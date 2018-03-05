@@ -12,19 +12,19 @@ uint8_t RemoteData[DBUS_MAX_LEN];
 
 void testRemoteTask(){
 	static int cnt=0;
-//	static int cnt1=0;
+	static int cnt1=0;
 	cnt++;
 	if(cnt>1)
 	{
 	cnt=0;
-	RemoteDataPrcess(RemoteData);
-	/*printf("RC_CtrlData: ch0 %d, ch1 %d, ch2 %d, ch3 %d, s1 %d, s2 %d times %d\r\n",
-					RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,
-					RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,
-					RC_CtrlData.rc.s1,RC_CtrlData.rc.s2,cnt1++);
+	//RemoteDataPrcess(RemoteData);
+	printf("RC_CtrlData: ch0 %d, ch1 %d, ch2 %d, ch3 %d, s1 %d, s2 %d times %d\r\n",
+					remote_info.rc.ch0,remote_info.rc.ch1,
+					remote_info.rc.ch2,remote_info.rc.ch3,
+					remote_info.rc.s1,remote_info.rc.s2,cnt1++);
 		printf("Remote Raw Data:"); 
 		for(int i=0;i<18;i++)printf("%d,",RemoteData[i]);
-		printf("\n\r");*/
+		printf("\n\r");
 	}
 }
 /*协议定义：

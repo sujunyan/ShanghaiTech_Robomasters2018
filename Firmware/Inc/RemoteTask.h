@@ -106,5 +106,6 @@ static int UART_Receive_DMA_No_IT(UART_HandleTypeDef* huart, uint8_t* pData, uin
 void RemoteDataPrcess(uint8_t *pData);
 
 extern uint8_t RemoteData[DBUS_MAX_LEN];
+extern RC_Ctl_t remote_info;
 #endif
 

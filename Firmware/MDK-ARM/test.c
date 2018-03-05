@@ -1,7 +1,7 @@
 
 #include "test.h"
 #include "sys_config.h"
-
+#include "RemoteTask.h"
 UBaseType_t test_task_stack_surplus;
 
 void test_task(const void* argu){
@@ -16,7 +16,7 @@ void test_task(const void* argu){
       //IMU_Get_Data();
 		//test_motor();
 		testRemoteTask();
-		
+		//printf("");
 		
     test_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     

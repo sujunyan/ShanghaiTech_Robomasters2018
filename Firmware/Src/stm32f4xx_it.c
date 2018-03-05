@@ -36,7 +36,7 @@
 #include "stm32f4xx_it.h"
 
 /* USER CODE BEGIN 0 */
-#include "test_app.h"
+#include "bsp_uart.h"
 #include "Serial_Debug.h"
 #include "RemoteTask.h"
 /* USER CODE END 0 */
@@ -366,7 +366,7 @@ void OTG_FS_IRQHandler(void)
 void USART6_IRQHandler(void)
 {
   /* USER CODE BEGIN USART6_IRQn 0 */
-  
+  uart_receive_handler(&huart6);
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */

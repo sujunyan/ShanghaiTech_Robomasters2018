@@ -33,6 +33,11 @@ void chasis_task(const void* argu){ // timer
 		chasis_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 }
 
+
+
+
+
+
 void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 	
 	ptr->last_ecd = ptr->ecd;

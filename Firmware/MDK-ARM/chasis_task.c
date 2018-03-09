@@ -4,7 +4,7 @@
 #include "RemoteTask.h"
 #include "pid.h"
 #include "sys_config.h"
-
+#include "bsp_can.h"
 
 
 chassis_t chassis;
@@ -15,7 +15,8 @@ void chasis_task(const void* argu){ // timer
 
 	
 	// TODO swich the mode to handle data from PC 
-  
+	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	chasis_remote_handle();
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
   
   if (!chassis_is_controllable())
@@ -29,7 +30,9 @@ void chasis_task(const void* argu){ // timer
 			chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_speed_fdb[i], chassis.wheel_speed_ref[i]);
 		}
 	}
+	
 
+		send_chassis_cur(chassis.current[0],chassis.current[1],chassis.current[2],chassis.current[3]);
 		chasis_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 }
 
@@ -181,4 +184,11 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
       wheel_rpm[i] *= rate;
   }
   memcpy(speed, wheel_rpm, 4*sizeof(int16_t));
+}
+
+
+
+void chasis_remote_handle(void){
+	chassis.vx= remote_info.rc.ch1;
+	chassis.vy=	remote_info.rc.ch0;
 }

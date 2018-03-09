@@ -30,8 +30,7 @@
 #include "can.h"
 
 /* CAN send and receive ID */
-typedef enum
-{
+typedef enum{
   CAN_3510_M1_ID       = 0x201,
   CAN_3510_M2_ID       = 0x202,
   CAN_3510_M3_ID       = 0x203,
@@ -50,34 +49,12 @@ typedef enum
 
 /* can receive motor parameter structure */
 #define FILTER_BUF 5
-typedef struct
-{
-  uint16_t ecd;
-  uint16_t last_ecd;
-  
-  int16_t  speed_rpm;
-  int16_t  given_current;
-
-  int32_t  round_cnt;
-  int32_t  total_ecd;
-  int32_t  total_angle;
-  
-  uint16_t offset_ecd;
-  uint32_t msg_cnt;
-  
-  int32_t  ecd_raw_rate;
-  int32_t  rate_buf[FILTER_BUF];
-  uint8_t  buf_cut;
-  int32_t  filter_rate;
-} moto_measure_t;
 
 
-extern moto_measure_t moto_chassis[];
-extern moto_measure_t moto_yaw, moto_pit, moto_trigger;
+
+
 //extern float          yaw_zgyro_angle;
 
-void encoder_data_handle(moto_measure_t* ptr, CAN_HandleTypeDef* hcan);
-void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan);
 
 void can_device_init(void);
 void can_receive_start(void);

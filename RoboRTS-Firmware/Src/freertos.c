@@ -53,18 +53,13 @@
 
 /* USER CODE BEGIN Includes */     
 #include "chassis_task.h"
-#include "shoot_task.h"
-#include "gimbal_task.h"
 #include "detect_task.h"
-#include "record_task.h"
 #include "imu_task.h"
-#include "comm_task.h"
-#include "modeswitch_task.h"
-#include "info_get_task.h"
 #include "bsp_uart.h"
 #include "sys_config.h"
 #include "serial_debug.h"
-
+#include "test.h"
+#include "can_send_task.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -83,6 +78,7 @@ TaskHandle_t freq_info_task_t;
 TaskHandle_t judge_unpack_task_t;
 TaskHandle_t pc_unpack_task_t;
 TaskHandle_t serial_debug_task_t;
+TaskHandle_t test_task_t;
 
 osTimerId chassis_timer_id;
 osTimerId gimbal_timer_id;
@@ -157,15 +153,16 @@ void MX_FREERTOS_Init(void) {
     /* real time control task */
   taskENTER_CRITICAL();
   
-    osTimerDef(chassisTimer, chassis_task);
-    chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
+   
+		
     
-    osTimerDef(gimTimer, gimbal_task);
-    gimbal_timer_id = osTimerCreate(osTimer(gimTimer), osTimerPeriodic, NULL); // 5 ms
   
 		
   /* USER CODE END RTOS_TIMERS */
-
+ osTimerDef(chassisTimer, chassis_task);
+    chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
+    osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
+		
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
 	
@@ -175,41 +172,25 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   
-    /* high priority task */
-    osThreadDef(shotTask, shot_task, osPriorityAboveNormal, 0, 128);   // wait for  SHOT_TASK_EXE_SIGNAL set by gimbal_task
-    shot_task_t = osThreadCreate(osThread(shotTask), NULL);
-  
-    osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); // wait for GIMBAL(CHASIS)_MOTOR_MSG_SEND signal
-    can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL); 
+   /* high priority task */
+		osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); //wait for signal set by gimbal/chasis_task
+		can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL);
+		 
     
-    /* low priority task */
-    osThreadDef(modeTask, mode_switch_task, osPriorityNormal, 0, 128); //5ms
-    mode_sw_task_t = osThreadCreate(osThread(modeTask), NULL);
-    
-    osThreadDef(infoTask, info_get_task, osPriorityNormal, 0, 128);  // wait for INFO_GET_EXE_SIGNAL set by mode_switch_task
-    info_get_task_t = osThreadCreate(osThread(infoTask), NULL);
-    
+		/* normal priority task */
     osThreadDef(errTask, detect_task, osPriorityNormal, 0, 128);  // 50 ms
     detect_task_t = osThreadCreate(osThread(errTask), NULL);
 
-    osThreadDef(imuTask, imu_task, osPriorityNormal, 0, 128);  // 1ms
+		osThreadDef(imuTask, imu_task, osPriorityNormal, 0, 128);  // 1 ms
     imu_task_t = osThreadCreate(osThread(imuTask), NULL);
-    
-		
 		//#if 0
 		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // 20 ms
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
+		
+		osThreadDef(testTask, test_task, osPriorityNormal, 0, 512);  // 20 ms
+    test_task_t = osThreadCreate(osThread(testTask), NULL);
     /* unpack task */
-		
-		#if 1 // not useful currently.
-    osThreadDef(unpackTask, judge_unpack_task, osPriorityNormal, 0, 512);  // wait for USART signal
-    judge_unpack_task_t = osThreadCreate(osThread(unpackTask), NULL);
-		#endif
-		
-		#if 1
-    osThreadDef(pcunpackTask, pc_unpack_task, osPriorityNormal, 0, 512);   // wait for USART signal
-    pc_unpack_task_t = osThreadCreate(osThread(pcunpackTask), NULL);
-    #endif
+	
   taskEXIT_CRITICAL();
   /* USER CODE END RTOS_THREADS */
 

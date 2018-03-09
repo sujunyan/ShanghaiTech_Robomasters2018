@@ -336,7 +336,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Test\Inc;../rmlib;..\FreeRTOS\Source\include;..\MDK-ARM;.\bsp</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Test\Inc;../rmlib;..\FreeRTOS\Source\include;..\MDK-ARM;.\bsp;..\FatFs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -493,31 +493,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>USB_Device_Library</GroupName>
-          <Files>
-            <File>
-              <FileName>usbd_cdc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_ctlreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_core.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_ioreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>FreeRTOS</GroupName>
           <Files>
             <File>
@@ -574,6 +549,11 @@
               <FileName>cpu_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeRTOS\Source\cpu_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>FreeRTOSConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\FreeRTOS\Source\include\FreeRTOSConfig.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -794,21 +774,6 @@
               <FileName>Serial_Debug.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Test\Src\Serial_Debug.c</FilePath>
-            </File>
-            <File>
-              <FileName>RTT_Syscalls_KEIL.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RTT_Implementation\Syscalls\RTT_Syscalls_KEIL.c</FilePath>
-            </File>
-            <File>
-              <FileName>SEGGER_RTT.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RTT_Implementation\RTT\SEGGER_RTT.c</FilePath>
-            </File>
-            <File>
-              <FileName>SEGGER_RTT_printf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RTT_Implementation\RTT\SEGGER_RTT_printf.c</FilePath>
             </File>
             <File>
               <FileName>Serial_Debug.h</FileName>

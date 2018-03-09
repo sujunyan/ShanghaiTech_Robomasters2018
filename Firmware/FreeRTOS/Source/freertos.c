@@ -81,7 +81,7 @@ volatile int stack_over_flow_warning = 0;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
-void StartDefaultTask(void const * argument);
+//void StartDefaultTask(void * argument);
 
 extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -100,7 +100,7 @@ __weak void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTask
    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
    called if a stack overflow is detected. */
 #if 0
-    if (xTask == chassis_task_t)
+    if (xTask == chasis_task_t)
       stack_over_flow_warning = 1;
     else if (xTask == gimbal_task_t)
       stack_over_flow_warning = 2;
@@ -146,11 +146,11 @@ void MX_FREERTOS_Init(void) {
     /* real time control task */
   taskENTER_CRITICAL();
   
-	
+	#if 0
     osTimerDef(chassisTimer, chasis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
 		osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
-		
+	#endif
 		
   /* 
     osTimerDef(gimTimer, gimbal_task);
@@ -161,10 +161,10 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-	
+	#if 0
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-
+	#endif
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -174,17 +174,22 @@ void MX_FREERTOS_Init(void) {
     
     /* low priority task */
 		
-		
+	#if 0
     osThreadDef(errTask, detect_task, osPriorityNormal, 0, 128);  // 50 ms
     detect_task_t = osThreadCreate(osThread(errTask), NULL);
-		
-		osThreadDef(testTask, test_task, osPriorityNormal, 0, 128);  // 50 ms
-    test_task_t = osThreadCreate(osThread(testTask), NULL);
+	#endif
 	
+	#if 1
+		osThreadDef(testTask, test_task, osPriorityNormal, 0, 1024);  // 50 ms
+    test_task_t = osThreadCreate(osThread(testTask), NULL);
+	#endif
+	
+	#if 0
 		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // 20 ms
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
 	
-		
+	#endif
+	
   taskEXIT_CRITICAL();
   /* USER CODE END RTOS_THREADS */
 
@@ -194,21 +199,7 @@ void MX_FREERTOS_Init(void) {
 }
 
 /* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
-{
-  /* init code for FATFS */
-	
-  //MX_FATFS_Init();
 
-  /* USER CODE BEGIN StartDefaultTask */
-  //osThreadResume(record_task_t);
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END StartDefaultTask */
-}
 
 /* USER CODE END Application */
 

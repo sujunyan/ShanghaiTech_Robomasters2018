@@ -7,10 +7,7 @@
 #define ENCODER_ANGLE_RATIO    (8192.0f/360.0f)
 
 #define FILTER_BUF 5
-#define CAN_3510_M1_ID 0x201
-#define CAN_3510_M2_ID 0x202
-#define CAN_3510_M3_ID 0x203
-#define CAN_3510_M4_ID 0x204
+
 #define CHASSIS_TASK_PERIOD 10
 
 typedef struct
@@ -38,8 +35,10 @@ typedef enum
 {
   CHASSIS_RELAX          = 0,
   CHASSIS_STOP           = 1,
+	
   MANUAL_SEPARATE_GIMBAL = 2,
   MANUAL_FOLLOW_GIMBAL   = 3,
+	
   DODGE_MODE             = 4,
   AUTO_SEPARATE_GIMBAL   = 5,
   AUTO_FOLLOW_GIMBAL     = 6,
@@ -72,7 +71,7 @@ void chasis_task(const void* argu);
 void test_motor(void);
 void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr);
 void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan);
-
+void chasis_remote_handle(void);
 void print_encoder(moto_measure_t*);
 int is_Motor_Reversed(int i);
 uint8_t chassis_is_controllable(void);
@@ -80,3 +79,10 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 
 extern chassis_t chassis;
 #endif
+/*
+#define CAN_3510_M1_ID 0x201
+#define CAN_3510_M2_ID 0x202
+#define CAN_3510_M3_ID 0x203
+#define CAN_3510_M4_ID 0x204
+*/
+

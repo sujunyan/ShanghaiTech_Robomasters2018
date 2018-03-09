@@ -1,219 +1,152 @@
-/****************************************************************************
- *  Copyright (C) 2018 RoboMaster.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of¬†
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.¬† See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- ***************************************************************************/
-/** @file chassis_task.c
- *  @version 1.1
- *  @date June 2017
- *
- *  @brief chassis control task
- *
- *  @copyright 2017 DJI RoboMaster. All rights reserved.
- *
- */
-
 #include "chassis_task.h"
-#include "gimbal_task.h"
-#include "detect_task.h"
-#include "comm_task.h"
-#include "modeswitch_task.h"
-#include "info_get_task.h"
-#include "info_interactive.h"
-#include "infantry_info.h"
-#include "judgement_info.h"
-#include "remote_ctrl.h"
-#include "keyboard.h"
+
+#include "can.h"
+#include "RemoteTask.h"
 #include "pid.h"
 #include "sys_config.h"
-#include "stdlib.h"
-#include "math.h"
-#include "string.h"
-#include "cmsis_os.h"
+#include "bsp_can.h"
 
-/* chassis twist angle (degree)*/
-#define TWIST_ANGLE    40
-/* twist period time (ms) */
-#define TWIST_PERIOD   1500
-/* warning surplus energy */
-#define WARNING_ENERGY 40.0f
 
-UBaseType_t chassis_stack_surplus;
-
-/* chassis task global parameter */
 chassis_t chassis;
-
-uint32_t chassis_time_last;
-int chassis_time_ms;
+UBaseType_t chasis_task_stack_surplus;
 extern TaskHandle_t can_msg_send_task_t;
-void chassis_task(void const *argu)
-{
-  chassis_time_ms = HAL_GetTick() - chassis_time_last;
-  chassis_time_last = HAL_GetTick();
-  
-//    get_chassis_info();
-//    get_chassis_mode();
 
-  switch (chassis.ctrl_mode)
-  {
-    case DODGE_MODE:
-    {
-      chassis.vx = 0;
-      chassis.vy = 0;
-      chassis_twist_handle();
-    }break;
-    
-    case AUTO_FOLLOW_GIMBAL:
-    {
-      taskENTER_CRITICAL();
-      chassis.vx = (float)pc_rece_mesg.chassis_control_data.x_speed;
-      chassis.vy = (float)pc_rece_mesg.chassis_control_data.y_speed;
-      chassis.position_ref = 0;
-      taskEXIT_CRITICAL();
-      
-      chassis.vw = pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle, chassis.position_ref); 
-    }break;
-    
-    case AUTO_SEPARATE_GIMBAL:
-    {
-      taskENTER_CRITICAL();
-      chassis.vx = (float)pc_rece_mesg.chassis_control_data.x_speed;
-      chassis.vy = (float)pc_rece_mesg.chassis_control_data.y_speed;
-      chassis.position_ref = 0;
-      chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
-      taskEXIT_CRITICAL();
-      
-    }break;
-    
-    case CHASSIS_STOP:
-    {
-      chassis_stop_handle();
-    }break;
+void chassis_task(const void* argu){ // timer
 
-    case MANUAL_SEPARATE_GIMBAL:
-    {
-      open_loop_handle();
-    }break;
-    
-    case MANUAL_FOLLOW_GIMBAL:
-    {
-      follow_gimbal_handle();
-    }break;
-
-    default:
-    {
-      chassis_stop_handle();
-    }break;
-  }
-
+	
+	// TODO swich the mode to handle data from PC 
+	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	chasis_remote_handle();
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
-
-  for (int i = 0; i < 4; i++)
-  {
-    chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_speed_fdb[i], chassis.wheel_speed_ref[i]);
-  }
   
   if (!chassis_is_controllable())
   {
     memset(chassis.current, 0, sizeof(chassis.current));
   }
-  
-  memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
-  osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
-  
-  chassis_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
+	else
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			chassis.wheel_speed_fdb[i] = chassis.motor[i].speed_rpm;
+			//printf("speed %d %d ",i,chassis.wheel_speed_fdb[i]);
+			chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_speed_fdb[i], chassis.wheel_speed_ref[i]);
+		}
+	}
+	//printf("\n\r");
+	
+
+		osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
+		chasis_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 }
 
 
-void chassis_stop_handle(void)
-{
-  chassis.vy = 0;
-  chassis.vx = 0;
-  chassis.vw = 0;
-}
 
-uint32_t twist_count;
-static void chassis_twist_handle(void)
-{
-  static int16_t twist_period = TWIST_PERIOD/CHASSIS_PERIOD;
-  static int16_t twist_angle  = TWIST_ANGLE;
-  twist_count++;
-  chassis.position_ref = twist_angle*sin(2*PI/twist_period*twist_count);
-  chassis.vw = pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle, chassis.position_ref);
-}
-void open_loop_handle(void)
-{
-  chassis.vy = rm.vy * CHASSIS_RC_MOVE_RATIO_Y + km.vy * CHASSIS_KB_MOVE_RATIO_Y;
-  chassis.vx = rm.vx * CHASSIS_RC_MOVE_RATIO_X + km.vx * CHASSIS_KB_MOVE_RATIO_X;
-  chassis.vw = rm.vw * CHASSIS_RC_MOVE_RATIO_R;
-}
-void follow_gimbal_handle(void)
-{
-  chassis.position_ref = 0;
+
+
+
+void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
+	
+	ptr->last_ecd = ptr->ecd;
+  ptr->ecd      = (uint16_t)(hcan->pRxMsg->Data[0] << 8 | hcan->pRxMsg->Data[1]);
   
-  chassis.vy = rm.vy * CHASSIS_RC_MOVE_RATIO_Y + km.vy * CHASSIS_KB_MOVE_RATIO_Y;
-  chassis.vx = rm.vx * CHASSIS_RC_MOVE_RATIO_X + km.vx * CHASSIS_KB_MOVE_RATIO_X;
-  
-  if (chassis.follow_gimbal)
-    chassis.vw = pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle, chassis.position_ref);
+  if (ptr->ecd - ptr->last_ecd > 4096)
+  {
+    ptr->round_cnt--;
+    ptr->ecd_raw_rate = ptr->ecd - ptr->last_ecd - 8192;
+  }
+  else if (ptr->ecd - ptr->last_ecd < -4096)
+  {
+    ptr->round_cnt++;
+    ptr->ecd_raw_rate = ptr->ecd - ptr->last_ecd + 8192;
+  }
   else
-    chassis.vw = 0;
-  
-//  if ((gim.ctrl_mode == GIMBAL_FOLLOW_ZGYRO)
-//   || ((gim.ctrl_mode == GIMBAL_NO_ARTI_INPUT) && (gim.input.no_action_flag == 1)))
-//     chassis.vw = pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle, 0); 
-//  else
-//    chassis.vw = 0;
+  {
+    ptr->ecd_raw_rate = ptr->ecd - ptr->last_ecd;
+  }
 
+  ptr->total_ecd = ptr->round_cnt * 8192 + ptr->ecd - ptr->offset_ecd;
+  /* total angle, unit is degree */
+  ptr->total_angle = ptr->total_ecd / ENCODER_ANGLE_RATIO;
+  
+
+  ptr->speed_rpm     = (int16_t)(hcan->pRxMsg->Data[2] << 8 | hcan->pRxMsg->Data[3]);
+  ptr->given_current = (int16_t)(hcan->pRxMsg->Data[4] << 8 | hcan->pRxMsg->Data[5]);
+	
+	#if 0
+	static int cnt=1;
+	cnt++;
+	//printf("cnt=%d\n\r",cnt);
+	if(cnt%1000==0)
+	{
+		int16_t degree=(hcan->pRxMsg->Data[0]<<8)+hcan->pRxMsg->Data[1];
+		int16_t rpm_speed=(hcan->pRxMsg->Data[2]<<8)+hcan->pRxMsg->Data[3];
+		int16_t Torque_current=(hcan->pRxMsg->Data[4]<<8)+hcan->pRxMsg->Data[5];
+		int16_t temperature=(hcan->pRxMsg->Data[4]<<8)+hcan->pRxMsg->Data[5];
+		printf("Motor %d Msg recieved in time %d cnt=%d",motor_ID,HAL_GetTick(),cnt);
+		printf("degree: %d rpm_speed %d Torque_current %d temperature %d \r\n",
+						degree,rpm_speed,Torque_current,temperature);
+		
+	}
+	#endif
+	
+}
+
+
+
+/*–≠“È∂®“Â£∫
+* ch0 ”““°∏À 364-1024-1684 ◊Û->”“
+* ch1 ”““°∏À 364-1024-1684 œ¬->…œ
+*	ch2 ◊Û“°∏À 364-1024-1684 ◊Û->”“
+* ch3 ◊Û“°∏À 364-1024-1684 œ¬->…œ
+*  s1 left  switch  …œ-÷–-œ¬  1-3-2
+*  s2 right ... 
+*/
+
+void test_motor(void)
+{
+	
+}
+
+void print_encoder(moto_measure_t* ptr){
+	printf("speed_rpm:%d  current:%d \r\n",ptr->speed_rpm,
+  ptr->given_current);
+}
+
+int is_Motor_Reversed(int i){ // some of the motor is reversed due to symmetric
+	
+	switch (i)
+	{
+		case 0:
+		case 3:
+			return 1;
+		case 1:
+		case 2:
+			return -1;
+		default:
+			return 0;
+	}
+}
+
+uint8_t chassis_is_controllable(void){
+  if (chassis.ctrl_mode == CHASSIS_RELAX 
+   || g_err.list[REMOTE_CTRL_OFFLINE].err_exist)
+    return 0;
+  else
+    return 1;
 }
 
 /**
   * @brief mecanum chassis velocity decomposition
-  * @param input : ‚Üë=+vx(mm/s)  ‚Üê=+vy(mm/s)  ccw=+vw(deg/s)
+  * @param input : forward=+vx(mm/s)  leftward =+vy(mm/s)  couter-clockwise=+vw(deg/s)
   *        output: every wheel speed(rpm)
   * @note  1=FR 2=FL 3=BL 4=BR
   */
-int rotation_center_gimbal = 0;
-void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
-{
-  static float rotate_ratio_fr;
-  static float rotate_ratio_fl;
-  static float rotate_ratio_bl;
-  static float rotate_ratio_br;
-  static float wheel_rpm_ratio;
-  
-  taskENTER_CRITICAL();
-  if (rotation_center_gimbal)
-  {
-    rotate_ratio_fr = ((glb_struct.wheel_base+glb_struct.wheel_track)/2.0f \
-                        - glb_struct.gimbal_x_offset + glb_struct.gimbal_y_offset)/RADIAN_COEF;
-    rotate_ratio_fl = ((glb_struct.wheel_base+glb_struct.wheel_track)/2.0f \
-                        - glb_struct.gimbal_x_offset - glb_struct.gimbal_y_offset)/RADIAN_COEF;
-    rotate_ratio_bl = ((glb_struct.wheel_base+glb_struct.wheel_track)/2.0f \
-                        + glb_struct.gimbal_x_offset - glb_struct.gimbal_y_offset)/RADIAN_COEF;
-    rotate_ratio_br = ((glb_struct.wheel_base+glb_struct.wheel_track)/2.0f \
-                        + glb_struct.gimbal_x_offset + glb_struct.gimbal_y_offset)/RADIAN_COEF;
-  }
-  else
-  {
-    rotate_ratio_fr = ((glb_struct.wheel_base+glb_struct.wheel_track)/2.0f)/RADIAN_COEF;
-    rotate_ratio_fl = rotate_ratio_fr;
-    rotate_ratio_bl = rotate_ratio_fr;
-    rotate_ratio_br = rotate_ratio_fr;
-  }
-  wheel_rpm_ratio = 60.0f/(glb_struct.wheel_perimeter*CHASSIS_DECELE_RATIO);
-  taskEXIT_CRITICAL();
+void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
+  static float rotate_ratio_fr=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_fl=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_bl=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_br=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float wheel_rpm_ratio = 60.0f/(PERIMETER*CHASSIS_DECELE_RATIO);
   
   
   VAL_LIMIT(vx, -MAX_CHASSIS_VX_SPEED, MAX_CHASSIS_VX_SPEED);  //mm/s
@@ -246,69 +179,8 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
 
 
 
-/**
-  * @brief  nitialize chassis motor pid parameter
-  * @usage  before chassis loop use this function
-  */
-void chassis_param_init(void)
-{
-  memset(&chassis, 0, sizeof(chassis_t));
-  
-  chassis.ctrl_mode      = CHASSIS_STOP;
-  chassis.last_ctrl_mode = CHASSIS_RELAX;
-  
-#ifdef CHASSIS_EC60
-  for (int k = 0; k < 4; k++)
-  {
-    PID_struct_init(&pid_spd[k], POSITION_PID, 10000, 2000, 25, 0.1, 0);
-  }
-#else
-  for (int k = 0; k < 4; k++)
-  {
-    PID_struct_init(&pid_spd[k], POSITION_PID, 10000, 1000, 3.0f, 0, 0);
-  }
-#endif
-  
-  PID_struct_init(&pid_chassis_angle, POSITION_PID, MAX_CHASSIS_VR_SPEED, 50, 14.0f, 0.0f, 50.0f);
-  
-  glb_struct.chassis_config = NO_CONFIG;
-  glb_struct.gimbal_config  = NO_CONFIG;
-  
-  memset(&pc_rece_mesg.structure_data, 0, sizeof(pc_rece_mesg.structure_data));
+void chasis_remote_handle(void){
+	chassis.vx =  remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // forward-backward 
+	chassis.vy = remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; // left-right
+  chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
 }
-
-#if 0
-int32_t total_cur_limit;
-int32_t total_cur;
-void power_limit_handle(void)
-{
-  if (g_err.list[JUDGE_SYS_OFFLINE].err_exist)
-  {
-    //judge system offline, mandatory limit current
-    total_cur_limit = 8000;
-  }
-  else
-  {
-    if (judge_rece_mesg.game_information.remain_power < WARNING_ENERGY)
-      total_cur_limit = ((judge_rece_mesg.game_information.remain_power * \
-                          judge_rece_mesg.game_information.remain_power)/ \
-                          (WARNING_ENERGY*WARNING_ENERGY)) * 40000;
-    else
-      total_cur_limit = 40000;
-  }
-  
-  total_cur = abs(chassis.current[0]) + abs(chassis.current[1]) + \
-              abs(chassis.current[2]) + abs(chassis.current[3]);
-  
-  if (total_cur > total_cur_limit)
-  {
-    chassis.current[0] = chassis.current[0] / total_cur * total_cur_limit;
-    chassis.current[1] = chassis.current[1] / total_cur * total_cur_limit;
-    chassis.current[2] = chassis.current[2] / total_cur * total_cur_limit;
-    chassis.current[3] = chassis.current[3] / total_cur * total_cur_limit;
-  }
-
-}
-#endif
-
-

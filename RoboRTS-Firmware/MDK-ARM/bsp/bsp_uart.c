@@ -29,11 +29,11 @@
 #include "detect_task.h"
 #include "judgement_info.h"
 #include "infantry_info.h"
-#include "info_interactive.h"
+
 #include "sys_config.h"
 #include "usart.h"
 #include "cmsis_os.h"
-#include "communicate.h"
+
 
 /* dma double buffer */
 uint8_t judge_dma_rxbuff[2][UART_RX_DMA_SIZE];
@@ -59,7 +59,7 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
     //uint32_t status = taskENTER_CRITICAL_FROM_ISR();
     if ((DBUS_MAX_LEN - dma_current_data_counter(huart->hdmarx->Instance)) == DBUS_BUFLEN)
     {
-      rc_callback_handle(&rc, dbus_buf);
+      RemoteDataPrcess(RemoteData);
       err_detector_hook(REMOTE_CTRL_OFFLINE);
     }
     //taskEXIT_CRITICAL_FROM_ISR(status);
@@ -71,7 +71,7 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
   }
   else if ((huart == &JUDGE_HUART) || (huart == &COMPUTER_HUART))
   {
-    uart_idle_interrupt_signal(huart);
+    //uart_idle_interrupt_signal(huart);
     
   }
   else
@@ -150,14 +150,14 @@ static int UART_Receive_DMA_No_IT(UART_HandleTypeDef* huart, uint8_t* pData, uin
 //if((hdma->Instance->CR & DMA_SxCR_CT) == RESET)
 static void dma_m1_rxcplt_callback(DMA_HandleTypeDef *hdma)
 {
-  UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  uart_dma_full_signal(huart);
+  //UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+  //uart_dma_full_signal(huart);
 }
 /* Current memory buffer used is Memory 1 */
 static void dma_m0_rxcplt_callback(DMA_HandleTypeDef *hdma)
 {
-  UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  uart_dma_full_signal(huart);
+  //UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+  //uart_dma_full_signal(huart);
 }
 static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \
                                                    uint32_t SrcAddress, \
@@ -241,14 +241,7 @@ static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \
 /**
   * @brief   initialize uart device 
   */
-void dbus_uart_init(void)
-{
-  //open uart idle it
-  __HAL_UART_CLEAR_IDLEFLAG(&DBUS_HUART);
-  __HAL_UART_ENABLE_IT(&DBUS_HUART, UART_IT_IDLE);
 
-  UART_Receive_DMA_No_IT(&DBUS_HUART, dbus_buf, DBUS_MAX_LEN);
-}
 void judgement_uart_init(void)
 {
   //open uart idle it
@@ -265,8 +258,9 @@ void judgement_uart_init(void)
                            UART_RX_DMA_SIZE);
   
 }
-void computer_uart_init(void)
-{
+
+#if 0
+void computer_uart_init(void){
   //open uart idle it
   __HAL_UART_CLEAR_IDLEFLAG(&COMPUTER_HUART);
   __HAL_UART_ENABLE_IT(&COMPUTER_HUART, UART_IT_IDLE);
@@ -280,7 +274,7 @@ void computer_uart_init(void)
                            (uint32_t)pc_dma_rxbuff[1], \
                            UART_RX_DMA_SIZE);
 }
-
+#endif
 /**
   * @brief  Rx Transfer completed callback
   * @param  huart: UART handle
@@ -289,7 +283,7 @@ void computer_uart_init(void)
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  uart_read_completed_signal(huart);
+  //uart_read_completed_signal(huart);
 }
 
 /**
@@ -300,7 +294,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-  uart_write_completed_signal(huart);
+  //uart_write_completed_signal(huart);
 }
 
 /**

@@ -7,8 +7,8 @@
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty ofÂ 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
@@ -26,7 +26,6 @@
 
 #include "detect_task.h"
 #include "cmsis_os.h"
-#include "led.h"
 #include "sys_config.h"
 
 UBaseType_t detect_stack_surplus;
@@ -157,17 +156,17 @@ void detect_task(void const *argu)
 		//g_err.err_now=NULL;
     if (g_err.err_now != NULL)
     {
-      //LED_G_OFF;
+      LED_G_OFF;
       module_offline_callback();
     }
     else
     {
       g_err.beep_ctrl = 0;
-      //LED_G_ON;
+      LED_G_ON;
     }
     
-    BEEP_TUNE = g_err.beep_tune;
-    BEEP_CTRL = 0;//g_err.beep_ctrl;
+    //BEEP_TUNE = g_err.beep_tune;
+    //BEEP_CTRL = 0;//g_err.beep_ctrl;
     
     detect_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     
@@ -308,5 +307,6 @@ static void module_offline_callback(void)
     }break;
   }
 }
+
 
 

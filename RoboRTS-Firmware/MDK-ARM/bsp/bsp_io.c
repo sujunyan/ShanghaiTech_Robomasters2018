@@ -43,7 +43,7 @@ uint8_t get_trigger_key_state(void)
   return HAL_GPIO_ReadPin(TRIG_GPIO_Port, TRIG_Pin);
 }
 
-
+/*
 void turn_on_friction_wheel(uint16_t spd)
 {
   LEFT_FRICTION  = spd;
@@ -55,11 +55,12 @@ void turn_off_friction_wheel(void)
   LEFT_FRICTION  = 1000;
   RIGHT_FIRCTION = 1000;
 }
-
+*/
 void mpu_heat_ctrl(uint16_t pwm_pulse)
 {
   IMU_PWM_PULSE = pwm_pulse;
 }
+
 
 void pwm_device_init(void)
 {

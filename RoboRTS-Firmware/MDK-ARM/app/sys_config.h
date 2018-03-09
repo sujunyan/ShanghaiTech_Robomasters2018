@@ -1,28 +1,16 @@
-/****************************************************************************
- *  Copyright (C) 2018 RoboMaster.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- ***************************************************************************/
 
-#ifndef __SYS_H__
-#define __SYS_H__
+#ifndef __SYS_CONFIG__
+#define __SYS_CONFIG__
 
-#include "stm32f4xx_hal.h"
+#include "freeRTOS.h"
+#include "stdlib.h"
+#include "cmsis_os.h"
+#include "RemoteTask.h"
+#include "Serial_Debug.h"
+#include "detect_task.h"
 
-/**********************remote control setting***************************/
-/* normalized remote controller proportion */
-#define RC_RESOLUTION     660.0f
+#define DEFAULT_TUNE  300
+#define RC_RESOLUTION 660.0f
 
 /*************************chassis setting*******************************/
 /* remote mode chassis move speed limit */
@@ -45,46 +33,18 @@
 #define CHASSIS_KB_MAX_SPEED_Y  3300.0f
 #define CHASSIS_KB_MOVE_RATIO_Y 1.0f
 
-/**************************gimbal setting*******************************/
-/* remote mode gimbal speed limit */
-/* pitch axis speed */
-#define GIMBAL_RC_MOVE_RATIO_PIT 1.0f
-/* yaw axis speed */
-#define GIMBAL_RC_MOVE_RATIO_YAW 1.0f
-
-/* keyboard mode gimbal speed limit */
-/* pitch axis speed */
-#define GIMBAL_PC_MOVE_RATIO_PIT 1.0f
-/* yaw axis speed */
-#define GIMBAL_PC_MOVE_RATIO_YAW 1.0f
-
-/**************************shot  setting********************************/
-/* shot speed */
-#define DEFAULT_FRIC_WHEEL_SPEED 1150 //maximum value is 2500
-/* shot frequence */
-#define TRIGGER_MOTOR_SPEED      2000 
-
-
-
 /************************ chassis parameter ****************************/
-/* the radius of wheel(mm) */
-#define RADIUS     76
-/* the perimeter of wheel(mm) */
-#define PERIMETER  478
 
-/* wheel track distance(mm) */
-#define WHEELTRACK 403
-/* wheelbase distance(mm) */
-#define WHEELBASE  385
-
-/* gimbal is relative to chassis center x axis offset(mm) */
-#define GIMBAL_X_OFFSET 150
-/* gimbal is relative to chassis center y axis offset(mm) */
-#define GIMBAL_Y_OFFSET 0
+#define RADIUS     76  // the radius of wheel(mm)
+#define PERIMETER  478 //the perimeter of wheel(mm)
+#define WHEELTRACK 403  // wheel track distance(mm)
+#define WHEELBASE  385 // wheelbase distance(mm)
+#define GIMBAL_X_OFFSET 150 // gimbal is relative to chassis center x axis offset(mm) 
+#define GIMBAL_Y_OFFSET 0 /* gimbal is relative to chassis center y axis offset(mm) */
 
 /* chassis motor use 3508 default */
 /* define CHASSIS_EC60 to use EC60 */
-#define CHASSIS_EC60
+//#define CHASSIS_EC60
 
 #ifdef CHASSIS_EC60
   /* chassis motor use EC60 */
@@ -104,34 +64,30 @@
   /* single 3508 motor maximum speed, unit is rpm */
   #define MAX_WHEEL_RPM        8500  //8347rpm = 3500mm/s
   /* chassis maximum translation speed, unit is mm/s */
-  #define MAX_CHASSIS_VX_SPEED 3300  //8000rpm
-  #define MAX_CHASSIS_VY_SPEED 3300
+  #define MAX_CHASSIS_VX_SPEED 2000  //8000rpm
+  #define MAX_CHASSIS_VY_SPEED 2000
   /* chassis maximum rotation speed, unit is degree/s */
   #define MAX_CHASSIS_VR_SPEED 300   //5000rpm
 #endif
 
-/************************** gimbal parameter *****************************/
-/* the ratio of motor encoder value translate to degree */
-#define ENCODER_ANGLE_RATIO    (8192.0f/360.0f)
-/* the deceleration ratio of pitch axis motor */
-#define PIT_DECELE_RATIO       1.0f
-/* the deceleration ratio of yaw axis motor */
-#define YAW_DECELE_RATIO       1.0f    //(5.0f/8.0f)
-/* the positive direction of pitch axis motor */
-#define PIT_MOTO_POSITIVE_DIR  1.0f
-/* the positive direction of yaw axis motor */
-#define YAW_MOTO_POSITIVE_DIR  1.0f
-/* the positive direction of tirgger motor */
-#define TRI_MOTO_POSITIVE_DIR  1.0f
+/**************************gimbal setting*******************************/
+/* remote mode gimbal speed limit */
+/* pitch axis speed */
+#define GIMBAL_RC_MOVE_RATIO_PIT 1.0f
+/* yaw axis speed */
+#define GIMBAL_RC_MOVE_RATIO_YAW 1.0f
+
+/* keyboard mode gimbal speed limit */
+/* pitch axis speed */
+#define GIMBAL_PC_MOVE_RATIO_PIT 1.0f
+/* yaw axis speed */
+#define GIMBAL_PC_MOVE_RATIO_YAW 1.0f
 
 
-
-
-/***********************system interface setting****************************/
-
-/* automatic navigation interface */
-//#define AUTO_NAVIGATION
-
+#define PC_HUART huart6
+#define DBUS_HUART         huart1 //for dji remote controler reciever
+#define JUDGE_HUART        huart3 //connected to judge system
+#define COMPUTER_HUART     huart6 //connected to manifold/TXone
 /* can relevant */
 #define CHASSIS_CAN       hcan1
 #define ZGYRO_CAN         hcan2
@@ -140,45 +96,10 @@
 #define TRIGGER_CAN       hcan1
 
 
-/* uart relevant */
-/**
-  * @attention
-  * close usart DMA receive interrupt, so need add 
-  * uart_receive_handler() before HAL_UART_IROHandler() in uart interrupt function
-*/
-#define DBUS_HUART         huart1 //for dji remote controler reciever
-#define JUDGE_HUART        huart3 //connected to judge system
-#define COMPUTER_HUART     huart6 //connected to manifold/TXone
+/***** math relevant ***************************************/
 
 
-/* gimbal relevant */
-#define GIMBAL_CASCADE_CTRL
-#define PIT_ANGLE_MAX        15
-#define PIT_ANGLE_MIN        -20
-#define YAW_ANGLE_MAX        50
-#define YAW_ANGLE_MIN        -50
-
-#define LEFT_FRICTION        TIM1->CCR1
-#define RIGHT_FIRCTION       TIM1->CCR4
-
-/* detect task relevant */
-#define BEEP_ERR
-#ifdef BEEP_ERR
-  #define BEEP_TUNE TIM3->ARR
-  #define BEEP_CTRL TIM3->CCR1
-#endif
-
-#define DEFAULT_TUNE  300
-
-/* imu temperature control */
-#define IMU_PWM_PULSE      TIM3->CCR2
-#define DEFAULT_IMU_TEMP   50
-
-/* math relevant */
-
-/* radian coefficient */
-#define RADIAN_COEF 57.3f
-/* circumference ratio */
+#define RADIAN_COEF 57.3f // radian coefficient 180/PI
 #define PI          3.142f
 
 #define VAL_LIMIT(val, min, max) \
@@ -193,4 +114,25 @@ else if((val) >= (max))\
 }\
 } while(0)\
 
+
 #endif
+
+/* imu temperature control *******************************************/
+#define IMU_PWM_PULSE      TIM3->CCR2
+#define DEFAULT_IMU_TEMP   50
+
+
+/* communication task macros ******************************************/
+#define JUDGE_UART_TX_SIGNAL   ( 1 << 0 )
+#define JUDGE_UART_IDLE_SIGNAL ( 1 << 1 )
+#define JUDGE_DMA_FULL_SIGNAL  ( 1 << 2 )
+
+#define PC_UART_TX_SIGNAL      ( 1 << 3 )
+#define PC_UART_IDLE_SIGNAL    ( 1 << 4 )
+#define PC_DMA_FULL_SIGNAL     ( 1 << 5 )
+
+#define GIMBAL_MOTOR_MSG_SEND  ( 1 << 6 )
+#define CHASSIS_MOTOR_MSG_SEND ( 1 << 7 )
+
+#define SHOT_TASK_EXE_SIGNAL   ( 1 << 8 )
+#define INFO_GET_EXE_SIGNAL    ( 1 << 9 )

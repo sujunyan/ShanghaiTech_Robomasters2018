@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * File Name          : main.hpp
+  * File Name          : main.h
   * Description        : This file contains the common defines of the application
   ******************************************************************************
   * This notice applies to any and all portions of this file
@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -50,41 +50,8 @@
 #define __MAIN_H
   /* Includes ------------------------------------------------------------------*/
 
-/* Includes ------------------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-  /*
-#include "can.h"
-#include "dma.h"
-#include "RemoteTask.h"
-#include "gpio.h"
-#include "SEGGER_RTT.h"
-#include "SEGGER_RTT_Conf.h"
-#include "spi.h"
-#include "stm32f4xx_hal_conf.h"
-#include "stm32f4xx_it.h"
-#include "tim.h"
-#include "usart.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
-#include "usbd_conf.h"
-#include "usbd_desc.h"
-#include "common.h"
-#include "fifo.h"
-#include "LostCounter.h"
-#include "pid_regulator.h"
-#include "ramp.h"
-#include "IST8310_reg.h"
-#include "mpu6500_reg.h"
-#include "Serial_Debug.h"
-#include "test_beep.h"
-#include "test_can.h"
-#include "test_imu.h"
-#include "test_led.h"
-#include "test_motor.h"
-#include "test_uart.h"
-#include "test_usb.h"
-#include "test_app.h"
-*/
+
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
@@ -93,35 +60,36 @@
 #define IST_INT_GPIO_Port GPIOE
 #define IST_RST_Pin GPIO_PIN_2
 #define IST_RST_GPIO_Port GPIOE
+#define MPU_INT_Pin GPIO_PIN_1
+#define MPU_INT_GPIO_Port GPIOE
+#define IMU_TEMP_Pin GPIO_PIN_5
+#define IMU_TEMP_GPIO_Port GPIOB
 #define LASER_Pin GPIO_PIN_13
 #define LASER_GPIO_Port GPIOG
+#define BEEP_Pin GPIO_PIN_4
+#define BEEP_GPIO_Port GPIOB
+#define TRIG_Pin GPIO_PIN_9
+#define TRIG_GPIO_Port GPIOI
+#define SPI5_NSS_Pin GPIO_PIN_6
+#define SPI5_NSS_GPIO_Port GPIOF
+#define CALI_Pin GPIO_PIN_10
+#define CALI_GPIO_Port GPIOF
 #define KEY_Pin GPIO_PIN_10
 #define KEY_GPIO_Port GPIOD
-#define LED_GREEN_Pin GPIO_PIN_14
-#define LED_GREEN_GPIO_Port GPIOF
-#define LED_RED_Pin GPIO_PIN_7
-#define LED_RED_GPIO_Port GPIOE
-
-/* ########################## Assert Selection ############################## */
-/**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
-  *        HAL drivers code
-  */
-/* #define USE_FULL_ASSERT    1U */
+#define LED1_Pin GPIO_PIN_14
+#define LED1_GPIO_Port GPIOF
+#define LED2_Pin GPIO_PIN_7
+#define LED2_GPIO_Port GPIOE
+#define SD_EXTI_Pin GPIO_PIN_15
+#define SD_EXTI_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-#ifdef __cplusplus
- extern "C" {
-#endif
 void _Error_Handler(char *, int);
 
 #define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-#ifdef __cplusplus
-}
-#endif
 
 /**
   * @}

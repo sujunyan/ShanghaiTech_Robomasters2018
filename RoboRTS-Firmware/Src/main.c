@@ -63,14 +63,11 @@
 #include "bsp_can.h"
 #include "bsp_uart.h"
 #include "calibrate.h"
-#include "comm_task.h"
-#include "gimbal_task.h"
-#include "shoot_task.h"
 #include "chassis_task.h"
 #include "detect_task.h"
-#include "imu_task.h"
 #include "bsp_imu.h"
 #include "bsp_io.h"
+#include "init.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -117,34 +114,16 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_SDIO_SD_Init();
-  MX_CAN1_Init();
-  MX_RTC_Init();
-  MX_SPI5_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
-  MX_CAN2_Init();
-  MX_TIM4_Init();
-  MX_TIM5_Init();
-  MX_TIM8_Init();
-  MX_TIM12_Init();
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_USART6_UART_Init();
-  MX_TIM1_Init();
+	sys_init();
 
   /* USER CODE BEGIN 2 */
   //software parameter initialize
-  gimbal_param_init();
-  shot_param_init();
-  chassis_param_init();
-  detector_param_init();
-  communicate_param_init();
-  imu_param_init();
-  cali_param_init();
+	pram_init();
+	
+  //communicate_param_init();
+  //imu_param_init();
+  //cali_param_init();
+	
   //hardware device initialize
   pwm_device_init();
   mpu_device_init();

@@ -156,13 +156,13 @@ void detect_task(void const *argu)
 		//g_err.err_now=NULL;
     if (g_err.err_now != NULL)
     {
-      //LED_G_OFF;
+      LED_G_OFF;
       module_offline_callback();
     }
     else
     {
       g_err.beep_ctrl = 0;
-      //LED_G_ON;
+      LED_G_ON;
     }
     
     //BEEP_TUNE = g_err.beep_tune;

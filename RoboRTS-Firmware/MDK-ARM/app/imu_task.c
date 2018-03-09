@@ -25,7 +25,7 @@
  */
   
 #include "imu_task.h"
-#include "gimbal_task.h"
+
 #include "cmsis_os.h"
 #include "bsp_imu.h"
 #include "pid.h"
@@ -55,8 +55,7 @@ static volatile float gx, gy, gz, ax, ay, az, mx, my, mz;   //
   * @param[in] input:x
   * @retval    1/Sqrt(x)
   */
-float invSqrt(float x)
-{
+float invSqrt(float x){
   float halfx = 0.5f * x;
   float y = x;
   long i = *(long*)&y;
@@ -68,8 +67,7 @@ float invSqrt(float x)
 
 #define BOARD_DOWN 1   //
 
-static void init_quaternion(void)
-{
+static void init_quaternion(void){
   int16_t hx, hy;
   float temp;
 
@@ -323,9 +321,8 @@ static void imu_AHRS_update(void)
   q3 = tempq3 * norm;
 
 }
-
-static void imu_attitude_update(void)
-{
+#if 1
+static void imu_attitude_update(void){
   imu.rol =  atan2(2*q2*q3 + 2*q0*q1, -2*q1*q1 - 2*q2*q2 + 1)* 57.3; // roll       -pi----pi
   imu.pit = -asin(-2*q1*q3 + 2*q0*q2)* 57.3;                         // pitch    -pi/2----pi/2 
   imu.yaw =  atan2(2*q1*q2 + 2*q0*q3, -2*q2*q2 - 2*q3*q3 + 1)* 57.3; // yaw        -pi----pi
@@ -342,9 +339,9 @@ static void imu_attitude_update(void)
   atti.pitch = imu.pit;
   atti.roll  = imu.rol;
   
-  gim.sensor.gyro_angle = atti.yaw;
+  //gim.sensor.gyro_angle = atti.yaw;
 }
-
+#endif
 void imu_param_init(void)
 {
   init_quaternion();
@@ -382,9 +379,10 @@ void imu_temp_ctrl_init(void)
                   10, 1, 0);
 }
 
-void imu_temp_keep(void)
-{
+#if 1
+void imu_temp_keep(void){
   imu.temp_ref = DEFAULT_IMU_TEMP;
   pid_calc(&pid_imu_tmp, imu.temp, imu.temp_ref);
   mpu_heat_ctrl(pid_imu_tmp.out);
 }
+#endif

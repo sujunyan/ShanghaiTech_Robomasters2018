@@ -23,12 +23,15 @@
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
- 
+
+// TODO 
+
+
 #ifndef __KEY_BOARD_H__
 #define __KEY_BOARD_H__
 
 #include "stm32f4xx_hal.h"
-#include "shoot_task.h"
+//#include "shoot_task.h"
 
 /* control key definition */
 //      direction  key

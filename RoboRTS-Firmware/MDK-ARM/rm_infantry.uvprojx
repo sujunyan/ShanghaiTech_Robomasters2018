@@ -336,7 +336,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;    ../Middlewares/Third_Party/FatFs/src/drivers;    ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;    ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;    ../Middlewares/Third_Party/FatFs/src;    ../Middlewares/Third_Party/FreeRTOS/Source/include;    ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;    ../Drivers/CMSIS/Include;    .\app;    .\bsp;    .\rmlib;    .\other_lib</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FatFs/src/drivers;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Middlewares/Third_Party/FatFs/src;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Drivers/CMSIS/Include;.\app;.\bsp;.\rmlib;.\other_lib;..\MDK-ARM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -378,7 +378,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Middlewares/FatFs</GroupName>
+          <GroupName>FatFs</GroupName>
           <Files>
             <File>
               <FileName>diskio.c</FileName>
@@ -413,7 +413,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/CMSIS</GroupName>
+          <GroupName>CMSIS</GroupName>
           <Files>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
@@ -433,7 +433,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/STM32F4xx_HAL_Driver</GroupName>
+          <GroupName>STM32F4xx_HAL_Driver</GroupName>
           <Files>
             <File>
               <FileName>stm32f4xx_hal_dma_ex.c</FileName>
@@ -543,6 +543,61 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Library</GroupName>
+          <Files>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>fatfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/fatfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_timebase_TIM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/stm32f4xx_hal_timebase_TIM.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/sdio.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_driver_sd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/bsp_driver_sd.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/gpio.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>FreeRTOS</GroupName>
           <Files>
             <File>
@@ -593,47 +648,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>User</GroupName>
+          <GroupName>main</GroupName>
           <Files>
-            <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_driver_sd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/bsp_driver_sd.c</FilePath>
-            </File>
-            <File>
-              <FileName>dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/tim.c</FilePath>
-            </File>
             <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/usart.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_hal_msp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/sdio.c</FilePath>
             </File>
             <File>
               <FileName>freertos.c</FileName>
@@ -651,30 +676,30 @@
               <FilePath>../Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_hal_timebase_TIM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/stm32f4xx_hal_timebase_TIM.c</FilePath>
+              <FileName>sys_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app\sys_config.h</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
+              <FileName>test.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/rtc.c</FilePath>
+              <FilePath>.\app\test.c</FilePath>
             </File>
             <File>
-              <FileName>spi.c</FileName>
+              <FileName>init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>fatfs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/fatfs.c</FilePath>
+              <FilePath>.\app\init.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>UserBsp</GroupName>
           <Files>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_io.c</FilePath>
+            </File>
             <File>
               <FileName>bsp_can.c</FileName>
               <FileType>1</FileType>
@@ -703,116 +728,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Interactive</GroupName>
-          <Files>
-            <File>
-              <FileName>info_interactive.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\info_interactive.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_io.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\bsp\bsp_io.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>ControlTask</GroupName>
-          <Files>
-            <File>
-              <FileName>gimbal_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\gimbal_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>shoot_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\shoot_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>chassis_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\chassis_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\app\sys_config.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>ModeSw</GroupName>
-          <Files>
-            <File>
-              <FileName>modeswitch_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\modeswitch_task.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>AppInfo</GroupName>
-          <Files>
-            <File>
-              <FileName>info_get_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\info_get_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>imu_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\imu_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>detect_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\detect_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>record_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\record_task.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Communication</GroupName>
-          <Files>
-            <File>
-              <FileName>comm_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\comm_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>communicate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\communicate.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Protocol</GroupName>
-          <Files>
-            <File>
-              <FileName>infantry_info.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\infantry_info.c</FilePath>
-            </File>
-            <File>
-              <FileName>judgement_info.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\judgement_info.c</FilePath>
-            </File>
-            <File>
-              <FileName>protocol.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\protocol.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>RmLib</GroupName>
           <Files>
             <File>
@@ -836,11 +751,6 @@
               <FilePath>.\rmlib\keyboard.c</FilePath>
             </File>
             <File>
-              <FileName>remote_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\remote_ctrl.c</FilePath>
-            </File>
-            <File>
               <FileName>data_fifo.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\other_lib\data_fifo.c</FilePath>
@@ -858,17 +768,47 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>SerialDebug</GroupName>
+          <GroupName>Debug</GroupName>
           <Files>
             <File>
-              <FileName>serial_debug.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\app\serial_debug.h</FilePath>
+              <FileName>detect_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\detect_task.c</FilePath>
             </File>
             <File>
-              <FileName>serial_debug.c</FileName>
+              <FileName>Serial_Debug.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\app\serial_debug.c</FilePath>
+              <FilePath>.\app\Serial_Debug.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ControlTask</GroupName>
+          <Files>
+            <File>
+              <FileName>chassis_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\chassis_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>RemoteTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\RemoteTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\imu_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>can_send_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\can_send_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>can_send_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\can_send_task.h</FilePath>
             </File>
           </Files>
         </Group>

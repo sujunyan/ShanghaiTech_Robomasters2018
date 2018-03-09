@@ -23,6 +23,7 @@
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
+#if 0 
  
 #include "keyboard.h"
 #include "bsp_uart.h"
@@ -282,3 +283,6 @@ void keyboard_shoot_hook(void)
   //single or continuous trigger bullet control
   kb_shoot_cmd(KB_SINGLE_SHOOT, KB_CONTINUE_SHOOT);
 }
+
+
+#endif

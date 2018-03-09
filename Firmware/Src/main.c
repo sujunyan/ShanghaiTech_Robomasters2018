@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -45,36 +45,36 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
+#include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
+#include "fatfs.h"
+#include "rtc.h"
+#include "sdio.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb_device.h"
 #include "gpio.h"
 
-#include "freeRTOS.h"
-#include "cmsis_os.h"
-
 /* USER CODE BEGIN Includes */
-#include "test_imu.h"
-#include "test_app.h"
-#include "test_can.h"
-#include "test_uart.h"
-#include "Serial_Debug.h"
-#include "RemoteTask.h"
-#include "test_motor.h"
-#include "init.h"
-
+#include "bsp_can.h"
+#include "bsp_uart.h"
+#include "calibrate.h"
+#include "comm_task.h"
+#include "gimbal_task.h"
+#include "shoot_task.h"
+#include "chassis_task.h"
+#include "detect_task.h"
+#include "imu_task.h"
+#include "bsp_imu.h"
+#include "bsp_io.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
-void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -82,6 +82,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -116,36 +117,62 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-	sys_init();
- 
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_SDIO_SD_Init();
+  MX_CAN1_Init();
+  MX_RTC_Init();
+  MX_SPI5_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_CAN2_Init();
+  MX_TIM4_Init();
+  MX_TIM5_Init();
+  MX_TIM8_Init();
+  MX_TIM12_Init();
+  MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
+  MX_USART6_UART_Init();
+  MX_TIM1_Init();
+
   /* USER CODE BEGIN 2 */
-  MPU6500_Init();
-  HAL_TIM_Base_Start_IT(&htim6);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-	dbus_uart_init();
+  //software parameter initialize
+  gimbal_param_init();
+  shot_param_init();
+  chassis_param_init();
+  detector_param_init();
+  communicate_param_init();
+  imu_param_init();
+  cali_param_init();
+  //hardware device initialize
+  pwm_device_init();
+  mpu_device_init();
   can_device_init();
-	
-  HAL_CAN_Receive_IT(&hcan1, CAN_FIFO0);
-  HAL_CAN_Receive_IT(&hcan2, CAN_FIFO0);
-	
-	pram_init();
+  //gyro_device_init();
+  
+  
+  can_receive_start();
+  dbus_uart_init();
+
   /* USER CODE END 2 */
-	
-	MX_FREERTOS_Init();
-	osKernelStart();
-	
-	
-	// We will NEVER reach here
+
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+  
+  /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	
   while (1)
   {
   /* USER CODE END WHILE */
-		
-		
+
   /* USER CODE BEGIN 3 */
-  
+
   }
   /* USER CODE END 3 */
 
@@ -158,6 +185,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
     /**Configure the main internal regulator output voltage 
     */
@@ -167,15 +195,23 @@ void SystemClock_Config(void)
 
     /**Initializes the CPU, AHB and APB busses clocks 
     */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 12;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLM = 6;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
+  RCC_OscInitStruct.PLL.PLLQ = 8;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Activate the Over-Drive mode 
+    */
+  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -194,6 +230,13 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
     /**Configure the Systick interrupt time 
     */
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
@@ -203,12 +246,33 @@ void SystemClock_Config(void)
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
 
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM6 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+/* USER CODE BEGIN Callback 0 */
+
+/* USER CODE END Callback 0 */
+  if (htim->Instance == TIM6) {
+    HAL_IncTick();
+  }
+/* USER CODE BEGIN Callback 1 */
+
+/* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

@@ -23,7 +23,7 @@
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
  *
  */
-#include "chasis_task.h"
+#include "chassis_task.h"
 #include "bsp_can.h"
 #include "detect_task.h"
 #include "bsp_uart.h"
@@ -49,10 +49,11 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
     {
       static uint8_t i;
       i = _hcan->pRxMsg->StdId - CAN_3510_M1_ID;
-
-      chassis.motor[i].msg_cnt++ <= 50 ? 
-										get_moto_offset(&chassis.motor[i], _hcan) : 
-										encoder_data_handle( _hcan,&chassis.motor[i]);
+			if(chassis.motor[i].msg_cnt++ <= 50)
+			{
+				get_moto_offset(&chassis.motor[i], _hcan);
+				chassis.ctrl_mode=CHASSIS_RELAX;
+			}else encoder_data_handle( _hcan,&chassis.motor[i]);
       err_detector_hook(CHASSIS_M1_OFFLINE + i);
     }
     break;
@@ -211,6 +212,7 @@ void send_gimbal_cur(int16_t yaw_iq, int16_t pit_iq, int16_t trigger_iq){
   * @param  3510 motor ESC id
   */
 void send_chassis_cur(int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4){
+	//printf("sending current to chassis %d %d %d %d\n\r",iq1,iq2,iq3,iq4);
   CHASSIS_CAN.pTxMsg->StdId   = 0x200;
   CHASSIS_CAN.pTxMsg->IDE     = CAN_ID_STD;
   CHASSIS_CAN.pTxMsg->RTR     = CAN_RTR_DATA;

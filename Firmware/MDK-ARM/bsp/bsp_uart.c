@@ -29,6 +29,7 @@
 #include "detect_task.h"
 #include "judgement_info.h"
 #include "infantry_info.h"
+
 #include "sys_config.h"
 #include "usart.h"
 #include "cmsis_os.h"
@@ -92,49 +93,6 @@ void uart_receive_handler(UART_HandleTypeDef *huart)
   }
 }
 
-/**
-  * @brief   enable global uart it and do not use DMA transfer done it
-  * @param   uart IRQHandler id, receive buff, buff size
-  * @retval  set success or fail
-  */
-static int UART_Receive_DMA_No_IT(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t Size)
-{
-  uint32_t tmp1 = 0;
-
-  tmp1 = huart->RxState;
-  if (tmp1 == HAL_UART_STATE_READY)
-  {
-    if ((pData == NULL) || (Size == 0))
-    {
-        return HAL_ERROR;
-    }
-
-    /* Process Locked */
-    __HAL_LOCK(huart);
-
-    huart->pRxBuffPtr = pData;
-    huart->RxXferSize = Size;
-    
-    huart->ErrorCode  = HAL_UART_ERROR_NONE;
-
-    /* Enable the DMA Stream */
-    HAL_DMA_Start(huart->hdmarx, (uint32_t)&huart->Instance->DR,
-                  (uint32_t)pData, Size);
-
-    /* Enable the DMA transfer for the receiver request by setting the DMAR bit
-    in the UART CR3 register */
-    SET_BIT(huart->Instance->CR3, USART_CR3_DMAR);
-
-    /* Process Unlocked */
-    __HAL_UNLOCK(huart);
-
-    return HAL_OK;
-  }
-  else
-  {
-    return HAL_BUSY;
-  }
-}
 
 
 
@@ -237,6 +195,9 @@ static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \
   return status; 
 }
 
+/**
+  * @brief   initialize uart device 
+  */
 
 void judgement_uart_init(void)
 {
@@ -254,8 +215,9 @@ void judgement_uart_init(void)
                            UART_RX_DMA_SIZE);
   
 }
-void computer_uart_init(void)
-{
+
+#if 0
+void computer_uart_init(void){
   //open uart idle it
   __HAL_UART_CLEAR_IDLEFLAG(&COMPUTER_HUART);
   __HAL_UART_ENABLE_IT(&COMPUTER_HUART, UART_IT_IDLE);
@@ -269,8 +231,28 @@ void computer_uart_init(void)
                            (uint32_t)pc_dma_rxbuff[1], \
                            UART_RX_DMA_SIZE);
 }
+#endif
+/**
+  * @brief  Rx Transfer completed callback
+  * @param  huart: UART handle
+  * @note   report end of DMA Rx transfer
+  * @retval None
+  */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  //uart_read_completed_signal(huart);
+}
 
-
+/**
+  * @brief  Tx Transfer completed callback
+  * @param  huart: UART handle. 
+  * @note   report end of DMA Tx transfer
+  * @retval None
+  */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+  //uart_write_completed_signal(huart);
+}
 
 /**
   * @brief  Returns the current memory target used by double buffer transfer.

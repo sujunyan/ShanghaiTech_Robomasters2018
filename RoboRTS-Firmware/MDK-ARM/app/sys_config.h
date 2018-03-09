@@ -15,22 +15,22 @@
 /*************************chassis setting*******************************/
 /* remote mode chassis move speed limit */
 /* left and right speed (mm/s) */
-#define CHASSIS_RC_MAX_SPEED_X  3300.0f
+#define CHASSIS_RC_MAX_SPEED_X  1000.0f
 #define CHASSIS_RC_MOVE_RATIO_X 1.0f
 /* back and forward speed (mm/s) */
-#define CHASSIS_RC_MAX_SPEED_Y  3300.0f
+#define CHASSIS_RC_MAX_SPEED_Y  1000.0f
 #define CHASSIS_RC_MOVE_RATIO_Y 1.0f
 /* chassis rotation speed (deg/s) */
 /* used only chassis open loop mode */
-#define CHASSIS_RC_MAX_SPEED_R 300.0f
+#define CHASSIS_RC_MAX_SPEED_R 100.0f
 #define CHASSIS_RC_MOVE_RATIO_R 1.0f
 
 /* keyboard mode speed limit */
 /* left and right speed (mm/s) */
-#define CHASSIS_KB_MAX_SPEED_X  3300.0f 
+#define CHASSIS_KB_MAX_SPEED_X  1000.0f 
 #define CHASSIS_KB_MOVE_RATIO_X 1.0f
 /* back and forward speed (mm/s) */
-#define CHASSIS_KB_MAX_SPEED_Y  3300.0f
+#define CHASSIS_KB_MAX_SPEED_Y  1000.0f
 #define CHASSIS_KB_MOVE_RATIO_Y 1.0f
 
 /************************ chassis parameter ****************************/
@@ -64,8 +64,8 @@
   /* single 3508 motor maximum speed, unit is rpm */
   #define MAX_WHEEL_RPM        8500  //8347rpm = 3500mm/s
   /* chassis maximum translation speed, unit is mm/s */
-  #define MAX_CHASSIS_VX_SPEED 2000  //8000rpm
-  #define MAX_CHASSIS_VY_SPEED 2000
+  #define MAX_CHASSIS_VX_SPEED 3300  //8000rpm
+  #define MAX_CHASSIS_VY_SPEED 3300
   /* chassis maximum rotation speed, unit is degree/s */
   #define MAX_CHASSIS_VR_SPEED 300   //5000rpm
 #endif

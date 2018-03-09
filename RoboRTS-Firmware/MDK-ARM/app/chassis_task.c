@@ -137,9 +137,9 @@ uint8_t chassis_is_controllable(void){
 
 /**
   * @brief mecanum chassis velocity decomposition
-  * @param input : forward=+vx(mm/s)  leftward =+vy(mm/s)  couter-clockwise=+vw(deg/s)
+  * @param input : forward=+vy(mm/s)  leftward =+vx(mm/s)  couter-clockwise=+vw(deg/s)
   *        output: every wheel speed(rpm)
-  * @note  1=FR 2=FL 3=BL 4=BR
+  * @note  1=FR 2=BR 3=BL 4=FL
   */
 void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
   static float rotate_ratio_fr=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
@@ -156,12 +156,13 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
   int16_t wheel_rpm[4];
   float   max = 0;
   
-  wheel_rpm[0] = (-vx - vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;
-  wheel_rpm[1] = ( vx - vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;
-  wheel_rpm[2] = ( vx + vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;
-  wheel_rpm[3] = (-vx + vy + vw * rotate_ratio_br) * wheel_rpm_ratio;
+  wheel_rpm[0] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;
+  wheel_rpm[1] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	
+	// these wheels are reversed due to sysmetry
+  wheel_rpm[2] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;
+  wheel_rpm[3] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;
 
-  //find max item
+  //find max item 
   for (uint8_t i = 0; i < 4; i++)
   {
     if (abs(wheel_rpm[i]) > max)
@@ -180,7 +181,7 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
 
 
 void chasis_remote_handle(void){
-	chassis.vx =  remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // forward-backward 
-	chassis.vy = remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; // left-right
+	chassis.vx =  remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // forward-backward 
+	chassis.vy = remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; // left-right
   chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
 }

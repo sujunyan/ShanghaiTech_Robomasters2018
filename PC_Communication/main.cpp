@@ -1,7 +1,5 @@
-#include "SerialPort.h"
 #include <iostream>
 #include <cstdlib>
-#include <zconf.h>
 #include <cstdio>
 #include "CommunicateNode.h"
 int main(void){
@@ -14,16 +12,11 @@ int main(void){
         char ch;
         while(node.is_open())
         {
-          //node.test();
-
-
           #if 1
                 node.update_once();
-         //       node.test();
-
                 if(cnt++%10==0)
                 {
-                        node.test();
+                    node.test();
                 }
          #endif
         }

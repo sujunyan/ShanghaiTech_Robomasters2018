@@ -6,8 +6,10 @@
 #define PC_COMMUNICATION_COMMUNICATENODE_H
 
 #include <cstdint>
-#include "SerialPort.h"
 #include "protocol.h"
+#include <boost/asio.hpp>
+using namespace boost;
+
 class CommunicateNode
 {
 public:
@@ -25,7 +27,8 @@ public:
 
 private:
     unpack_data_t data;
-    SerialPort port = SerialPort(nullptr);
+    asio::io_service io;
+    asio::serial_port port=asio::serial_port(io);
     receive_judge_t judge_rece_mesg;
     receive_board_t board_rece_msg;
 
@@ -34,6 +37,7 @@ private:
     void board_data_handle(uint8_t*);
     void judgement_data_handle(uint8_t*);
 
+    uint8_t readByte();
     void print_judge_info();
     void print_board_info();
 

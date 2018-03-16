@@ -35,8 +35,7 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
   while (flag)
   {
     // independent thread, need not mutex
-    byte = port.readByte();
-    // printf("unpack_step: %d \n",p_obj->unpack_step);
+    byte = readByte();
     switch(p_obj->unpack_step)
     {
       case STEP_HEADER_SOF:
@@ -61,7 +60,6 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 
       case STEP_LENGTH_HIGH:
       {
-          //printf("step_length_high header size %d \n",p_obj->p_header==NULL);
         p_obj->data_len |= (byte << 8);
         p_obj->protocol_packet[p_obj->index++] = byte;
 
@@ -90,23 +88,13 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 
         if (p_obj->index == HEADER_LEN)
         {
-          //if ( verify_crc8_check_sum(p_obj->protocol_packet, HEADER_LEN) )
-          if(1)
+          if ( verify_crc8_check_sum(p_obj->protocol_packet, HEADER_LEN) )
+          //if(1)
           {
-            //p_obj->p_header->data_length=p_obj->data_len;
             p_obj->unpack_step = STEP_DATA_CRC16;
-            //printf("Check CRC8 sucessfully with data_length %d  %d with data \n",p_obj->p_header->data_length,p_obj->data_len);
-            /*
-              for (int i = 0; i < 5 ; ++i)
-            {
-              printf("%x, ",p_obj->protocol_packet[i]);
-            }
-            printf("\n");
-             */
           }
           else
           {
-            //printf("check_CRC8 failed\n");
             p_obj->unpack_step = STEP_HEADER_SOF;
             p_obj->index = 0;
           }
@@ -125,23 +113,18 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
           p_obj->index = 0;
 
 
-          //if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
-          /* No chassis value if anno it */
+          if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
           {
-            //printf("Check CRC16 sucessfully\n");
             if (sof == UP_REG_ID)
             {
               board_data_handle(p_obj->protocol_packet);
             }
             else  //DN_REG_ID
             {
-              printf("%d\n", p_obj->data_len);
-              printf("%d\n", p_obj->protocol_packet[200]);
               judgement_data_handle(p_obj->protocol_packet);
             }
               flag=0;
           }
-          //else printf("check_CRC16 failed\n");
         }
       }break;
 
@@ -203,7 +186,7 @@ void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
   //uint16_t cmd_id      = *(uint16_t*)(p_frame+HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-#if 1
+#if 0
     if(cmd_id && data_length==6)
     //if(cmd_id)
     {
@@ -256,7 +239,7 @@ void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
     break;
   }
 
-  printf("judge_data handle complete\n");
+  //printf("judge_data handle complete\n");
   /* forward data */
   // data_packet_pack(cmd_id, data_addr, data_length, UP_REG_ID);
   /* error, no function named data_packet_pack */
@@ -265,13 +248,16 @@ void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
 
 CommunicateNode::CommunicateNode(char *portname, int baudrate) {
     IsOpen=0;
-    port=SerialPort(portname,baudrate);
-    while (!port.is_connect())
-    {
-      printf("Try to connect to the USB port\n");
-      //usleep(10000);
-    }
 
+    port.open(portname);
+    port.set_option(asio::serial_port::baud_rate(baudrate));
+    using namespace asio;
+    {
+        port. set_option (serial_port :: flow_control (serial_port :: flow_control :: none ) ) ;
+        port. set_option (serial_port :: parity (serial_port :: parity :: none ) ) ;
+        port. set_option (serial_port :: stop_bits (serial_port :: stop_bits :: one ) ) ;
+        port. set_option (serial_port :: character_size (8 ) ) ;
+    };
     data.p_header=new frame_header_t;
 
     memset(&judge_rece_mesg,0,sizeof(judge_rece_mesg));
@@ -289,13 +275,13 @@ void CommunicateNode::update() {
 void CommunicateNode::update_once() {
         // unpack_data(&data,UP_REG_ID);
         /* if open, other codes doesnt work */
-        printf("update begin\n");
+        //printf("update begin\n");
         unpack_data(&data,DN_REG_ID);
-        printf("data updated\n");
+        //printf("data updated\n");
 }
 
 void CommunicateNode::print_judge_info() {
-#if 0
+#if 1
     //cmd_id=1 game_info
 printf("================CHECKSTART======================\n");
 // 0x0001 game_information
@@ -381,11 +367,13 @@ void CommunicateNode::print_board_info() {
 }
 
 void CommunicateNode::test() {
-  unsigned char ch=port.readByte();
+#if 0
+  unsigned char ch=readByte();
 
   if(ch==0xa5)printf("\n%x\n",ch);
   else printf("%x ",ch);
-  //  print_judge_info();
+#endif
+    print_judge_info();
 }
 
 CommunicateNode::~CommunicateNode() {
@@ -393,4 +381,10 @@ CommunicateNode::~CommunicateNode() {
 
 bool CommunicateNode::is_open() {
   return IsOpen;
+}
+
+uint8_t CommunicateNode::readByte() {
+    uint8_t ch;
+    asio::read(port,asio::buffer(&ch,1));
+    return ch;
 }

@@ -2,12 +2,12 @@
 #ifndef __SYS_CONFIG__
 #define __SYS_CONFIG__
 
-#include "freeRTOS.h"
-#include "stdlib.h"
-#include "cmsis_os.h"
 #include "RemoteTask.h"
 #include "Serial_Debug.h"
 #include "detect_task.h"
+#include "freeRTOS.h"
+#include "stdlib.h"
+#include "cmsis_os.h"
 
 #define DEFAULT_TUNE  300
 #define RC_RESOLUTION 660.0f
@@ -74,24 +74,44 @@
 #endif
 
 /**************************gimbal setting*******************************/
+
+
 /* remote mode gimbal speed limit */
-/* pitch axis speed */
-#define GIMBAL_RC_MOVE_RATIO_PIT 1.0f
-/* yaw axis speed */
-#define GIMBAL_RC_MOVE_RATIO_YAW 1.0f
 
+#define GIMBAL_RC_MOVE_RATIO_PIT 0.005f /* pitch axis speed */
+#define GIMBAL_RC_MOVE_RATIO_YAW 0.005f /* yaw axis speed */
+ 
 /* keyboard mode gimbal speed limit */
-/* pitch axis speed */
-#define GIMBAL_PC_MOVE_RATIO_PIT 1.0f
-/* yaw axis speed */
-#define GIMBAL_PC_MOVE_RATIO_YAW 1.0f
 
+#define GIMBAL_PC_MOVE_RATIO_PIT 1.0f /* pitch axis speed */
+#define GIMBAL_PC_MOVE_RATIO_YAW 1.0f /* yaw axis speed */
+/************************** gimbal parameter *****************************/
+/* the ratio of motor encoder value translate to degree */
+#define ENCODER_ANGLE_RATIO    (360.0f/8192.0f)
+/* the deceleration ratio of pitch axis motor */
+#define PIT_DECELE_RATIO       1.0f
+/* the deceleration ratio of yaw axis motor */
+#define YAW_DECELE_RATIO       1.0f    //(5.0f/8.0f)
 
+#define PIT_MOTO_POSITIVE_DIR  1.0f /* the positive direction of pitch axis motor */
+#define YAW_MOTO_POSITIVE_DIR  1.0f /* the positive direction of yaw axis motor */
+#define TRI_MOTO_POSITIVE_DIR  1.0f /* the positive direction of tirgger motor */
+
+/*************************** gimbal relevant *********************************/
+#define GIMBAL_CASCADE_CTRL
+#define PIT_ANGLE_MAX        10
+#define PIT_ANGLE_MIN        -20
+#define YAW_ANGLE_MAX        60
+#define YAW_ANGLE_MIN        -60
+
+/* uart relevant********************************************/
 #define PC_HUART huart6
 #define DBUS_HUART         huart1 //for dji remote controler reciever
 #define JUDGE_HUART        huart3 //connected to judge system
 #define COMPUTER_HUART     huart6 //connected to manifold/TXone
-/* can relevant */
+
+
+/* can relevant ******************************************/
 #define CHASSIS_CAN       hcan1
 #define ZGYRO_CAN         hcan2
 #define CHASSIS_ZGYRO_CAN hcan1

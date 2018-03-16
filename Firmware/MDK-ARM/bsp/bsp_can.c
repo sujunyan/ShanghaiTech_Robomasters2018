@@ -29,8 +29,8 @@
 #include "bsp_uart.h"
 #include "string.h"
 #include "sys_config.h"
-
-
+#include "gimbal_task.h"
+#include "imu_task.h"
 //float yaw_zgyro_angle;
 void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan)
 {
@@ -39,7 +39,9 @@ void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan)
 }
 
 #if 1
+float can2_buf[3];
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
+	//printf("can msg recv at time %d \r\n",osKernelSysTick());
   switch (_hcan->pRxMsg->StdId)
   {
     case CAN_3510_M1_ID:
@@ -47,6 +49,7 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
     case CAN_3510_M3_ID:
     case CAN_3510_M4_ID:
     {
+			if(gim.ctrl_mode == GIMBAL_INIT)break;
       static uint8_t i;
       i = _hcan->pRxMsg->StdId - CAN_3510_M1_ID;
 			if(chassis.motor[i].msg_cnt++ <= 50)
@@ -57,19 +60,24 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
       err_detector_hook(CHASSIS_M1_OFFLINE + i);
     }
     break;
-		#if 0
+		
     case CAN_YAW_MOTOR_ID:
     {
-      encoder_data_handle(&moto_yaw, _hcan);
+      encoder_data_handle( _hcan,&gim.yaw_motor);			
+			// update the offset 
+			gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;
       err_detector_hook(GIMBAL_YAW_OFFLINE);
     }
     break;
     case CAN_PIT_MOTOR_ID:
     {
-      encoder_data_handle(&moto_pit, _hcan);
+      encoder_data_handle(_hcan,&gim.pit_motor);
+			// update the offset
+			gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
       err_detector_hook(GIMBAL_PIT_OFFLINE);
     }
     break;
+		#if 0
     case CAN_TRIGGER_MOTOR_ID:
     {
       if (_hcan == &TRIGGER_CAN)
@@ -84,33 +92,19 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
     }
     break;
     #endif
-    case CAN_CHASSIS_ZGYRO_ID:
-    {
-      chassis.gyro_angle = 0.001f * ((int32_t)(_hcan->pRxMsg->Data[0] << 24) |
-                                              (_hcan->pRxMsg->Data[1] << 16) |
-                                              (_hcan->pRxMsg->Data[2] << 8) |
-                                              (_hcan->pRxMsg->Data[3]));
-      
-      chassis.gyro_palstance = 0.001f * ((int32_t)(_hcan->pRxMsg->Data[4] << 24) |
-                                                  (_hcan->pRxMsg->Data[5] << 16) |
-                                                  (_hcan->pRxMsg->Data[6] << 8) |
-                                                  (_hcan->pRxMsg->Data[7]));
-      
-      err_detector_hook(CHASSIS_GYRO_OFFLINE);
-    }
-    break;
-
-    case CAN_GIMBAL_ZGYRO_ID:
-    {
-//      gim.sensor.gyro_angle = 0.001f * ((int32_t)(_hcan->pRxMsg->Data[0] << 24) |
-//                                          (_hcan->pRxMsg->Data[1] << 16) |
-//                                          (_hcan->pRxMsg->Data[2] << 8) |
-//                                          (_hcan->pRxMsg->Data[3]));
-//      
-//      err_detector_hook(GIMBAL_GYRO_OFFLINE);
-    }
-    break;
-    
+		
+		// The gyro in can2 
+		case 0xA:
+		{
+			LED_G_TOGGLE;
+			can2_buf[0]=*(float *)&(_hcan->pRxMsg->Data[0]);
+			can2_buf[1]=*(float *)&(_hcan->pRxMsg->Data[4]);
+		}break;
+		case 0xB:
+		{
+			LED_G_TOGGLE;
+			can2_buf[2]=*(float *)&(_hcan->pRxMsg->Data[0]);
+		}break;
 
     default:
     {
@@ -192,6 +186,7 @@ void gyro_device_init(void){
   * @param  current value corresponding motor(yaw/pitch/trigger)
   */
 void send_gimbal_cur(int16_t yaw_iq, int16_t pit_iq, int16_t trigger_iq){
+	//printf("gimbal current sent: yaw_iq %d  pit_iq %d  trigger_iq %d \r\n",yaw_iq,pit_iq,trigger_iq);
   GIMBAL_CAN.pTxMsg->StdId   = 0x1ff;
   GIMBAL_CAN.pTxMsg->IDE     = CAN_ID_STD;
   GIMBAL_CAN.pTxMsg->RTR     = CAN_RTR_DATA;

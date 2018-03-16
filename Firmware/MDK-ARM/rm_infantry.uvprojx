@@ -810,7 +810,20 @@
               <FileType>5</FileType>
               <FilePath>.\can_send_task.h</FilePath>
             </File>
+            <File>
+              <FileName>gimbal_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\gimbal_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>gimbal_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\gimbal_task.h</FilePath>
+            </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>ComunnicationTask</GroupName>
         </Group>
       </Groups>
     </Target>

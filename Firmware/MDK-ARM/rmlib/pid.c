@@ -28,11 +28,11 @@
 #include "math.h"
 
 void abs_limit(float *a, float ABS_MAX)
-{
+{	
   if (*a > ABS_MAX)
     *a = ABS_MAX;
   if (*a < -ABS_MAX)
-    *a = -ABS_MAX;
+    *a = -ABS_MAX;  
 }
 
 static void pid_param_init(
@@ -108,6 +108,8 @@ float pid_calc(pid_t *pid, float get, float set)
       pid->out += pid->pout + pid->iout + pid->dout;
       abs_limit(&(pid->out), pid->max_out);
   }
+	
+	if (pid->out < pid->min_out && pid->out > - pid->min_out)pid->out=0; 
 
   pid->err[LLAST] = pid->err[LAST];
   pid->err[LAST]  = pid->err[NOW];
@@ -135,9 +137,11 @@ void PID_struct_init(
 {
   pid->f_param_init = pid_param_init;
   pid->f_pid_reset  = pid_reset;
-
+	
   pid->f_param_init(pid, mode, maxout, intergral_limit, kp, ki, kd);
   pid->f_pid_reset(pid, kp, ki, kd);
+	
+	pid->min_out=0;
 }
 
 pid_t pid_yaw           = {0};

@@ -3,7 +3,7 @@
 #include "cmsis_os.h"
 #include "chassis_task.h"
 #include "bsp_can.h"
-
+#include "gimbal_task.h"
 UBaseType_t can_send_surplus;
 void can_msg_send_task(void const *argu)
 {
@@ -21,6 +21,7 @@ void can_msg_send_task(void const *argu)
 //        can_time_last = HAL_GetTick();
         
         //send_gimbal_motor_ctrl_message(glb_cur.gimbal_cur);
+				send_gimbal_cur(gim.current[0],gim.current[1],0);
       }
       
       if (event.value.signals & CHASSIS_MOTOR_MSG_SEND)

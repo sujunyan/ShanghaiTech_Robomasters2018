@@ -31,9 +31,10 @@ void serial_debug_task(void const *argu)
 }
 int fputc(int ch, FILE *f)   //  redirect the printf function
 {
-		
+	#ifdef SERIAL_DEBUG
 	if(serial_debug_buffer_size<MAX_SERIAL_BUFFER_SIZE)
 		serial_debug_buffer[serial_debug_buffer_size++]=ch;
+	#endif
 	//else MAX_SERIAL_BUFFER_SIZE=0;
    return ch;
 }

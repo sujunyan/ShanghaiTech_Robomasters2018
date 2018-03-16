@@ -32,7 +32,7 @@
 #include "sys_config.h"
 #include "bsp_io.h"
 #include "math.h"
-
+#include "gimbal_task.h"
 
 UBaseType_t imu_stack_surplus;
 
@@ -78,7 +78,6 @@ static void init_quaternion(void){
     temp = hx/hy;
   else
     return ;
-
   #ifdef BOARD_DOWN
   if(hx<0 && hy <0)   //OK
   {
@@ -232,8 +231,7 @@ float Kp  = 2.0, Ki = 0.01;
 
 //#define Kp 2.0f    // proportional gain governs rate of convergence to accelerometer/magnetometer
 //#define Ki 0.01f   // integral gain governs rate of convergence of gyroscope biases
-static void imu_AHRS_update(void) 
-{
+static void imu_AHRS_update(void) {
   float norm;
   float hx, hy, hz, bx, bz;
   float vx, vy, vz, wx, wy, wz;
@@ -339,11 +337,10 @@ static void imu_attitude_update(void){
   atti.pitch = imu.pit;
   atti.roll  = imu.rol;
   
-  //gim.sensor.gyro_angle = atti.yaw;
+  
 }
 #endif
-void imu_param_init(void)
-{
+void imu_param_init(void){
   init_quaternion();
   imu_temp_ctrl_init();
 }

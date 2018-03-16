@@ -3,8 +3,8 @@
 
 
 #include "sys_config.h"
+#include "bsp_can.h"
 
-#define ENCODER_ANGLE_RATIO    (8192.0f/360.0f)
 
 #define FILTER_BUF 5
 

@@ -60,6 +60,7 @@
 #include "serial_debug.h"
 #include "test.h"
 #include "can_send_task.h"
+#include "gimbal_task.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -162,7 +163,11 @@ void MX_FREERTOS_Init(void) {
  osTimerDef(chassisTimer, chassis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
     osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
-		
+	#ifdef CALI_DONE
+		osTimerDef(gimbalTimer, gimbal_task);
+    gimbal_timer_id = osTimerCreate(osTimer(gimbalTimer), osTimerPeriodic, NULL);  // 5 ms
+    osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
+	#endif
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
 	
@@ -173,8 +178,8 @@ void MX_FREERTOS_Init(void) {
   /* add threads, ... */
   
    /* high priority task */
-		osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); //wait for signal set by gimbal/chasis_task
-		can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL);
+	osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); //wait for signal set by gimbal/chasis_task
+	can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL);
 		 
     
 		/* normal priority task */

@@ -5,7 +5,7 @@
 #include "pid.h"
 #include "sys_config.h"
 #include "bsp_can.h"
-
+#include "gimbal_task.h"
 
 chassis_t chassis;
 UBaseType_t chasis_task_stack_surplus;
@@ -17,6 +17,11 @@ void chassis_task(const void* argu){ // timer
 	// TODO swich the mode to handle data from PC 
 	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 	chasis_remote_handle();
+	
+	// chassis follow the gimbal
+	pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle_ecd , 0);
+	chassis.vw = pid_chassis_angle.out;
+	
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
   
   if (!chassis_is_controllable())
@@ -73,7 +78,7 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 
   ptr->total_ecd = ptr->round_cnt * 8192 + ptr->ecd - ptr->offset_ecd;
   /* total angle, unit is degree */
-  ptr->total_angle = ptr->total_ecd / ENCODER_ANGLE_RATIO;
+  ptr->total_angle = ptr->total_ecd * ENCODER_ANGLE_RATIO;
   
 
   ptr->speed_rpm     = (int16_t)(hcan->pRxMsg->Data[2] << 8 | hcan->pRxMsg->Data[3]);
@@ -136,6 +141,7 @@ int is_Motor_Reversed(int i){ // some of the motor is reversed due to symmetric
 
 uint8_t chassis_is_controllable(void){
   if (chassis.ctrl_mode == CHASSIS_RELAX 
+	||	gim.ctrl_mode ==  GIMBAL_INIT
    || g_err.list[REMOTE_CTRL_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M1_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M2_OFFLINE].err_exist
@@ -218,12 +224,12 @@ void chasis_remote_handle(void){
 		else if (KEY_S)chassis.vy =  -CHASSIS_KB_MAX_SPEED_Y * ratio;
 		else chassis.vy=0;
 		
-		chassis.vw  = remote_info.mouse.x* CHASSIS_KB_MAX_SPEED_R *ratio; // rotate 
+		//chassis.vw  = remote_info.mouse.x* CHASSIS_KB_MAX_SPEED_R *ratio; // rotate 
 	}
 	else
 		{
 			chassis.vx =  remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // left-right
 			chassis.vy = - remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; //  forward-backward 
-			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
+			//chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
 		}
 }

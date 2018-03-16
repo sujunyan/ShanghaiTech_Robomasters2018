@@ -59,6 +59,8 @@ typedef struct pid_t
   uint32_t max_out;
   uint32_t integral_limit;
 
+	
+	float min_out;
   void (*f_param_init)(struct pid_t *pid, 
                        uint32_t      pid_mode,
                        uint32_t      max_output,

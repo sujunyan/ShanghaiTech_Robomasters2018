@@ -239,8 +239,7 @@ void mpu_get_data(void)
 }
 
 uint8_t mpu_id;
-uint8_t mpu_device_init(void)
-{
+uint8_t mpu_device_init(void){
   // Reset the internal registers
   mpu_write_reg(MPU6500_PWR_MGMT_1, 0x80);
   MPU_INIT_DELAY(100);
@@ -276,8 +275,7 @@ uint8_t mpu_device_init(void)
   return 0;
 }
 
-void mpu_offset_cal(void)
-{
+void mpu_offset_cal(void){
   int i;
   for (i = 0; i < 300; i++)
   {

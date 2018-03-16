@@ -26,17 +26,17 @@ uint8_t* protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, ui
   append_crc16_check_sum(tx_buf, frame_length);
 
   return tx_buf;
-}
+} // unused function -- send message
 
 void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
   uint8_t byte = 0;
-  int static cnt=0;
-  bool flag=1;
+  int static cnt = 0;
+  bool flag = 1;
   while (flag)
   {
-    //independent thread, need not mutex
-    byte=port.readByte();
-    //printf("unpack_step: %d \n",p_obj->unpack_step);
+    // independent thread, need not mutex
+    byte = port.readByte();
+    // printf("unpack_step: %d \n",p_obj->unpack_step);
     switch(p_obj->unpack_step)
     {
       case STEP_HEADER_SOF:
@@ -90,8 +90,8 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 
         if (p_obj->index == HEADER_LEN)
         {
-          if ( verify_crc8_check_sum(p_obj->protocol_packet, HEADER_LEN) )
-        //  if(1)
+          //if ( verify_crc8_check_sum(p_obj->protocol_packet, HEADER_LEN) )
+          if(1)
           {
             //p_obj->p_header->data_length=p_obj->data_len;
             p_obj->unpack_step = STEP_DATA_CRC16;
@@ -119,13 +119,14 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
         {
            p_obj->protocol_packet[p_obj->index++] = byte;
         }
-        if (p_obj->index >= (HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN))
+        else if (p_obj->index >= (HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN))
         {
           p_obj->unpack_step = STEP_HEADER_SOF;
           p_obj->index = 0;
 
 
-          if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
+          //if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
+          /* No chassis value if anno it */
           {
             //printf("Check CRC16 sucessfully\n");
             if (sof == UP_REG_ID)
@@ -134,6 +135,8 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
             }
             else  //DN_REG_ID
             {
+              printf("%d\n", p_obj->data_len);
+              printf("%d\n", p_obj->protocol_packet[200]);
               judgement_data_handle(p_obj->protocol_packet);
             }
               flag=0;
@@ -191,24 +194,27 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
 
 }
 
-void CommunicateNode::judgement_data_handle(uint8_t * p_frame) {
+void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
   frame_header_t *p_header = (frame_header_t*)p_frame;
   memcpy(p_header, p_frame, HEADER_LEN);
 
-  uint16_t data_length = p_frame[1]|p_frame[2]<<8;
-  uint16_t cmd_id      = p_frame[HEADER_LEN]| (p_frame [HEADER_LEN+1])<<8;
-  //  uint16_t cmd_id      = *(uint16_t*)(p_frame+HEADER_LEN);
+  uint16_t data_length = p_frame[1] | p_frame[2] << 8;
+  uint16_t cmd_id      = p_frame[HEADER_LEN] | (p_frame[HEADER_LEN+1])<<8;
+  //uint16_t cmd_id      = *(uint16_t*)(p_frame+HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
 #if 1
-    if(cmd_id)
+    if(cmd_id && data_length==6)
+    //if(cmd_id)
     {
-      printf("handle judge data\n");
+      //printf("handle judge data\n");
       //print_data(p_frame);
+      printf("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=========================================================]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
       print_all_packet(p_frame);
+      printf("cmd_id = %d | %d << %d\n", p_frame[HEADER_LEN], p_frame[HEADER_LEN+1], 8);
       printf("judge_data handle with len %d cmd_id %x \n", data_length, cmd_id);
-      //printf("HEADER_LEN= %d the data is ",HEADER_LEN);
-
+      //printf("HEADER_LEN= %lu the data is ",HEADER_LEN);
+      printf("\n");
     }
 #endif
   switch (cmd_id)
@@ -225,30 +231,35 @@ void CommunicateNode::judgement_data_handle(uint8_t * p_frame) {
       memcpy(&judge_rece_mesg.real_shoot_data, data_addr, data_length);
     break;
 
-    case STU_CUSTOM_DATA_ID:
-      memcpy(&judge_rece_mesg.student_download_data, data_addr, data_length);
+    case POWER_HEAT_DATA_ID:
+      memcpy(&judge_rece_mesg.power_heat_data, data_addr, data_length);
     break;
 
-//    case REAL_FIELD_DATA_ID:
-//      memcpy(&judge_rece_mesg.rfid_data, data_addr, data_length);
-//    break;
-//
-//    case GAME_RESULT_ID:
-//      memcpy(&judge_rece_mesg.game_result_data, data_addr, data_length);
-//    break;
-//
-//    case GAIN_BUFF_ID:
-//      memcpy(&judge_rece_mesg.get_buff_data, data_addr, data_length);
-//    break;
-//
-//    case CLIENT_TO_ROBOT_ID:
-//      memcpy(&judge_rece_mesg.student_download_data, data_addr, data_length);
-//    break;
+    case REAL_FIELD_DATA_ID:
+      memcpy(&judge_rece_mesg.rfid_data, data_addr, data_length);
+    break;
+
+    case GAME_RESULT_ID:
+      memcpy(&judge_rece_mesg.game_result_data, data_addr, data_length);
+    break;
+
+    case GAIN_BUFF_ID:
+      memcpy(&judge_rece_mesg.get_buff_data, data_addr, data_length);
+    break;
+
+    case ROBOT_POSITION_ID:
+      memcpy(&judge_rece_mesg.robot_position_data, data_addr, data_length);
+    break;
+
+    case STU_CUSTOM_DATA_ID:
+      memcpy(&judge_rece_mesg.clinet_show_data, data_addr, data_length);
+    break;
   }
 
-  //printf("judge_data handle complete\n");
+  printf("judge_data handle complete\n");
   /* forward data */
-  //data_packet_pack(cmd_id, data_addr, data_length, UP_REG_ID);
+  // data_packet_pack(cmd_id, data_addr, data_length, UP_REG_ID);
+  /* error, no function named data_packet_pack */
 
 }
 
@@ -276,33 +287,93 @@ void CommunicateNode::update() {
 }
 
 void CommunicateNode::update_once() {
-        //unpack_data(&data,UP_REG_ID);
-        //printf("update begin\n");
+        // unpack_data(&data,UP_REG_ID);
+        /* if open, other codes doesnt work */
+        printf("update begin\n");
         unpack_data(&data,DN_REG_ID);
-        //printf("data updated\n");
+        printf("data updated\n");
 }
 
 void CommunicateNode::print_judge_info() {
-
-    // cmd_id=1 game_info
 #if 0
-    game_robot_state_t state=judge_rece_mesg.game_information;
-    printf("stage_remain_time is %d\n",state.stage_remain_time);
-    printf("game process is %d\n",state.game_process);
-    printf("remain_hp is:%d max: %d\n",judge_rece_mesg.game_information.remain_hp,judge_rece_mesg.game_information.max_hp);
+    //cmd_id=1 game_info
+printf("================CHECKSTART======================\n");
+// 0x0001 game_information
+#if 1
+    printf("----------0x0001 game_information-------------------------\n");
+    extGameRobotState_t state = judge_rece_mesg.game_information;
+    printf("stageRemainTime: %d\n",state.stageRemainTime);
+    printf("gameProgress: %d\n",state.gameProgress);
+    printf("remainHP: %d/%d\n",state.remainHP, state.maxHP);
 #endif
 
-#if 0
+// 0x0002 blood_changed_data
+// 0x0003 real_shoot_data
 
-    real_shoot_t shoot=judge_rece_mesg.real_shoot_data;
-    printf("bullet speed is %f frequency is %d\n",shoot.bullet_speed,shoot.bullet_freq);
-
-    printf("robot_hurt_data is:%d %d\n",
-            judge_rece_mesg.blood_changed_data.armor_type,
-            judge_rece_mesg.blood_changed_data.hurt_type
-    );
+#if 1
+    printf("-----0x0002 & 0x0003 blood_changed & real_shoot_data------\n");
+    extShootData_t shoot = judge_rece_mesg.real_shoot_data;
+    printf("bulletType: %d\n", shoot.bulletType);
+    printf("bulletSpeed: %f\n", shoot.bulletSpeed);
+    printf("bulletFreq: %d\n", shoot.bulletFreq);
+    extRobotHurt_t hurt = judge_rece_mesg.blood_changed_data;
+    printf("hurtArmorType: %d\n", hurt.armorType);
+    printf("hurtType: %d\n", hurt.hurtType);
 #endif
 
+// 0x0004 power_heat_data
+#if 1
+    printf("----------0x0004 power_heat_data--------------------------\n");
+    extPowerHeatData_t power = judge_rece_mesg.power_heat_data;
+    printf("chassisVolt: %f\n", power.chassisVolt);
+    printf("chassisCurrent: %f\n", power.chassisCurrent);
+    printf("chassisPower: %f\n", power.chassisPower);
+    printf("chassisPowerBuffer: %f\n", power.chassisPowerBuffer);
+#endif
+
+// 0x0005 rfid_data
+#if 1
+    printf("----------0x0005 rfid_data--------------------------------\n");
+    extRfidDetect_t detect = judge_rece_mesg.rfid_data;
+    printf("cardType: %d\n", detect.cardType);
+    printf("cardIdx: %d\n", detect.cardIdx);
+#endif
+
+// 0x0006 game_result_data
+#if 1
+    printf("----------0x0006 game_result_data-------------------------\n");
+    extGameResult_t whowin = judge_rece_mesg.game_result_data;
+    printf("winner: %d\n", whowin.winner);
+#endif
+
+// 0x0007 get_buff_data
+#if 1
+    printf("----------0x0007 get_buff_data----------------------------\n");
+    extGetBuff_t getbuff = judge_rece_mesg.get_buff_data;
+    printf("buffType: %d\n", getbuff.buffType);
+    printf("buffAddition: %d\n", getbuff.buffAddition);
+#endif
+
+// 0x0008 robot_position_data
+#if 1
+    printf("----------0x0008 robot_position_data----------------------\n");
+    extGameRobotPos_t position = judge_rece_mesg.robot_position_data;
+    printf("x y z: %f / %f / %f\n", position.x, position.y, position.z);
+    printf("yaw: %f\n", position.yaw);
+#endif
+
+// 0x0100 clinet_show_data
+#if 1
+    printf("----------0x0100 client_show_data-------------------------\n");
+    extShowData_t userdef = judge_rece_mesg.clinet_show_data;
+    printf("data1: %f\n", userdef.data1);
+    printf("data2: %f\n", userdef.data2);
+    printf("data3: %f\n", userdef.data3);
+    printf("mask: %d\n", userdef.mask);
+#endif
+
+printf("================CHECKOVER======================\n");
+#endif
 }
 
 void CommunicateNode::print_board_info() {
@@ -310,7 +381,11 @@ void CommunicateNode::print_board_info() {
 }
 
 void CommunicateNode::test() {
-    print_judge_info();
+  unsigned char ch=port.readByte();
+
+  if(ch==0xa5)printf("\n%x\n",ch);
+  else printf("%x ",ch);
+  //  print_judge_info();
 }
 
 CommunicateNode::~CommunicateNode() {
@@ -319,8 +394,3 @@ CommunicateNode::~CommunicateNode() {
 bool CommunicateNode::is_open() {
   return IsOpen;
 }
-
-
-
-
-

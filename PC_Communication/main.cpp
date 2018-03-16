@@ -11,16 +11,21 @@ int main(void){
 #if 1
         CommunicateNode node(portname,115200);
         int cnt=0;
+        char ch;
         while(node.is_open())
         {
+          //node.test();
+
+
+          #if 1
                 node.update_once();
          //       node.test();
-#if 1
+
                 if(cnt++%10==0)
                 {
                         node.test();
                 }
-#endif
+         #endif
         }
 #endif
 #if 0
@@ -40,7 +45,3 @@ int main(void){
 
         return 0;
 }
-
-
-
-

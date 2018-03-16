@@ -18,7 +18,7 @@
  *  @version 1.0
  *  @date Oct 2017
  *
- *  @brief the communication protocol of main control with 
+ *  @brief the communication protocol of main control with
  *         judge system and computer
  *
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
@@ -183,7 +183,7 @@ void print_data(uint8_t * p_frame) {
   uint16_t data_length = p_frame[1]|p_frame[2]<<8;
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-  printf("The data of packet is ");
+  printf("The data of packet with len %d,",data_length);
 
   for (uint16_t i = 0; i < (uint16_t)data_length ; ++i)
   {
@@ -195,15 +195,18 @@ void print_data(uint8_t * p_frame) {
 void print_all_packet(uint8_t * p_frame){
   uint16_t data_length = p_frame[1]|p_frame[2]<<8;
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
-  printf("The data of all packet is ");
-  for (uint16_t i = 0; i <HEADER_LEN + data_length ; ++i)
+  // printf("==============================");
+  // printf("\n");
+  // printf("HEADER_LEN = %lu, data_length = %d", HEADER_LEN, data_length);
+  // printf("\n");
+  // printf("------------------------------");
+  // printf("\n");
+  printf("The data of all packet with len %d:    ",data_length);
+  for (uint16_t i = 0; i <HEADER_LEN + data_length+CMD_LEN ; ++i)
   {
     printf("%x, ",*(p_frame+i));
   }
+  // printf("\n");
+  // printf("==============================");
   printf("\n");
 }
-
-
-
-
-

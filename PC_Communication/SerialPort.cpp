@@ -21,8 +21,8 @@ SerialPort::SerialPort(char *portname,int baudrate) {
     }
     else
     {
-        fcntl(fd, F_SETFL,
-              FNDELAY); // Sets the read() function to return NOW and not wait for data to enter buffer if there isn't anything there.
+          // fcntl(fd, F_SETFL,  FNDELAY); 
+              // Sets the read() function to return NOW and not wait for data to enter buffer if there isn't anything there.
 
         //Configure port for 8N1 transmission
         tcgetattr(fd, &options);                    //Gets the current options for the port
@@ -41,6 +41,7 @@ SerialPort::SerialPort(char *portname,int baudrate) {
         options.c_cflag &= ~PARENB;                    //?
         options.c_cflag &= ~CSTOPB;                    //?
         options.c_cflag &= ~CSIZE;                    //?
+        options.c_cflag &= ~CRTSCTS;
         options.c_cflag |= CS8;                        //?
         tcsetattr(fd, TCSANOW, &options);            //Set the new options for the port "NOW"
         is_connected=1;

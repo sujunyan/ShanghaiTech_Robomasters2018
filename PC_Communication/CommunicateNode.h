@@ -11,7 +11,7 @@
 class CommunicateNode
 {
 public:
-    CommunicateNode(char* portname,int baudrate=9600);
+    CommunicateNode(char* portname,int baudrate);
     ~CommunicateNode();
     void update_once();
     void update();

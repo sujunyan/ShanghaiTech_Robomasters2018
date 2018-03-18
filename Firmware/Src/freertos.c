@@ -61,6 +61,7 @@
 #include "test.h"
 #include "can_send_task.h"
 #include "gimbal_task.h"
+#include "PC_communication_task.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -80,6 +81,7 @@ TaskHandle_t judge_unpack_task_t;
 TaskHandle_t pc_unpack_task_t;
 TaskHandle_t serial_debug_task_t;
 TaskHandle_t test_task_t;
+TaskHandle_t PC_communication_task_t;
 
 osTimerId chassis_timer_id;
 osTimerId gimbal_timer_id;
@@ -160,18 +162,16 @@ void MX_FREERTOS_Init(void) {
   
 		
   /* USER CODE END RTOS_TIMERS */
- osTimerDef(chassisTimer, chassis_task);
+		osTimerDef(chassisTimer, chassis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
-    osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
-	#ifdef CALI_DONE
+    
 		osTimerDef(gimbalTimer, gimbal_task);
     gimbal_timer_id = osTimerCreate(osTimer(gimbalTimer), osTimerPeriodic, NULL);  // 5 ms
-    osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
-	#endif
+    
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
 	
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);  // initialize and start timer
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -188,11 +188,22 @@ void MX_FREERTOS_Init(void) {
 
 		osThreadDef(imuTask, imu_task, osPriorityNormal, 0, 128);  // 1 ms
     imu_task_t = osThreadCreate(osThread(imuTask), NULL);
-		//#if 0
-		osThreadDef(serialDebugTask, serial_debug_task, osPriorityNormal, 0, 512);  // 20 ms
-    serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
+		
+		
+		 
 		
 		// low priority
+		
+		#ifdef SERIAL_DEBUG
+		osThreadDef(serialDebugTask, serial_debug_task, osPriorityBelowNormal, 0, 512);  // 20 ms
+    serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
+		
+		#else 
+		osThreadDef(PC_communicationTask, PC_communication_task, osPriorityNormal, 0, 128);  // 1 ms
+    PC_communication_task_t = osThreadCreate(osThread(PC_communicationTask), NULL);
+		#endif
+		
+		
 		osThreadDef(testTask, test_task, osPriorityBelowNormal, 0, 512);  // 20 ms
     test_task_t = osThreadCreate(osThread(testTask), NULL);
     /* unpack task */
@@ -210,9 +221,27 @@ void StartDefaultTask(void const * argument)
 {
   /* init code for FATFS */
   MX_FATFS_Init();
+	
+	// update the offset		
+	osDelay(1000); // wait for imu and ecd to be stable
+	osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
+	for(;;)
+	{
+		if(gimbal_is_controllable())
+			{
+				osDelay(1000); // wait for imu and ecd to be stable
+				update_gimbal_sensor();
+				gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
+				gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;
+				#ifdef CALI_DONE			
+				osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
+				#endif
+				break;
+			}
+		else osDelay(1);
+	}
 
-  /* USER CODE BEGIN StartDefaultTask */
-  //osThreadResume(record_task_t);
+  
   /* Infinite loop */
   for(;;)
   {

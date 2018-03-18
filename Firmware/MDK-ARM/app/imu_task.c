@@ -336,8 +336,8 @@ static void imu_attitude_update(void){
   atti.yaw   = imu.yaw + atti.yaw_cnt*360;
   atti.pitch = imu.pit;
   atti.roll  = imu.rol;
-  
-  
+	//printf("update T %d\r\n",osKernelSysTick());
+   
 }
 #endif
 void imu_param_init(void){
@@ -353,8 +353,8 @@ void imu_task(void const *argu)
   uint32_t imu_wake_time = osKernelSysTick();
   while(1)
   {
-    imu_time_ms = HAL_GetTick() - imu_time_last;
-    imu_time_last = HAL_GetTick();
+    //imu_time_ms = HAL_GetTick() - imu_time_last;
+    //imu_time_last = HAL_GetTick();
     
     imu_temp_keep();
     
@@ -363,7 +363,7 @@ void imu_task(void const *argu)
     imu_attitude_update();
     
     imu_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
-    
+    printf("imu_task done T %d\r\n",HAL_GetTick());
     osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);  
   }
 

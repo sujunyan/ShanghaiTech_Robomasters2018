@@ -15,14 +15,14 @@
 /*************************chassis setting*******************************/
 /* remote mode chassis move speed limit */
 /* left and right speed (mm/s) */
-#define CHASSIS_RC_MAX_SPEED_X  2000.0f
+#define CHASSIS_RC_MAX_SPEED_X  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_X 1.0f
 /* back and forward speed (mm/s) */
-#define CHASSIS_RC_MAX_SPEED_Y  2000.0f
+#define CHASSIS_RC_MAX_SPEED_Y  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_Y 1.0f
 /* chassis rotation speed (deg/s) */
 /* used only chassis open loop mode */
-#define CHASSIS_RC_MAX_SPEED_R 100.0f
+#define CHASSIS_RC_MAX_SPEED_R 200.0f
 #define CHASSIS_RC_MOVE_RATIO_R 1.0f
 
 /* keyboard mode speed limit */
@@ -70,7 +70,7 @@
   #define MAX_CHASSIS_VX_SPEED 3300  //8000rpm
   #define MAX_CHASSIS_VY_SPEED 3300
   /* chassis maximum rotation speed, unit is degree/s */
-  #define MAX_CHASSIS_VR_SPEED 100   //5000rpm
+  #define MAX_CHASSIS_VR_SPEED 360   //5000rpm
 #endif
 
 /**************************gimbal setting*******************************/
@@ -78,8 +78,8 @@
 
 /* remote mode gimbal speed limit */
 
-#define GIMBAL_RC_MOVE_RATIO_PIT 0.005f /* pitch axis speed */
-#define GIMBAL_RC_MOVE_RATIO_YAW 0.005f /* yaw axis speed */
+#define GIMBAL_RC_MOVE_RATIO_PIT 0.002f /* pitch axis speed */
+#define GIMBAL_RC_MOVE_RATIO_YAW 0.001f /* yaw axis speed */
  
 /* keyboard mode gimbal speed limit */
 
@@ -101,8 +101,8 @@
 #define GIMBAL_CASCADE_CTRL
 #define PIT_ANGLE_MAX        10
 #define PIT_ANGLE_MIN        -20
-#define YAW_ANGLE_MAX        60
-#define YAW_ANGLE_MIN        -60
+#define YAW_ANGLE_MAX        40
+#define YAW_ANGLE_MIN        -40
 
 /* uart relevant********************************************/
 #define PC_HUART huart6

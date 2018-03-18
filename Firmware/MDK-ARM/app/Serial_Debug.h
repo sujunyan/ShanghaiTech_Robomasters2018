@@ -25,7 +25,7 @@
 }\
 
 
-#define SERIAL_DEBUG_PERIOD 200
+#define SERIAL_DEBUG_PERIOD 100
 
 void testSerialDebug(void);
 void checkUART(void);

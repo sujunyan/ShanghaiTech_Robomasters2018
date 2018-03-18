@@ -135,11 +135,12 @@ void gimbal_task(void const *argu)
     //gim.ctrl_mode = GIMBAL_RELAX;
     //pid_trigger.iout = 0;
   }
-
   
+  //memset(gim.current, 0, sizeof(gim.current));
+	
   osSignalSet(can_msg_send_task_t, GIMBAL_MOTOR_MSG_SEND);
   //osSignalSet(shot_task_t, SHOT_TASK_EXE_SIGNAL);
-
+	//printf("gimbal_task done T %d\r\n",osKernelSysTick());
   gimbal_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 
 }
@@ -160,21 +161,21 @@ void gimbal_task(void const *argu)
 */
 void close_loop_handle(void){
   static float chassis_angle_tmp=0;
-  static float limit_angle_range = 2;
+  static float limit_angle_range = 3;
   
-  gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_imu;
+  gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
   gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu ; // 
   //TODO
 	//gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle;
 	
   /* chassis angle relative to gim.pid.yaw_angle_fdb */
-  //chassis_angle_tmp = gim.pid.yaw_angle_fdb - gim.sensor.yaw_relative_angle;
+  chassis_angle_tmp =  gim.pid.yaw_angle_ref ;
   /* limit gimbal yaw axis angle */
 	
-  if ((gim.sensor.yaw_relative_angle_imu >= YAW_ANGLE_MIN - limit_angle_range) && \
-      (gim.sensor.yaw_relative_angle_imu <= YAW_ANGLE_MAX + limit_angle_range))
+  if ((gim.pid.yaw_angle_fdb >= chassis_angle_tmp+ YAW_ANGLE_MIN - limit_angle_range) && \
+      (gim.pid.yaw_angle_fdb <= chassis_angle_tmp+ YAW_ANGLE_MAX + limit_angle_range))
   {
-    gim.pid.yaw_angle_ref += remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
+    gim.pid.yaw_angle_ref += -remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
                        + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW;
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);
   }
@@ -182,7 +183,7 @@ void close_loop_handle(void){
   if ((gim.sensor.pit_relative_angle_imu >= PIT_ANGLE_MIN - limit_angle_range) && \
       (gim.sensor.pit_relative_angle_imu <= PIT_ANGLE_MAX + limit_angle_range))
   {
-    gim.pid.pit_angle_ref += remote_info.rc.ch3 * GIMBAL_RC_MOVE_RATIO_PIT
+    gim.pid.pit_angle_ref += - remote_info.rc.ch3 * GIMBAL_RC_MOVE_RATIO_PIT
                        + remote_info.mouse.y * GIMBAL_PC_MOVE_RATIO_PIT;
     VAL_LIMIT(gim.pid.pit_angle_ref, PIT_ANGLE_MIN, PIT_ANGLE_MAX);
   }
@@ -226,8 +227,8 @@ void init_mode_handle(void){
   /* lift gimbal pitch */
 	
 	
-  gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_imu;
-  gim.pid.pit_angle_ref = gim.sensor.pit_relative_angle_imu * (1 - ramp_calc(&pit_ramp)); // desired ref is 0
+  gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
+  gim.pid.pit_angle_ref = gim.sensor.pit_relative_angle_ecd * (1 - ramp_calc(&pit_ramp)); // desired ref is 0
   
 	/* keep yaw unmove this time */
   gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu;
@@ -236,13 +237,15 @@ void init_mode_handle(void){
   if(gim.pid.pit_angle_fdb >= -2.0f && gim.pid.pit_angle_fdb < 2.0f)
   {
     /* yaw back center after pitch arrive */
-    gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_imu * ( 1 - ramp_calc(&yaw_ramp));
-    
+    gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_ecd * ( 1 - ramp_calc(&yaw_ramp));
+    gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd;
+		
     if (gim.pid.yaw_angle_fdb >= -1.5f && gim.pid.yaw_angle_fdb <= 1.5f)
     {
       /* yaw arrive and switch gimbal state */
       gim.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
       
+			gim.sensor.yaw_offset_angle_imu =atti.yaw;
       //gim.yaw_offset_angle = gim.sensor.gyro_angle;
       gim.pid.pit_angle_ref = 0;
       gim.pid.yaw_angle_ref = 0;
@@ -292,16 +295,7 @@ void update_gimbal_sensor(void){
 	
 	 //gim.sensor.yaw_relative_angle_imu updated in imu task
 	
-	static int cnt=0;	
-	// initialize the imu offset in bsp_can
-	if(!(g_err.list[GIMBAL_YAW_OFFLINE].err_exist || g_err.list[GIMBAL_PIT_OFFLINE].err_exist) && cnt++<10)   
-	{
-		//gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
-		//gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;		
-		//gim.sensor.pit_offset_angle_imu =  atti.roll;
-		//gim.sensor.yaw_offset_angle_imu =  atti.yaw;	
-	}
-	//if(flag)return; // if we have not initialize the offset
+ // ecd offset update in bsp_can
 	gim.sensor.yaw_relative_angle_imu = atti.yaw - gim.sensor.yaw_offset_angle_imu;
 	gim.sensor.pit_relative_angle_imu = atti.roll- gim.sensor.pit_offset_angle_imu;
 	

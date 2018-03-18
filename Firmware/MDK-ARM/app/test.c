@@ -31,13 +31,9 @@ void test_task( const void* argu){
 		//LED_G_TOGGLE;
 		
 		
-		#if 0
-	
-		#endif
 		
      //printf("can2_buf is %f %f %f \r\n",can2_buf[0],can2_buf[1],can2_buf[2]);
-		//testRemoteTask();
-		//test_chassis();
+		
 		
     test_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     

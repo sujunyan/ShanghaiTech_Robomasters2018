@@ -41,7 +41,8 @@ void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan)
 #if 1
 float can2_buf[3];
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
-	//printf("can msg recv at time %d \r\n",osKernelSysTick());
+//	static uint32_t cnt=0;
+	//printf("can recv ID %x T %d \r\n",_hcan->pRxMsg->StdId,osKernelSysTick());
   switch (_hcan->pRxMsg->StdId)
   {
     case CAN_3510_M1_ID:
@@ -63,17 +64,14 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
 		
     case CAN_YAW_MOTOR_ID:
     {
-      encoder_data_handle( _hcan,&gim.yaw_motor);			
-			// update the offset 
-			gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;
+			//printf("yaw motor recv T %d\r\n",osKernelSysTick());
+      encoder_data_handle( _hcan,&gim.yaw_motor);					
       err_detector_hook(GIMBAL_YAW_OFFLINE);
     }
     break;
     case CAN_PIT_MOTOR_ID:
     {
       encoder_data_handle(_hcan,&gim.pit_motor);
-			// update the offset
-			gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
       err_detector_hook(GIMBAL_PIT_OFFLINE);
     }
     break;
@@ -186,7 +184,7 @@ void gyro_device_init(void){
   * @param  current value corresponding motor(yaw/pitch/trigger)
   */
 void send_gimbal_cur(int16_t yaw_iq, int16_t pit_iq, int16_t trigger_iq){
-	//printf("gimbal current sent: yaw_iq %d  pit_iq %d  trigger_iq %d \r\n",yaw_iq,pit_iq,trigger_iq);
+	//printf("gim_cur_sent: yaw %d  pit %d  trigger %d  T %d\r\n",yaw_iq,pit_iq,trigger_iq,osKernelSysTick());
   GIMBAL_CAN.pTxMsg->StdId   = 0x1ff;
   GIMBAL_CAN.pTxMsg->IDE     = CAN_ID_STD;
   GIMBAL_CAN.pTxMsg->RTR     = CAN_RTR_DATA;
@@ -207,7 +205,7 @@ void send_gimbal_cur(int16_t yaw_iq, int16_t pit_iq, int16_t trigger_iq){
   * @param  3510 motor ESC id
   */
 void send_chassis_cur(int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4){
-	//printf("sending current to chassis %d %d %d %d\n\r",iq1,iq2,iq3,iq4);
+	//printf("sending current to chassis %d %d %d %d T \n\r",iq1,iq2,iq3,iq4);
   CHASSIS_CAN.pTxMsg->StdId   = 0x200;
   CHASSIS_CAN.pTxMsg->IDE     = CAN_ID_STD;
   CHASSIS_CAN.pTxMsg->RTR     = CAN_RTR_DATA;

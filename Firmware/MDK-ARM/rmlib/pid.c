@@ -109,12 +109,12 @@ float pid_calc(pid_t *pid, float get, float set)
       abs_limit(&(pid->out), pid->max_out);
   }
 	
-	if (pid->out < pid->min_out && pid->out > - pid->min_out)pid->out=0; 
+	 
 
   pid->err[LLAST] = pid->err[LAST];
   pid->err[LAST]  = pid->err[NOW];
   
-  
+  if (pid->out < pid->min_out && pid->out > - pid->min_out)pid->out=0;
   if ((pid->output_deadband != 0) && (fabs(pid->out) < pid->output_deadband))
     return 0;
   else

@@ -54,16 +54,12 @@ typedef struct
 	chassis_mode_e  ctrl_mode;
   chassis_mode_e  last_ctrl_mode;
 	
-  float           gyro_angle;
-  float           gyro_palstance;
-
 	moto_measure_t 	motor[4];
   int16_t         wheel_speed_fdb[4];
   int16_t         wheel_speed_ref[4];
   int16_t         current[4];
   
-  int16_t         position_ref;
-  uint8_t         follow_gimbal;
+
 } chassis_t;
 
 

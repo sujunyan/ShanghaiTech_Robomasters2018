@@ -3,7 +3,7 @@
 
 UBaseType_t serial_debug_stack_surplus;
 
-#define MAX_SERIAL_BUFFER_SIZE 1000
+#define MAX_SERIAL_BUFFER_SIZE 10000
 uint8_t serial_debug_buffer[MAX_SERIAL_BUFFER_SIZE];
 uint16_t serial_debug_buffer_size=0;
 void serial_debug_task(void const *argu)

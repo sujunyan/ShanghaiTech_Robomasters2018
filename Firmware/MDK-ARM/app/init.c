@@ -51,7 +51,7 @@ void chassis_param_init(void)
 
   for (int k = 0; k < 4; k++)
   {
-    PID_struct_init(&pid_spd[k], POSITION_PID, 8000, 1000, 3.0f, 0, 0);
+    PID_struct_init(&pid_spd[k], POSITION_PID, 10000, 1000, 3.0f, 0, 0);
   }
   
 }
@@ -71,23 +71,23 @@ void gimbal_param_init(void)
   gim.last_ctrl_mode = GIMBAL_RELAX;
  
 	
-	PID_struct_init(&pid_chassis_angle, POSITION_PID, 1000, 10,
-                  1, 0, 0);
+	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 10,
+                  4 , 0, 0);
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */
   PID_struct_init(&pid_pit, POSITION_PID, 300, 10,
                   30, 0, 0); //
   PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
-                  15, 0.01, 10);
+                  15, 0.1, 0);
 
   /* yaw axis motor pid parameter */
   PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50,
-                  20, 0, 25); //
-  PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 1000,
+                  30, 0, 0); //
+  PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
                   13, 0, 0 );
-  //pid_yaw_speed.min_out= 100;
-	pid_yaw.min_out=0.1;
+  //pid_yaw_speed.min_out= 200;
+	//pid_yaw.min_out=100;
 	
   /* bullet trigger motor pid parameter */
   PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,

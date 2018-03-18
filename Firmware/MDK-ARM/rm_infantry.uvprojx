@@ -741,19 +741,9 @@
               <FilePath>.\rmlib\pid.c</FilePath>
             </File>
             <File>
-              <FileName>calibrate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\calibrate.c</FilePath>
-            </File>
-            <File>
-              <FileName>keyboard.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\keyboard.c</FilePath>
-            </File>
-            <File>
               <FileName>data_fifo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\other_lib\data_fifo.c</FilePath>
+              <FilePath>.\rmlib\data_fifo.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -823,7 +813,34 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>ComunnicationTask</GroupName>
+          <GroupName>CommunicationTask</GroupName>
+          <Files>
+            <File>
+              <FileName>PC_communication_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PC_communication_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>PC_communication_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\PC_communication_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\protocol.c</FilePath>
+            </File>
+            <File>
+              <FileName>protocol.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\protocol.h</FilePath>
+            </File>
+            <File>
+              <FileName>infantry_info.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rmlib\infantry_info.h</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

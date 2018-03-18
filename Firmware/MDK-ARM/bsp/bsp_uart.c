@@ -39,6 +39,8 @@
 uint8_t judge_dma_rxbuff[2][UART_RX_DMA_SIZE];
 uint8_t pc_dma_rxbuff[2][UART_RX_DMA_SIZE];
 
+extern TaskHandle_t PC_communication_task_t;
+
 /**
   * @brief   clear idle it flag after uart receive a frame data
   * @param   uart IRQHandler id
@@ -62,17 +64,16 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
       RemoteDataPrcess(RemoteData);
       err_detector_hook(REMOTE_CTRL_OFFLINE);
     }
-    //taskEXIT_CRITICAL_FROM_ISR(status);
     
     /* restart dma transmission */
     __HAL_DMA_SET_COUNTER(huart->hdmarx, DBUS_MAX_LEN);
     __HAL_DMA_ENABLE(huart->hdmarx);
 
   }
-  else if ((huart == &JUDGE_HUART) || (huart == &COMPUTER_HUART))
+  else if ( huart == &COMPUTER_HUART)
   {
     //uart_idle_interrupt_signal(huart);
-    
+    osSignalSet(PC_communication_task_t, PC_UART_IDLE_SIGNAL);
   }
   else
   {
@@ -94,27 +95,24 @@ void uart_receive_handler(UART_HandleTypeDef *huart)
 }
 
 
-
-
-
-
-
-
-
-
-
 /* Current memory buffer used is Memory 0 */
 //if((hdma->Instance->CR & DMA_SxCR_CT) == RESET)
 static void dma_m1_rxcplt_callback(DMA_HandleTypeDef *hdma)
 {
-  //UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  //uart_dma_full_signal(huart);
+  UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+  if (huart == &COMPUTER_HUART)
+  {
+    osSignalSet(PC_communication_task_t, PC_DMA_FULL_SIGNAL);
+  }
 }
 /* Current memory buffer used is Memory 1 */
 static void dma_m0_rxcplt_callback(DMA_HandleTypeDef *hdma)
 {
-  //UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  //uart_dma_full_signal(huart);
+  UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+  if (huart == &COMPUTER_HUART)
+  {
+    osSignalSet(PC_communication_task_t, PC_DMA_FULL_SIGNAL);
+  }
 }
 static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \
                                                    uint32_t SrcAddress, \
@@ -216,7 +214,7 @@ void judgement_uart_init(void)
   
 }
 
-#if 0
+#if 1
 void computer_uart_init(void){
   //open uart idle it
   __HAL_UART_CLEAR_IDLEFLAG(&COMPUTER_HUART);
@@ -288,4 +286,7 @@ uint16_t dma_current_data_counter(DMA_Stream_TypeDef *dma_stream)
   /* Return the number of remaining data units for DMAy Streamx */
   return ((uint16_t)(dma_stream->NDTR));
 }
+
+
+
 

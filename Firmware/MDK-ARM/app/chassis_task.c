@@ -15,13 +15,14 @@ void chassis_task(const void* argu){ // timer
 
 	
 	// TODO swich the mode to handle data from PC 
-	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
-	chasis_remote_handle();
+	
+	
 	
 	// chassis follow the gimbal
 	pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle_ecd , 0);
 	chassis.vw = pid_chassis_angle.out;
-	
+	chasis_remote_handle();
+	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
   
   if (!chassis_is_controllable())
@@ -36,21 +37,14 @@ void chassis_task(const void* argu){ // timer
 			chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_speed_fdb[i], chassis.wheel_speed_ref[i]);
 		}
 	}
+	//TODO ban chassis for test 
+	
+	//memset(chassis.current, 0, sizeof(chassis.current));
+	
 		osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
 		chasis_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 }
 
-void test_chassis(void){
-	static uint16_t cnt=0;
-	if(cnt++%2==0)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			printf("speed %d %d resired %d \n\r ",i,chassis.wheel_speed_fdb[i],chassis.wheel_speed_ref[i]);
-		}
-	printf(" with cnt %d \n\r ",cnt);
-	}
-}
 
 
 
@@ -84,22 +78,6 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
   ptr->speed_rpm     = (int16_t)(hcan->pRxMsg->Data[2] << 8 | hcan->pRxMsg->Data[3]);
   ptr->given_current = (int16_t)(hcan->pRxMsg->Data[4] << 8 | hcan->pRxMsg->Data[5]);
 	
-	#if 0
-	static int cnt=1;
-	cnt++;
-	//printf("cnt=%d\n\r",cnt);
-	if(cnt%1000==0)
-	{
-		int16_t degree=(hcan->pRxMsg->Data[0]<<8)+hcan->pRxMsg->Data[1];
-		int16_t rpm_speed=(hcan->pRxMsg->Data[2]<<8)+hcan->pRxMsg->Data[3];
-		int16_t Torque_current=(hcan->pRxMsg->Data[4]<<8)+hcan->pRxMsg->Data[5];
-		int16_t temperature=(hcan->pRxMsg->Data[4]<<8)+hcan->pRxMsg->Data[5];
-		printf("Motor %d Msg recieved in time %d cnt=%d",motor_ID,HAL_GetTick(),cnt);
-		printf("degree: %d rpm_speed %d Torque_current %d temperature %d \r\n",
-						degree,rpm_speed,Torque_current,temperature);
-		
-	}
-	#endif
 	
 }
 
@@ -124,24 +102,11 @@ void print_encoder(moto_measure_t* ptr){
   ptr->given_current);
 }
 
-int is_Motor_Reversed(int i){ // some of the motor is reversed due to symmetric
-	
-	switch (i)
-	{
-		case 0:
-		case 3:
-			return 1;
-		case 1:
-		case 2:
-			return -1;
-		default:
-			return 0;
-	}
-}
+
 
 uint8_t chassis_is_controllable(void){
   if (chassis.ctrl_mode == CHASSIS_RELAX 
-	||	gim.ctrl_mode ==  GIMBAL_INIT
+	 ||	gim.ctrl_mode ==  GIMBAL_INIT
    || g_err.list[REMOTE_CTRL_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M1_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M2_OFFLINE].err_exist
@@ -176,11 +141,11 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
   int16_t wheel_rpm[4];
   float   max = 0;
   
-  wheel_rpm[0] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;
-  wheel_rpm[1] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	
+  wheel_rpm[0] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
+  wheel_rpm[1] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
 	// these wheels are reversed due to sysmetry
-  wheel_rpm[2] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;
-  wheel_rpm[3] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;
+  wheel_rpm[2] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
+  wheel_rpm[3] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
 
   //find max item 
   for (uint8_t i = 0; i < 4; i++)
@@ -228,8 +193,8 @@ void chasis_remote_handle(void){
 	}
 	else
 		{
-			chassis.vx =  remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // left-right
-			chassis.vy = - remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; //  forward-backward 
+			chassis.vx = - remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X; // left-right
+			chassis.vy =  remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; //  forward-backward 
 			//chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
 		}
 }

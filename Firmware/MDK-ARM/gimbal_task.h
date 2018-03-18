@@ -6,7 +6,7 @@
 /* gimbal control period time (ms) */
 #define GIMBAL_PERIOD 5
 #define CALI_DONE
-#define PIT_ECD_CENTER_OFFSET 5600
+#define PIT_ECD_CENTER_OFFSET 5750
 #define YAW_ECD_CENTER_OFFSET 3330
 
 

@@ -142,9 +142,10 @@ void CommunicateNode::send_data(float data1, float data2, float data3, uint8_t m
   package -> data1 = data1;
   package -> data2 = data2;
   package -> data3 = data3;
+  package -> mask =mask;
   uint8_t buf[14];
-  uint16_t size = protocol_packet_pack(STU_CUSTOM_DATA_ID, (uint8_t*) package, sizeof(package), UP_REG_ID, buf);
-  boost::asio::write(port, boost::asio::buffer(buf,14));
+  uint16_t size = protocol_packet_pack(STU_CUSTOM_DATA_ID, (uint8_t*) package, sizeof(package), DN_REG_ID, buf);
+  boost::asio::write(port, boost::asio::buffer(buf,size));
 }
 
 void CommunicateNode::board_data_handle(uint8_t *p_frame)

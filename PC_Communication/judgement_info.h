@@ -149,6 +149,7 @@ typedef struct
  float data1;
  float data2;
  float data3;
+uint8_t mask;
 } __attribute__((packed))extShowData_t;
 
 /**

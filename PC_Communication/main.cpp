@@ -17,7 +17,7 @@ int main(void){
 
                 if(cnt++%10==0)
                 {
-                    node.send_data(1.1,2.2,3.3,4);
+                    node.send_data(1.11,2.22,3.33,0);
                     node.test();
                 }
          #endif

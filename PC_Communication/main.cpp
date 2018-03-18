@@ -14,13 +14,16 @@ int main(void){
         {
           #if 1
                 node.update_once();
+
                 if(cnt++%10==0)
                 {
+                    node.send_data(1.1,2.2,3.3,4);
                     node.test();
                 }
          #endif
         }
 #endif
+
 #if 0
         SerialPort serialPort(portname,115200);
         int cnt=0;

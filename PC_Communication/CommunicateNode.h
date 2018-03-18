@@ -8,6 +8,7 @@
 #include <cstdint>
 #include "protocol.h"
 #include <boost/asio.hpp>
+
 using namespace boost;
 
 class CommunicateNode
@@ -20,6 +21,7 @@ public:
     void send_cali_cmd();
     void send_chasis_ctrl();
     void send_gimbal_ctrl();
+    void send_data(float data1, float data2, float data3, uint8_t mask);
     send_board_t board_send_msg;
 
     bool is_open();
@@ -43,5 +45,5 @@ private:
 
 };
 
-uint8_t* protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof, uint8_t *tx_buf);
+uint16_t protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof, uint8_t *tx_buf);
 #endif //PC_COMMUNICATION_COMMUNICATENODE_H

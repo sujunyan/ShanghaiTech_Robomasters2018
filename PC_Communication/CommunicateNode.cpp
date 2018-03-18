@@ -11,7 +11,7 @@
 
 #include <unistd.h>
 
-uint8_t* protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof, uint8_t *tx_buf) {
+uint16_t protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof, uint8_t *tx_buf) {
   uint16_t frame_length = HEADER_LEN + CMD_LEN + len + CRC_LEN;
   frame_header_t *p_header = (frame_header_t*)tx_buf;
 
@@ -25,7 +25,7 @@ uint8_t* protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, ui
   memcpy(&tx_buf[HEADER_LEN + CMD_LEN], p_data, len);
   append_crc16_check_sum(tx_buf, frame_length);
 
-  return tx_buf;
+  return frame_length;
 } // unused function -- send message
 
 void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
@@ -137,6 +137,16 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
   }
 }
 
+void CommunicateNode::send_data(float data1, float data2, float data3, uint8_t mask) {
+  extShowData_t *package;
+  package -> data1 = data1;
+  package -> data2 = data2;
+  package -> data3 = data3;
+  uint8_t buf[14];
+  uint16_t size = protocol_packet_pack(STU_CUSTOM_DATA_ID, (uint8_t*) package, sizeof(package), UP_REG_ID, buf);
+  boost::asio::write(port, boost::asio::buffer(buf,14));
+}
+
 void CommunicateNode::board_data_handle(uint8_t *p_frame)
 {
   frame_header_t *p_header = (frame_header_t*)p_frame;
@@ -145,12 +155,11 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-
   switch (cmd_id)
   {
       case CHASSIS_DATA_ID:
-      memcpy(&board_rece_msg.chassis_information, data_addr, data_length);
-        break;
+          memcpy(&board_rece_msg.chassis_information, data_addr, data_length);
+          break;
       case GIMBAL_DATA_ID:
           memcpy(&board_rece_msg.chassis_information, data_addr, data_length);
           break;
@@ -173,8 +182,6 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
           memcpy(&board_rece_msg.version_info_data, data_addr, data_length);
           break;
   }
-
-
 }
 
 void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
@@ -186,56 +193,69 @@ void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
   //uint16_t cmd_id      = *(uint16_t*)(p_frame+HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-#if 0
-    if(cmd_id && data_length==6)
+  #if 1
     //if(cmd_id)
     {
       //printf("handle judge data\n");
       //print_data(p_frame);
-      printf("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=========================================================]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
-      print_all_packet(p_frame);
-      printf("cmd_id = %d | %d << %d\n", p_frame[HEADER_LEN], p_frame[HEADER_LEN+1], 8);
-      printf("judge_data handle with len %d cmd_id %x \n", data_length, cmd_id);
+      // print_all_packet(p_frame);
+      // printf("cmd_id = %d | %d << %d\n", p_frame[HEADER_LEN], p_frame[HEADER_LEN+1], 8);
+      // printf("judge_data handle with len %d cmd_id %x \n", data_length, cmd_id);
       //printf("HEADER_LEN= %lu the data is ",HEADER_LEN);
-      printf("\n");
+      // printf("\n");
     }
-#endif
+  #endif
+
   switch (cmd_id)
-  {
+    {
     case GAME_INFO_ID:
+      //printf("it works 001\n");
       memcpy(&judge_rece_mesg.game_information, data_addr, data_length);
     break;
 
     case REAL_BLOOD_DATA_ID:
+      //printf("it works 002\n");
       memcpy(&judge_rece_mesg.blood_changed_data, data_addr, data_length);
     break;
 
     case REAL_SHOOT_DATA_ID:
+      printf("it works 003\n");
       memcpy(&judge_rece_mesg.real_shoot_data, data_addr, data_length);
     break;
 
     case POWER_HEAT_DATA_ID:
+      //printf("it works 004\n");
       memcpy(&judge_rece_mesg.power_heat_data, data_addr, data_length);
     break;
 
     case REAL_FIELD_DATA_ID:
+      //printf("it works 005\n");
       memcpy(&judge_rece_mesg.rfid_data, data_addr, data_length);
     break;
 
     case GAME_RESULT_ID:
+      //printf("it works 006\n");
       memcpy(&judge_rece_mesg.game_result_data, data_addr, data_length);
     break;
 
     case GAIN_BUFF_ID:
+      //printf("it works 007\n");
       memcpy(&judge_rece_mesg.get_buff_data, data_addr, data_length);
     break;
 
     case ROBOT_POSITION_ID:
+      //printf("it works 008\n");
       memcpy(&judge_rece_mesg.robot_position_data, data_addr, data_length);
     break;
 
     case STU_CUSTOM_DATA_ID:
+      //printf("it works 100\n");
       memcpy(&judge_rece_mesg.clinet_show_data, data_addr, data_length);
+    break;
+
+    case DOWNLOAD_DATA_ID:
+      //printf("it works 102\n");
+      memcpy(&judge_rece_mesg.clinet_download_data, data_addr, data_length);
     break;
   }
 
@@ -258,10 +278,11 @@ CommunicateNode::CommunicateNode(char *portname, int baudrate) {
         port. set_option (serial_port :: stop_bits (serial_port :: stop_bits :: one ) ) ;
         port. set_option (serial_port :: character_size (8 ) ) ;
     };
-    data.p_header=new frame_header_t;
+    data.p_header = new frame_header_t;
 
     memset(&judge_rece_mesg,0,sizeof(judge_rece_mesg));
     memset(&board_rece_msg,0,sizeof(board_rece_msg));
+
     IsOpen=1;
 }
 
@@ -273,7 +294,7 @@ void CommunicateNode::update() {
 }
 
 void CommunicateNode::update_once() {
-        // unpack_data(&data,UP_REG_ID);
+        //unpack_data(&data,UP_REG_ID);
         /* if open, other codes doesnt work */
         //printf("update begin\n");
         unpack_data(&data,DN_REG_ID);
@@ -281,85 +302,75 @@ void CommunicateNode::update_once() {
 }
 
 void CommunicateNode::print_judge_info() {
-#if 1
-    //cmd_id=1 game_info
-printf("================CHECKSTART======================\n");
-// 0x0001 game_information
-#if 1
-    printf("----------0x0001 game_information-------------------------\n");
-    extGameRobotState_t state = judge_rece_mesg.game_information;
-    printf("stageRemainTime: %d\n",state.stageRemainTime);
-    printf("gameProgress: %d\n",state.gameProgress);
-    printf("remainHP: %d/%d\n",state.remainHP, state.maxHP);
-#endif
+  //cmd_id=1 game_info
+  printf("================CHECKSTART======================\n");
+  // 0x0001 game_information
+      printf("----------0x0001 game_information-------------------------\n");
+      extGameRobotState_t state = judge_rece_mesg.game_information;
+      printf("stageRemainTime: %d\n",state.stageRemainTime);
+      printf("gameProgress: %d\n",state.gameProgress);
+      printf("remainHP: %d/%d\n",state.remainHP, state.maxHP);
+  // 0x0002 blood_changed_data
+  // 0x0003 real_shoot_data
+      printf("-----0x0002 & 0x0003 blood_changed & real_shoot_data------\n");
+      extShootData_t shoot = judge_rece_mesg.real_shoot_data;
+      printf("bulletType: %d\n", shoot.bulletType);
+      printf("bulletSpeed: %f\n", shoot.bulletSpeed);
+      printf("bulletFreq: %d\n", shoot.bulletFreq);
+      extRobotHurt_t hurt = judge_rece_mesg.blood_changed_data;
+      printf("hurtArmorType: %d", hurt.armorType);
+      switch (hurt.armorType)
+      {
+        case 0: printf(" (Front)\n"); break;
+        case 1: printf(" (Left)\n"); break;
+        case 2: printf(" (Behind)\n"); break;
+        case 3: printf(" (Right)\n"); break;
+        case 4: printf(" (Above_1)\n"); break;
+        case 5: printf(" (Above_2)\n"); break;
+        default: printf(" (Offline)\n"); break;
+      }
+      printf("hurtType: %d\n", hurt.hurtType);
+  // 0x0004 power_heat_data
+      printf("----------0x0004 power_heat_data--------------------------\n");
+      extPowerHeatData_t power = judge_rece_mesg.power_heat_data;
+      printf("chassisVolt: %f\n", power.chassisVolt);
+      printf("chassisCurrent: %f\n", power.chassisCurrent);
+      printf("chassisPower: %f\n", power.chassisPower);
+      printf("chassisPowerBuffer: %f\n", power.chassisPowerBuffer);
+  // 0x0005 rfid_data
+      printf("----------0x0005 rfid_data--------------------------------\n");
+      extRfidDetect_t detect = judge_rece_mesg.rfid_data;
+      printf("cardType: %d\n", detect.cardType);
+      printf("cardIdx: %d\n", detect.cardIdx);
+  // 0x0006 game_result_data
+      printf("----------0x0006 game_result_data-------------------------\n");
+      extGameResult_t whowin = judge_rece_mesg.game_result_data;
+      printf("winner: %d\n", whowin.winner);
+  // 0x0007 get_buff_data
+      printf("----------0x0007 get_buff_data----------------------------\n");
+      extGetBuff_t getbuff = judge_rece_mesg.get_buff_data;
+      printf("buffType: %d\n", getbuff.buffType);
+      printf("buffAddition: %d\n", getbuff.buffAddition);
+  // 0x0008 robot_position_data
+      printf("----------0x0008 robot_position_data----------------------\n");
+      extGameRobotPos_t position = judge_rece_mesg.robot_position_data;
+      printf("x y z: %f / %f / %f\n", position.x, position.y, position.z);
+      printf("yaw: %f\n", position.yaw);
+  // 0x0100 clinet_show_data
+      printf("----------0x0100 client_show_data-------------------------\n");
+      extShowData_t userdeff = judge_rece_mesg.clinet_show_data;
+      printf("data1: %f\n", userdeff.data1);
+      printf("data2: %f\n", userdeff.data2);
+      printf("data3: %f\n", userdeff.data3);
+  // 0x0102 clinet_show_data
+      printf("----------0x0102 clinet_download_data---------------------\n");
+      extDownStreamData_t userdef = judge_rece_mesg.clinet_download_data;
+      for (int i = 0; i < 32; i++) {
+        printf("%d ", userdef.data[i]);
+      }
+      printf("\n");
 
-// 0x0002 blood_changed_data
-// 0x0003 real_shoot_data
-
-#if 1
-    printf("-----0x0002 & 0x0003 blood_changed & real_shoot_data------\n");
-    extShootData_t shoot = judge_rece_mesg.real_shoot_data;
-    printf("bulletType: %d\n", shoot.bulletType);
-    printf("bulletSpeed: %f\n", shoot.bulletSpeed);
-    printf("bulletFreq: %d\n", shoot.bulletFreq);
-    extRobotHurt_t hurt = judge_rece_mesg.blood_changed_data;
-    printf("hurtArmorType: %d\n", hurt.armorType);
-    printf("hurtType: %d\n", hurt.hurtType);
-#endif
-
-// 0x0004 power_heat_data
-#if 1
-    printf("----------0x0004 power_heat_data--------------------------\n");
-    extPowerHeatData_t power = judge_rece_mesg.power_heat_data;
-    printf("chassisVolt: %f\n", power.chassisVolt);
-    printf("chassisCurrent: %f\n", power.chassisCurrent);
-    printf("chassisPower: %f\n", power.chassisPower);
-    printf("chassisPowerBuffer: %f\n", power.chassisPowerBuffer);
-#endif
-
-// 0x0005 rfid_data
-#if 1
-    printf("----------0x0005 rfid_data--------------------------------\n");
-    extRfidDetect_t detect = judge_rece_mesg.rfid_data;
-    printf("cardType: %d\n", detect.cardType);
-    printf("cardIdx: %d\n", detect.cardIdx);
-#endif
-
-// 0x0006 game_result_data
-#if 1
-    printf("----------0x0006 game_result_data-------------------------\n");
-    extGameResult_t whowin = judge_rece_mesg.game_result_data;
-    printf("winner: %d\n", whowin.winner);
-#endif
-
-// 0x0007 get_buff_data
-#if 1
-    printf("----------0x0007 get_buff_data----------------------------\n");
-    extGetBuff_t getbuff = judge_rece_mesg.get_buff_data;
-    printf("buffType: %d\n", getbuff.buffType);
-    printf("buffAddition: %d\n", getbuff.buffAddition);
-#endif
-
-// 0x0008 robot_position_data
-#if 1
-    printf("----------0x0008 robot_position_data----------------------\n");
-    extGameRobotPos_t position = judge_rece_mesg.robot_position_data;
-    printf("x y z: %f / %f / %f\n", position.x, position.y, position.z);
-    printf("yaw: %f\n", position.yaw);
-#endif
-
-// 0x0100 clinet_show_data
-#if 1
-    printf("----------0x0100 client_show_data-------------------------\n");
-    extShowData_t userdef = judge_rece_mesg.clinet_show_data;
-    printf("data1: %f\n", userdef.data1);
-    printf("data2: %f\n", userdef.data2);
-    printf("data3: %f\n", userdef.data3);
-    printf("mask: %d\n", userdef.mask);
-#endif
-
-printf("================CHECKOVER======================\n");
-#endif
+  printf("================CHECKOVER======================\n");
 }
 
 void CommunicateNode::print_board_info() {

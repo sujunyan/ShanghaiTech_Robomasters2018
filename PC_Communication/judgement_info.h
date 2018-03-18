@@ -22,9 +22,9 @@ typedef enum
   GAIN_BUFF_ID       = 0x0007,  // Buff gained
   ROBOT_POSITION_ID  = 0x0008,  // 50Hz
 
-  STU_CUSTOM_DATA_ID = 0x0100,  // 10Hz
-  //ROBOT_TO_CLIENT_ID = 0x0101,
-  //CLIENT_TO_ROBOT_ID = 0x0102,
+  STU_CUSTOM_DATA_ID = 0x0100,
+  UPLOAD_DATA_ID     = 0x0101,
+  DOWNLOAD_DATA_ID   = 0x0102,
 } judge_data_id_e;
 
 /**
@@ -142,25 +142,30 @@ typedef struct
 } __attribute__((packed))extGameRobotPos_t;
 
 /**
- * @brief  student custom data
+ * @brief  student custom data(0x0100)
  */
 typedef struct
 {
  float data1;
  float data2;
  float data3;
- uint8_t mask;
 } __attribute__((packed))extShowData_t;
 
-//typedef struct
-//{
-//  uint8_t  data[64];
-//} __attribute__((packed))user_to_server_t;
-//
-//typedef struct
-//{
-//  uint8_t  data[32];
-//} __attribute__((packed))server_to_user_t;
+/**
+ * @brief  UPLOAD (0x0101)
+ */
+typedef struct
+{
+ uint8_t data[64];
+} __attribute__((packed))extUpStreamData_t;
+
+/**
+ * @brief  DOWNLOAD (0x0101)
+ */
+typedef struct
+{
+  uint8_t data[32];
+} __attribute__((packed))extDownStreamData_t;
 
 /**
   * @brief  the data structure receive from judgement
@@ -176,5 +181,7 @@ typedef struct
   extGetBuff_t            get_buff_data;
   extGameRobotPos_t       robot_position_data;
   extShowData_t           clinet_show_data;
+  extDownStreamData_t     clinet_download_data;
 } __attribute__((packed))receive_judge_t;
-#endif //PC_COMMUNICATION_JUDGEMENT_INFO_H
+#endif
+//PC_COMMUNICATION_JUDGEMENT_INFO_H

@@ -88,7 +88,7 @@ void gimbal_self_check(void)
 #endif 
 
 extern TaskHandle_t can_msg_send_task_t;
-extern TaskHandle_t shot_task_t;
+extern TaskHandle_t shoot_task_t;
 void gimbal_task(void const *argu)
 {
  
@@ -139,7 +139,7 @@ void gimbal_task(void const *argu)
   //memset(gim.current, 0, sizeof(gim.current));
 	
   osSignalSet(can_msg_send_task_t, GIMBAL_MOTOR_MSG_SEND);
-  //osSignalSet(shot_task_t, SHOT_TASK_EXE_SIGNAL);
+  osSignalSet(shoot_task_t, SHOT_TASK_EXE_SIGNAL);
 	//printf("gimbal_task done T %d\r\n",osKernelSysTick());
   gimbal_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 
@@ -180,8 +180,8 @@ void close_loop_handle(void){
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);
   }
   /* limit gimbal pitch axis angle */
-  if ((gim.sensor.pit_relative_angle_imu >= PIT_ANGLE_MIN - limit_angle_range) && \
-      (gim.sensor.pit_relative_angle_imu <= PIT_ANGLE_MAX + limit_angle_range))
+  if ((gim.sensor.pit_relative_angle_ecd >= PIT_ANGLE_MIN - limit_angle_range) && \
+      (gim.sensor.pit_relative_angle_ecd <= PIT_ANGLE_MAX + limit_angle_range))
   {
     gim.pid.pit_angle_ref += - remote_info.rc.ch3 * GIMBAL_RC_MOVE_RATIO_PIT
                        + remote_info.mouse.y * GIMBAL_PC_MOVE_RATIO_PIT;

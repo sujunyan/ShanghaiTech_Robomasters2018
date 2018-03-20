@@ -810,6 +810,16 @@
               <FileType>5</FileType>
               <FilePath>.\gimbal_task.h</FilePath>
             </File>
+            <File>
+              <FileName>shoot_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\shoot_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>shoot_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\shoot_task.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

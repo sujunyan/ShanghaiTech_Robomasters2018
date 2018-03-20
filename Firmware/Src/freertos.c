@@ -62,13 +62,14 @@
 #include "can_send_task.h"
 #include "gimbal_task.h"
 #include "PC_communication_task.h"
+#include "shoot_task.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN Variables */
-TaskHandle_t shot_task_t;
+TaskHandle_t shoot_task_t;
 TaskHandle_t can_msg_send_task_t;
 
 TaskHandle_t mode_sw_task_t;
@@ -162,6 +163,7 @@ void MX_FREERTOS_Init(void) {
   
 		
   /* USER CODE END RTOS_TIMERS */
+	// timer start in StartDefaultTask
 		osTimerDef(chassisTimer, chassis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);  // 10 ms
     
@@ -181,13 +183,15 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); //wait for signal set by gimbal/chasis_task
 	can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL);
 		 
+		 osThreadDef(shotTask, shoot_task, osPriorityAboveNormal, 0, 128);  // wait for signal set by gimbal
+    shoot_task_t = osThreadCreate(osThread(shotTask), NULL);
     
 		/* normal priority task */
-    osThreadDef(errTask, detect_task, osPriorityNormal, 0, 128);  // 50 ms
-    detect_task_t = osThreadCreate(osThread(errTask), NULL);
+   osThreadDef(errTask, detect_task, osPriorityNormal, 0, 128);  // 50 ms
+   detect_task_t = osThreadCreate(osThread(errTask), NULL);
 
 		osThreadDef(imuTask, imu_task, osPriorityNormal, 0, 128);  // 1 ms
-    imu_task_t = osThreadCreate(osThread(imuTask), NULL);
+   imu_task_t = osThreadCreate(osThread(imuTask), NULL);
 		
 		
 		 
@@ -199,7 +203,7 @@ void MX_FREERTOS_Init(void) {
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
 		
 		#else 
-		osThreadDef(PC_communicationTask, PC_communication_task, osPriorityNormal, 0, 128);  // 1 ms
+		osThreadDef(PC_communicationTask, PC_communication_task, osPriorityNormal, 0, 128);  // wait for uart signal 
     PC_communication_task_t = osThreadCreate(osThread(PC_communicationTask), NULL);
 		#endif
 		

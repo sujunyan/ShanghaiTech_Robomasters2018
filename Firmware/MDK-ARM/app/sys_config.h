@@ -12,7 +12,7 @@
 #define DEFAULT_TUNE  300
 #define RC_RESOLUTION 660.0f
 
-/*************************chassis setting*******************************/
+/*************************chassis setting*********************************************************/
 /* remote mode chassis move speed limit */
 /* left and right speed (mm/s) */
 #define CHASSIS_RC_MAX_SPEED_X  3300.0f
@@ -36,7 +36,7 @@
 #define CHASSIS_KB_MAX_SPEED_R 10.0f
 #define CHASSIS_KB_MOVE_RATIO_R 1.0f
 
-/************************ chassis parameter ****************************/
+/************************ chassis parameter ********************************************************/
 
 #define RADIUS     76  // the radius of wheel(mm)
 #define PERIMETER  478 //the perimeter of wheel(mm)
@@ -73,29 +73,26 @@
   #define MAX_CHASSIS_VR_SPEED 360   //5000rpm
 #endif
 
-/**************************gimbal setting*******************************/
+/**************************gimbal setting*************************************************************************************/
 
 
 /* remote mode gimbal speed limit */
 
-#define GIMBAL_RC_MOVE_RATIO_PIT 0.002f /* pitch axis speed */
-#define GIMBAL_RC_MOVE_RATIO_YAW 0.001f /* yaw axis speed */
+#define GIMBAL_RC_MOVE_RATIO_PIT 0.002f
+#define GIMBAL_RC_MOVE_RATIO_YAW 0.001f 
  
 /* keyboard mode gimbal speed limit */
 
-#define GIMBAL_PC_MOVE_RATIO_PIT 1.0f /* pitch axis speed */
-#define GIMBAL_PC_MOVE_RATIO_YAW 1.0f /* yaw axis speed */
-/************************** gimbal parameter *****************************/
+#define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
+#define GIMBAL_PC_MOVE_RATIO_YAW -0.04f 
+/************************** gimbal parameter ******************************************************************/
 /* the ratio of motor encoder value translate to degree */
 #define ENCODER_ANGLE_RATIO    (360.0f/8192.0f)
-/* the deceleration ratio of pitch axis motor */
-#define PIT_DECELE_RATIO       1.0f
-/* the deceleration ratio of yaw axis motor */
-#define YAW_DECELE_RATIO       1.0f    //(5.0f/8.0f)
-
-#define PIT_MOTO_POSITIVE_DIR  1.0f /* the positive direction of pitch axis motor */
-#define YAW_MOTO_POSITIVE_DIR  1.0f /* the positive direction of yaw axis motor */
-#define TRI_MOTO_POSITIVE_DIR  1.0f /* the positive direction of tirgger motor */
+#define PIT_DECELE_RATIO       1.0f /* the deceleration ratio of pitch axis motor */
+#define YAW_DECELE_RATIO       1.0f    //(5.0f/8.0f) /* the deceleration ratio of yaw axis motor */
+#define PIT_MOTO_POSITIVE_DIR  1.0f 
+#define YAW_MOTO_POSITIVE_DIR  1.0f 
+#define TRI_MOTO_POSITIVE_DIR  1.0f 
 
 /*************************** gimbal relevant *********************************/
 #define GIMBAL_CASCADE_CTRL
@@ -103,8 +100,13 @@
 #define PIT_ANGLE_MIN        -20
 #define YAW_ANGLE_MAX        40
 #define YAW_ANGLE_MIN        -40
-
-/* uart relevant********************************************/
+#define LEFT_FRICTION        TIM12->CCR1
+#define RIGHT_FIRCTION       TIM12->CCR2
+/**************************shot  setting********************************/
+/* shot speed */
+#define DEFAULT_FRIC_WHEEL_SPEED 1500 //maximum value is 2500
+#define TRIGGER_MOTOR_SPEED      2000  /* shot frequence */
+/************************ uart relevant********************************************/
 #define PC_HUART huart6
 #define DBUS_HUART         huart1 //for dji remote controler reciever
 #define JUDGE_HUART        huart3 //connected to judge system

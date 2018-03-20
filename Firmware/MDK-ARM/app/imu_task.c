@@ -363,7 +363,7 @@ void imu_task(void const *argu)
     imu_attitude_update();
     
     imu_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
-    printf("imu_task done T %d\r\n",HAL_GetTick());
+    //printf("imu_task done T %d\r\n",HAL_GetTick());
     osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);  
   }
 

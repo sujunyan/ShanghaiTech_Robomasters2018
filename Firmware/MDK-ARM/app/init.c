@@ -14,9 +14,10 @@
 #include "imu_task.h"
 #include "gimbal_task.h"
 #include "stdlib.h"
+#include "shoot_task.h"
 void sys_init()
 {
-	 MX_GPIO_Init();
+	MX_GPIO_Init();
   MX_DMA_Init();
   MX_SDIO_SD_Init();
   MX_CAN1_Init();
@@ -43,6 +44,7 @@ void pram_init(void)
 	imu_param_init();
 	gimbal_param_init();
 	gimbal_back_param();
+	shoot_param_init();
 }
 
 void chassis_param_init(void)
@@ -71,8 +73,8 @@ void gimbal_param_init(void)
   gim.last_ctrl_mode = GIMBAL_RELAX;
  
 	
-	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 10,
-                  4 , 0, 0);
+	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 50,
+                  4 , 0.01, 0);
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */
@@ -94,5 +96,24 @@ void gimbal_param_init(void)
                   15, 0, 10);
   PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 3000,
                   1.5, 0.1, 5);
+}
+
+
+void shoot_param_init(void){
+	
+	
+  memset(&shoot, 0, sizeof(shoot_t));
+  
+  shoot.ctrl_mode      = SHOT_DISABLE;
+  shoot.fric_wheel_spd = DEFAULT_FRIC_WHEEL_SPEED;
+  //shot.remain_bullets = 0;
+  
+  memset(&trig, 0, sizeof(trigger_t));
+  
+  trig.dir             = 1;
+  trig.feed_bullet_spd = 2000;
+  trig.c_shot_spd      = 4000;
+  trig.state         = TRIG_INIT;
+  
 }
 

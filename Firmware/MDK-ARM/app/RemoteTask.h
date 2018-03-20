@@ -55,7 +55,7 @@
  * bit      :15   14   13   12   11   10   9   8   7   6     5     4   3   2   1
  * keyboard : V    C    X	  Z    G    F    R   E   Q  CTRL  SHIFT  D   A   S   W
  **********************************************************************************/
-#define KEY_W 			(remote_info.key_code & 0x0001)		//bit 0
+#define KEY_W 			(remote_info.key_code &0x0001 )		//bit 0
 #define KEY_S 			(remote_info.key_code &0x0002 )
 #define KEY_A 			(remote_info.key_code &0x0004	)
 #define KEY_D 			(remote_info.key_code &0x0008	)
@@ -72,24 +72,6 @@
 #define KEY_V 			(remote_info.key_code &0x4000	)	//bit 15
 #define KEY_B				(remote_info.key_code &0x8000	)
 /******************************************************/
-/* control key definition **************/
-//      direction  key
-#define FORWARD    (KEY_W)
-#define BACK       (KEY_S)
-#define LEFT       (KEY_A)
-#define RIGHT      (KEY_D)
-//      speed      key
-#define FAST_SPD   (KEY_SHIFT)
-#define SLOW_SPD   (KEY_CTRL)
-//      function   key or mouse operate
-#define TWIST_CTRL (rc.kb.bit.E)
-#define BUFF_CTRL  (rc.kb.bit.F)
-#define TRACK_CTRL (km.rk_sta == KEY_PRESS_LONG)
-//      shoot relevant       key or mouse operation
-#define KB_SINGLE_SHOOT     (km.lk_sta == KEY_PRESS_ONCE)
-#define KB_CONTINUE_SHOOT   (km.lk_sta == KEY_PRESS_LONG)
-#define KB_OPEN_FRIC_WHEEL  (rc.kb.bit.Q)
-#define KB_CLOSE_FIRC_WHEEL (rc.kb.bit.Q && rc.kb.bit.SHIFT)
 
 
 //RC_CtrlData

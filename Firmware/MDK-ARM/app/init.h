@@ -5,5 +5,5 @@
 void sys_init(void);
 void pram_init(void);
 void chassis_param_init(void);
-
+void shoot_param_init(void);
 #endif

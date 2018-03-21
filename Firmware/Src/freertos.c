@@ -82,7 +82,7 @@ TaskHandle_t judge_unpack_task_t;
 TaskHandle_t pc_unpack_task_t;
 TaskHandle_t serial_debug_task_t;
 TaskHandle_t test_task_t;
-TaskHandle_t PC_communication_task_t;
+TaskHandle_t PC_receive_task_t;
 
 osTimerId chassis_timer_id;
 osTimerId gimbal_timer_id;
@@ -195,7 +195,8 @@ void MX_FREERTOS_Init(void) {
 		
 		
 		 
-		
+		osThreadDef(PC_receiveTask, PC_receive_task, osPriorityNormal, 0, 128);  // wait for uart signal 
+    PC_receive_task_t = osThreadCreate(osThread(PC_receiveTask), NULL);
 		// low priority
 		
 		#ifdef SERIAL_DEBUG
@@ -203,8 +204,7 @@ void MX_FREERTOS_Init(void) {
     serial_debug_task_t = osThreadCreate(osThread(serialDebugTask), NULL);
 		
 		#else 
-		osThreadDef(PC_communicationTask, PC_communication_task, osPriorityNormal, 0, 128);  // wait for uart signal 
-    PC_communication_task_t = osThreadCreate(osThread(PC_communicationTask), NULL);
+	
 		#endif
 		
 		

@@ -92,10 +92,7 @@ void gimbal_param_init(void)
 	//pid_yaw.min_out=100;
 	
   /* bullet trigger motor pid parameter */
-  PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,
-                  15, 0, 10);
-  PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 3000,
-                  1.5, 0.1, 5);
+  
 }
 
 
@@ -109,11 +106,16 @@ void shoot_param_init(void){
   //shot.remain_bullets = 0;
   
   memset(&trig, 0, sizeof(trigger_t));
-  
+ 
   trig.dir             = 1;
   trig.feed_bullet_spd = 2000;
   trig.c_shot_spd      = 4000;
   trig.state         = TRIG_INIT;
+	
+	PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,
+                  15, 0, 10);
+  PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 3000,
+                  1.5, 0.1, 5);
   
 }
 

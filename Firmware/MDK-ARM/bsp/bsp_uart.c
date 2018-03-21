@@ -39,7 +39,7 @@
 uint8_t judge_dma_rxbuff[2][UART_RX_DMA_SIZE];
 uint8_t pc_dma_rxbuff[2][UART_RX_DMA_SIZE];
 
-extern TaskHandle_t PC_communication_task_t;
+extern TaskHandle_t PC_receive_task_t;
 
 /**
   * @brief   clear idle it flag after uart receive a frame data
@@ -73,7 +73,7 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
   else if ( huart == &COMPUTER_HUART)
   {
     //uart_idle_interrupt_signal(huart);
-    osSignalSet(PC_communication_task_t, PC_UART_IDLE_SIGNAL);
+    osSignalSet(PC_receive_task_t, PC_UART_IDLE_SIGNAL);
   }
   else
   {
@@ -102,7 +102,7 @@ static void dma_m1_rxcplt_callback(DMA_HandleTypeDef *hdma)
   UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
   if (huart == &COMPUTER_HUART)
   {
-    osSignalSet(PC_communication_task_t, PC_DMA_FULL_SIGNAL);
+    osSignalSet(PC_receive_task_t, PC_DMA_FULL_SIGNAL);
   }
 }
 /* Current memory buffer used is Memory 1 */
@@ -111,7 +111,7 @@ static void dma_m0_rxcplt_callback(DMA_HandleTypeDef *hdma)
   UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
   if (huart == &COMPUTER_HUART)
   {
-    osSignalSet(PC_communication_task_t, PC_DMA_FULL_SIGNAL);
+    osSignalSet(PC_receive_task_t, PC_DMA_FULL_SIGNAL);
   }
 }
 static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \

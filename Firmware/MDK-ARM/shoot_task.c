@@ -37,7 +37,7 @@
 #include "sys_config.h"
 #include "cmsis_os.h"
 #include "string.h"
-
+#include "pid.h"
 /* stack usage monitor */
 UBaseType_t shoot_stack_surplus;
 
@@ -67,11 +67,13 @@ void shoot_task(void const *argu)
         
 				shoot.fric_wheel_run = (remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_UP);   
         //trig.key = get_trigger_key_state();
-        
+       
         if (shoot.fric_wheel_run)
         {
 					turn_on_friction_wheel(shoot.fric_wheel_spd);
 					turn_on_laser();
+					if(TRIG_RUN)pid_calc(&pid_trigger_speed,trig.motor.speed_rpm,trig.feed_bullet_spd);
+					else pid_trigger_speed.out = 0;
           //shoot_bullet_handle();
         }
         else
@@ -99,7 +101,7 @@ void test_shoot_task(void){
   {
 					turn_on_friction_wheel(1500);
 					turn_on_laser();
-					printf("set fric speed %d \r\n",shoot.fric_wheel_spd);
+					//printf("set fric speed %d \r\n",shoot.fric_wheel_spd);
           //shoot_bullet_handle();
   }
   else

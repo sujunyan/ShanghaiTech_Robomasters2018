@@ -84,7 +84,7 @@
 /* keyboard mode gimbal speed limit */
 
 #define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
-#define GIMBAL_PC_MOVE_RATIO_YAW -0.04f 
+#define GIMBAL_PC_MOVE_RATIO_YAW -0.06f 
 /************************** gimbal parameter ******************************************************************/
 /* the ratio of motor encoder value translate to degree */
 #define ENCODER_ANGLE_RATIO    (360.0f/8192.0f)

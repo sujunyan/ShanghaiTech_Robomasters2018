@@ -31,6 +31,7 @@
 #include "sys_config.h"
 #include "gimbal_task.h"
 #include "imu_task.h"
+#include "shoot_task.h"
 //float yaw_zgyro_angle;
 void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan)
 {
@@ -75,13 +76,13 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
       err_detector_hook(GIMBAL_PIT_OFFLINE);
     }
     break;
-		#if 0
+
     case CAN_TRIGGER_MOTOR_ID:
     {
       if (_hcan == &TRIGGER_CAN)
       {
-        moto_trigger.msg_cnt++;
-        moto_trigger.msg_cnt <= 10 ? get_moto_offset(&moto_trigger, _hcan) : encoder_data_handle(&moto_trigger, _hcan);
+        trig.motor.msg_cnt++;
+        trig.motor.msg_cnt <= 10 ? get_moto_offset(&trig.motor, _hcan) : encoder_data_handle(_hcan,&trig.motor );
         err_detector_hook(TRIGGER_MOTO_OFFLINE);
       }
       else
@@ -89,7 +90,7 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
       }
     }
     break;
-    #endif
+
 		
 		// The gyro in can2 
 		case 0xA:

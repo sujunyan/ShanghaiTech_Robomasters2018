@@ -99,7 +99,7 @@ static void close_loop_handle(void);
 
 
 static void cascade_pid_ctrl(void);
-
+float remote_ctrl_map(float offset,float step);
 void gimbal_param_init(void);
 void gimbal_back_param(void);
 uint8_t gimbal_is_controllable(void);

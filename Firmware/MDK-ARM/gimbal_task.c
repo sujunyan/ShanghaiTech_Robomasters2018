@@ -127,7 +127,7 @@ void gimbal_task(void const *argu)
   {
     gim.current[0] = YAW_MOTO_POSITIVE_DIR*pid_yaw_speed.out;
     gim.current[1] = PIT_MOTO_POSITIVE_DIR*pid_pit_speed.out;
-    //glb_cur.gimbal_cur[2] = pid_trigger_speed.out;
+    //gim.current[2] = pid_trigger_speed.out;
   }
   else
   {
@@ -147,7 +147,20 @@ void gimbal_task(void const *argu)
 
 
 
+float remote_ctrl_map(float offset,float step){
+	static float out=0;
+	out+=offset;
+	if(out>step){
+		out-=step;
+		return step;
+	}
+	else{
+		float tmp=out;
+		out=0;
+		return tmp;
+	}
 
+}
 
 
 
@@ -162,9 +175,10 @@ void gimbal_task(void const *argu)
 void close_loop_handle(void){
   static float chassis_angle_tmp=0;
   static float limit_angle_range = 3;
-  
+  static float step= GIMBAL_RC_MOVE_RATIO_YAW*330;
+	
   gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
-  gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu ; // 
+  gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu; // 
   //TODO
 	//gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle;
 	
@@ -175,8 +189,10 @@ void close_loop_handle(void){
   if ((gim.pid.yaw_angle_fdb >= chassis_angle_tmp+ YAW_ANGLE_MIN - limit_angle_range) && \
       (gim.pid.yaw_angle_fdb <= chassis_angle_tmp+ YAW_ANGLE_MAX + limit_angle_range))
   {
-    gim.pid.yaw_angle_ref += -remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
-                       + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW;
+    gim.pid.yaw_angle_ref += remote_ctrl_map( 
+											 (KEY_Q)?step:0 -  (KEY_E)?(-step):0 +
+												-remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
+                       + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW ,step);
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);
   }
   /* limit gimbal pitch axis angle */

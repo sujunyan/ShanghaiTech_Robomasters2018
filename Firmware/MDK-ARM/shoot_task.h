@@ -29,9 +29,10 @@
 
 #include "stm32f4xx_hal.h"
 #include "RemoteTask.h"
+#include "chassis_task.h"
 /* shoot task control period time (ms) */
 #define SHOT_TASK_PERIOD 5
-
+#define TRIG_RUN (remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_UP)
 typedef enum
 {
   SHOT_DISABLE       = 0,
@@ -62,7 +63,7 @@ typedef __packed struct
   uint16_t     remain_bullets;
 } shoot_t;
 
-typedef __packed struct
+typedef  struct
 {
   /* trigger motor param */
   int32_t   spd_ref;
@@ -73,8 +74,10 @@ typedef __packed struct
   uint32_t  one_time;
   int32_t   feed_bullet_spd;
   int32_t   c_shot_spd;
+	
   
   trig_state_e state;
+	moto_measure_t motor;
 } trigger_t;
 
 

@@ -8,6 +8,7 @@
 
 #include "bsp_uart.h"
 #include "protocol.h"
+#include "infantry_info.h"
 typedef enum
 {
   STEP_HEADER_SOF  = 0,
@@ -33,6 +34,10 @@ uint16_t data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len);
 void send_all_pack_to_pc(void);
 void pc_data_handle(uint8_t *p_frame);
 void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end);
+
+void pc_chassis_control_data_handle(chassis_ctrl_t*);
+void pc_gimbal_control_data_handle(gimbal_ctrl_t*);
+void pc_shoot_control_data_handle(shoot_ctrl_t*);
 
 extern uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 #endif

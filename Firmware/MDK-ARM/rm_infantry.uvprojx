@@ -776,14 +776,14 @@
           <GroupName>ControlTask</GroupName>
           <Files>
             <File>
-              <FileName>chassis_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\chassis_task.c</FilePath>
-            </File>
-            <File>
               <FileName>RemoteTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\app\RemoteTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>chassis_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\chassis_task.c</FilePath>
             </File>
             <File>
               <FileName>imu_task.c</FileName>

@@ -71,6 +71,8 @@ void chasis_remote_handle(void);
 void print_encoder(moto_measure_t*);
 int is_Motor_Reversed(int i);
 uint8_t chassis_is_controllable(void);
+uint8_t chassis_is_auto(void);
+uint8_t chassis_is_follow(void);
 void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 void test_chassis(void);
 

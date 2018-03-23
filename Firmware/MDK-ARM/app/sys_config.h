@@ -81,17 +81,12 @@
 #define GIMBAL_RC_MOVE_RATIO_PIT 0.002f
 #define GIMBAL_RC_MOVE_RATIO_YAW 0.001f 
  
-/* keyboard mode gimbal speed limit */
 
-#define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
-#define GIMBAL_PC_MOVE_RATIO_YAW -0.06f 
 /************************** gimbal parameter ******************************************************************/
 /* the ratio of motor encoder value translate to degree */
 #define ENCODER_ANGLE_RATIO    (360.0f/8192.0f)
 #define PIT_DECELE_RATIO       1.0f /* the deceleration ratio of pitch axis motor */
 #define YAW_DECELE_RATIO       1.0f    //(5.0f/8.0f) /* the deceleration ratio of yaw axis motor */
-#define PIT_MOTO_POSITIVE_DIR  1.0f 
-#define YAW_MOTO_POSITIVE_DIR  1.0f 
 #define TRI_MOTO_POSITIVE_DIR  1.0f 
 
 /*************************** gimbal relevant *********************************/
@@ -104,7 +99,7 @@
 #define RIGHT_FIRCTION       TIM12->CCR2
 /**************************shot  setting********************************/
 /* shot speed */
-#define DEFAULT_FRIC_WHEEL_SPEED 1500 //maximum value is 2500
+#define DEFAULT_FRIC_WHEEL_SPEED 2500 //maximum value is 2500
 #define TRIGGER_MOTOR_SPEED      2000  /* shot frequence */
 /************************ uart relevant********************************************/
 #define PC_HUART huart6

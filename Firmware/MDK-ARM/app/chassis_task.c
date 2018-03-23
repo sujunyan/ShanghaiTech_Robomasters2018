@@ -1,5 +1,4 @@
 #include "chassis_task.h"
-
 #include "can.h"
 #include "RemoteTask.h"
 #include "pid.h"
@@ -19,7 +18,7 @@ void chassis_task(const void* argu){ // timer
 	
 	
 	// chassis follow the gimbal
-	pid_calc(&pid_chassis_angle, gim.sensor.yaw_relative_angle_ecd , 0);
+	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , 0);
 	chassis.vw = pid_chassis_angle.out;
 	chasis_remote_handle();
 	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
@@ -141,11 +140,11 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
   int16_t wheel_rpm[4];
   float   max = 0;
   
-  wheel_rpm[0] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
-  wheel_rpm[1] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
+  wheel_rpm[2] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
+  wheel_rpm[3] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
 	// these wheels are reversed due to sysmetry
-  wheel_rpm[2] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
-  wheel_rpm[3] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
+  wheel_rpm[0] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
+  wheel_rpm[1] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
 
   //find max item 
   for (uint8_t i = 0; i < 4; i++)
@@ -177,9 +176,9 @@ void chasis_remote_handle(void){
 	if(is_keyboard_mode())
 	{
 		float ratio;
-		if (KEY_SHIFT)ratio=1.0 ;
-		else if (KEY_CTRL) ratio=0.5;
-		else ratio=0.3;
+		if (KEY_SHIFT)ratio=0.7 ;
+		else if (KEY_CTRL) ratio=1;
+		else ratio=0.5;
 		
 		if(KEY_A)chassis.vx =  CHASSIS_KB_MAX_SPEED_X * ratio; // left-right
 		else if(KEY_D)chassis.vx = - CHASSIS_KB_MAX_SPEED_X * ratio;
@@ -197,4 +196,11 @@ void chasis_remote_handle(void){
 			chassis.vy =  remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y; //  forward-backward 
 			//chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
 		}
+}
+uint8_t chassis_is_auto(void){
+	return (chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL || chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL);
+}
+
+uint8_t chassis_is_follow(void){
+	return (chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL || chassis.ctrl_mode==AUTO_FOLLOW_GIMBAL);
 }

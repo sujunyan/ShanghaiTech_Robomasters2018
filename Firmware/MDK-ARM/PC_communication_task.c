@@ -4,6 +4,9 @@
 #include "bsp_uart.h"
 #include "protocol.h"
 #include "infantry_info.h"
+#include "chassis_task.h"
+#include "shoot_task.h"
+#include "gimbal_task.h"
 uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 UBaseType_t pc_comm_surplus;
 receive_pc_t pc_rece_mesg;
@@ -35,7 +38,7 @@ void PC_receive_task(const void * argu){
 				begin=0;	
 		}
 		
-    send_all_pack_to_pc();
+   // send_all_pack_to_pc();
 		
 		
 		pc_comm_surplus=uxTaskGetStackHighWaterMark(NULL);
@@ -65,6 +68,16 @@ uint16_t data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len){
 }
 
 void send_all_pack_to_pc(void){
+	 
+	//rc_info_t rc_info;
+	//memset(rc_info,0,sizeof(rc_info));
+	//static uint8_t data[]="hello world\r\n";
+	uint16_t size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));
+	
+	
+	write_uart_blocking(&COMPUTER_HUART,computer_tx_buf,size);
+	
+	
 	// TODO 
 }
 
@@ -191,18 +204,46 @@ void pc_data_handle(uint8_t *p_frame){
   switch (cmd_id)
   {
     case CHASSIS_CTRL_ID:
+		{
       memcpy(&pc_rece_mesg.chassis_control_data, data_addr, data_length);
-    break;
+			pc_chassis_control_data_handle(&pc_rece_mesg.chassis_control_data);
+		}break;
 
     case GIMBAL_CTRL_ID:
+		{
       memcpy(&pc_rece_mesg.gimbal_control_data, data_addr, data_length);
-    break;
+			pc_gimbal_control_data_handle(&pc_rece_mesg.gimbal_control_data);
+    }break;
 
     case SHOOT_CTRL_ID:
+		{
       memcpy(&pc_rece_mesg.shoot_control_data, data_addr, data_length);
-    break;
+			pc_shoot_control_data_handle(&pc_rece_mesg.shoot_control_data);
+    }break;
   }
   
   taskEXIT_CRITICAL();
+}
+
+void pc_chassis_control_data_handle(chassis_ctrl_t* ptr){
+	//printf("chasis ctrl data recv.\r\n");
+	//chassis.ctrl_mode =ptr->ctrl_mode;
+	chassis.vx=ptr->x_speed;
+	chassis.vy=ptr->y_speed;
+	chassis.vw=ptr->w_info.w_speed;
+}
+void pc_gimbal_control_data_handle(gimbal_ctrl_t* ptr){
+	
+	//gim.ctrl_mode=ptr->ctrl_mode;
+	gim.pid.pit_angle_ref=ptr->pit_ref;
+	gim.pid.yaw_angle_ref=ptr->yaw_ref;
+//	printf("gimbal_ctrl_data recv %f %f \r\n\n",ptr->pit_ref,ptr->yaw_ref);
+}
+void pc_shoot_control_data_handle(shoot_ctrl_t* ptr){
+	//printf("shoot_ctrl_data recv\r\n");
+	shoot.ctrl_mode=ptr->shoot_cmd;
+	shoot.fric_wheel_run = ptr->fric_wheel_run;
+	shoot.fric_wheel_spd = ptr->fric_wheel_spd;
+
 }
 

@@ -73,8 +73,8 @@ void gimbal_param_init(void)
   gim.last_ctrl_mode = GIMBAL_RELAX;
  
 	
-	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 50,
-                  4 , 0.01, 0);
+	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 10,
+                  5 , 0.00, 0);
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */
@@ -84,8 +84,8 @@ void gimbal_param_init(void)
                   15, 0.1, 0);
 
   /* yaw axis motor pid parameter */
-  PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50,
-                  30, 0, 0); //
+  PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50, // TODO MAX=1000 previously
+                  20, 0.00, 0); //
   PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
                   13, 0, 0 );
   //pid_yaw_speed.min_out= 200;
@@ -102,7 +102,7 @@ void shoot_param_init(void){
   memset(&shoot, 0, sizeof(shoot_t));
   
   shoot.ctrl_mode      = SHOT_DISABLE;
-  shoot.fric_wheel_spd = DEFAULT_FRIC_WHEEL_SPEED;
+  shoot.fric_wheel_spd = 2000;
   //shot.remain_bullets = 0;
   
   memset(&trig, 0, sizeof(trigger_t));

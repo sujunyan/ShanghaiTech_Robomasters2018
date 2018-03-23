@@ -65,10 +65,10 @@ void shoot_task(void const *argu)
 				printf("shoot time %d %d\r\n",shoot_time_ms,shoot_time_last);
 				#endif
         
-				shoot.fric_wheel_run = (remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_UP);   
+				shoot.fric_wheel_run = (remote_info.rc.s1 == RC_UP );   
         //trig.key = get_trigger_key_state();
        
-        if (shoot.fric_wheel_run)
+        if (shoot.fric_wheel_run && gimbal_is_controllable())
         {
 					turn_on_friction_wheel(shoot.fric_wheel_spd);
 					turn_on_laser();

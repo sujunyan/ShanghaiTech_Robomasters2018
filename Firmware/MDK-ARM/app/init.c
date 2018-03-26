@@ -74,7 +74,7 @@ void gimbal_param_init(void)
  
 	
 	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 10,
-                  5 , 0.00, 0);
+                  10 , 0.0, 0);  // TODO
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */

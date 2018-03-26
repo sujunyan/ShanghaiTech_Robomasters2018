@@ -82,17 +82,6 @@ uint32_t gimbal_time_last;
 int gimbal_time_ms;
 uint32_t patrol_count;
 
-#if 0
-void gimbal_self_check(void)
-{
-  if ( !read_gimbal_offset(&(gim.pit_center_offset), &(gim.yaw_center_offset),
-                           &(cv_buff.pit_offset),    &(cv_buff.yaw_offset)) )
-  {
-    /* gimbal has not been calibrated */
-    no_cali_data_handle();
-  }
-}
-#endif 
 
 extern TaskHandle_t can_msg_send_task_t;
 extern TaskHandle_t shoot_task_t;

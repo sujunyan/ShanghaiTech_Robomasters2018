@@ -38,6 +38,8 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end);
 void pc_chassis_control_data_handle(chassis_ctrl_t*);
 void pc_gimbal_control_data_handle(gimbal_ctrl_t*);
 void pc_shoot_control_data_handle(shoot_ctrl_t*);
+void PC_send_task(void const * argu);
+void PC_send_msg_update(void);
 
 extern uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 #endif

@@ -765,11 +765,6 @@
               <FileType>1</FileType>
               <FilePath>.\app\detect_task.c</FilePath>
             </File>
-            <File>
-              <FileName>Serial_Debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app\Serial_Debug.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -825,6 +820,11 @@
         <Group>
           <GroupName>CommunicationTask</GroupName>
           <Files>
+            <File>
+              <FileName>Serial_Debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\Serial_Debug.c</FilePath>
+            </File>
             <File>
               <FileName>PC_communication_task.c</FileName>
               <FileType>1</FileType>

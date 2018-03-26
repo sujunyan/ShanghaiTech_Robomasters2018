@@ -32,4 +32,5 @@ void checkUART(void);
 void write_uart_noblocking(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
 void write_uart_blocking(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
 void serial_debug_task(void const *argu);
+void send_serial_debug_msg(void);
 #endif

@@ -73,6 +73,7 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
   else if ( huart == &COMPUTER_HUART)
   {
     //uart_idle_interrupt_signal(huart);
+		//printf("IDLE msg recv\r\n");
     osSignalSet(PC_receive_task_t, PC_UART_IDLE_SIGNAL);
   }
   else
@@ -103,6 +104,7 @@ static void dma_m1_rxcplt_callback(DMA_HandleTypeDef *hdma)
   if (huart == &COMPUTER_HUART)
   {
     osSignalSet(PC_receive_task_t, PC_DMA_FULL_SIGNAL);
+		//printf("DMA FULL recv\r\n");
   }
 }
 /* Current memory buffer used is Memory 1 */
@@ -112,6 +114,7 @@ static void dma_m0_rxcplt_callback(DMA_HandleTypeDef *hdma)
   if (huart == &COMPUTER_HUART)
   {
     osSignalSet(PC_receive_task_t, PC_DMA_FULL_SIGNAL);
+		//printf("DMA FULL recv\r\n");
   }
 }
 static HAL_StatusTypeDef DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, \

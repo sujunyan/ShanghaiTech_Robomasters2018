@@ -1,1 +1,0 @@
-/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/PC_Communication.dir/CommunicateNode.cpp.o CMakeFiles/PC_Communication.dir/main.cpp.o CMakeFiles/PC_Communication.dir/protocol.cpp.o  -o PC_Communication.exe -Wl,--out-implib,libPC_Communication.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -lboost_system 

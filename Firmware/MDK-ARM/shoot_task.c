@@ -65,7 +65,7 @@ void shoot_task(void const *argu)
 				printf("shoot time %d %d\r\n",shoot_time_ms,shoot_time_last);
 				#endif
         
-				shoot.fric_wheel_run = (remote_info.rc.s1 == RC_UP );   
+				shoot.fric_wheel_run = (remote_info.rc.s1 == RC_UP || pc_rece_mesg.shoot_control_data.fric_wheel_run);   
         //trig.key = get_trigger_key_state();
        
         if (shoot.fric_wheel_run && gimbal_is_controllable())

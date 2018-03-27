@@ -1,14 +1,16 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 project(PC_Communication)
 
 set(CMAKE_CXX_STANDARD 11)
-set(SRC_FILES
+
+set(SOURCE_FILES
+        board_info.h
         CommunicateNode.cpp
         CommunicateNode.h
-           protocol.cpp
-            protocol.h
-        board_info.h
         judgement_info.h
-        )
-add_executable(PC_Communication main.cpp ${SRC_FILES})
+        main.cpp
+        protocol.cpp
+        protocol.h)
+
+add_executable(PC_Communication ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(PC_Communication boost_system)

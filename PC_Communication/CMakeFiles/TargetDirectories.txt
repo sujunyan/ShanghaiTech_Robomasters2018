@@ -1,0 +1,3 @@
+/cygdrive/e/2018/robomaster2018/NewInfantry/src/ShanghaiTech_Robomasters2018/PC_Communication/CMakeFiles/rebuild_cache.dir
+/cygdrive/e/2018/robomaster2018/NewInfantry/src/ShanghaiTech_Robomasters2018/PC_Communication/CMakeFiles/edit_cache.dir
+/cygdrive/e/2018/robomaster2018/NewInfantry/src/ShanghaiTech_Robomasters2018/PC_Communication/CMakeFiles/PC_Communication.dir

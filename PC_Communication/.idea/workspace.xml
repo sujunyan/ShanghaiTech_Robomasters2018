@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
+    <generated>
+      <config projectName="PC_Communication" targetName="PC_Communication" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e1cffddb-ecd2-4496-90ce-5f43fe19a462" name="Default" comment="" />
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <ignored path="$PROJECT_DIR$/CMakeFiles/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="15" column="50" lean-forward="false" selection-start-line="15" selection-start-column="50" selection-end-line="15" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="431">
+              <caret line="21" column="25" lean-forward="false" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#860#1253#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommunicateNode.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="552">
+              <caret line="155" column="14" lean-forward="false" selection-start-line="155" selection-start-column="14" selection-end-line="155" selection-end-column="14" />
+              <folding>
+                <element signature="e#35#63#0" expanded="true" />
+                <element signature="e#199#790#0" expanded="false" />
+                <element signature="e#3639#3765#0" expanded="true" />
+                <element signature="e#4130#5588#0" expanded="false" />
+                <element signature="e#5590#8076#0" expanded="false" />
+                <element signature="e#8078#8955#0" expanded="false" />
+                <element signature="e#9282#12762#0" expanded="false" />
+                <element signature="e#12850#12939#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="protocol.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/protocol.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-69">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="buffer.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://D:/software/cygwin/usr/include/boost/asio/buffer.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17618">
+              <caret line="766" column="0" lean-forward="false" selection-start-line="766" selection-start-column="0" selection-end-line="766" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommunicateNode.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CommunicateNode.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="38" column="10" lean-forward="false" selection-start-line="38" selection-start-column="10" selection-end-line="38" selection-end-column="10" />
+              <folding>
+                <element signature="e#149#167#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="judgement_info.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/judgement_info.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="board_info.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/board_info.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="226" column="2" lean-forward="false" selection-start-line="226" selection-start-column="2" selection-end-line="226" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="F:/minGW/include/boost/asio/impl/use_future.hpp" />
+        <option value="$PROJECT_DIR$/mingw.thread.h" />
+        <option value="D:/software/cygwin/usr/include/boost/asio/basic_serial_port.hpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/CommunicateNode.h" />
+        <option value="$PROJECT_DIR$/CommunicateNode.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="153" />
+    <option name="y" value="119" />
+    <option name="width" value="1668" />
+    <option name="height" value="995" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="PC_Communication" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="PC_Communication" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Build All">
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="PC_Communication" RUN_TARGET_NAME="PC_Communication" EXPLICIT_BUILD_TARGET_NAME="all">
+      <envs />
+    </configuration>
+    <configuration name="PC_Communication" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="PC_Communication" TARGET_NAME="PC_Communication" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="PC_Communication" RUN_TARGET_NAME="PC_Communication">
+      <envs />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
+      <item index="1" class="java.lang.String" itemvalue="Application.PC_Communication" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e1cffddb-ecd2-4496-90ce-5f43fe19a462" name="Default" comment="" />
+      <created>1521863456868</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1521863456868</updated>
+      <workItem from="1521863459702" duration="42000" />
+      <workItem from="1521883576681" duration="1768000" />
+      <workItem from="1521885749540" duration="435000" />
+      <workItem from="1521891189132" duration="1726000" />
+      <workItem from="1521892951427" duration="109000" />
+      <workItem from="1521893080210" duration="6168000" />
+      <workItem from="1521902839464" duration="2697000" />
+      <workItem from="1521905707196" duration="1464000" />
+      <workItem from="1521942882110" duration="618000" />
+      <workItem from="1521943527124" duration="2284000" />
+      <workItem from="1521947943837" duration="289000" />
+      <workItem from="1521949110844" duration="137000" />
+      <workItem from="1521949628168" duration="508000" />
+      <workItem from="1521952064103" duration="167000" />
+      <workItem from="1521952232769" duration="743000" />
+      <workItem from="1521953042492" duration="1379000" />
+      <workItem from="1522070141162" duration="3017000" />
+      <workItem from="1522139265859" duration="582000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="24133000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="153" y="119" width="1668" height="995" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24969697" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3302217" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905483" sideWeight="0.50242424" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905483" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3990665" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32905483" sideWeight="0.49757576" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="8" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/FindBoost.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33833">
+          <caret line="1471" column="0" lean-forward="false" selection-start-line="1471" selection-start-column="0" selection-end-line="1471" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3450">
+          <caret line="150" column="56" lean-forward="false" selection-start-line="150" selection-start-column="56" selection-end-line="150" selection-end-column="56" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#860#1253#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+          <folding>
+            <element signature="e#149#167#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mingw.thread.h" />
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/CMakeTestCCompiler.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1426">
+          <caret line="62" column="69" lean-forward="false" selection-start-line="62" selection-start-column="69" selection-end-line="62" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/minGW/include/boost/asio/impl/use_future.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3450">
+          <caret line="150" column="56" lean-forward="false" selection-start-line="150" selection-start-column="56" selection-end-line="150" selection-end-column="56" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#860#1253#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="e#149#167#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/CMakeTestCCompiler.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1426">
+          <caret line="62" column="69" lean-forward="false" selection-start-line="62" selection-start-column="69" selection-end-line="62" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/minGW/include/boost/asio/impl/use_future.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3450">
+          <caret line="150" column="56" lean-forward="false" selection-start-line="150" selection-start-column="56" selection-end-line="150" selection-end-column="56" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#860#1253#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="e#149#167#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="22" column="39" lean-forward="false" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/CMakeTestCCompiler.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1426">
+          <caret line="62" column="69" lean-forward="false" selection-start-line="62" selection-start-column="69" selection-end-line="62" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8970">
+          <caret line="390" column="21" lean-forward="false" selection-start-line="390" selection-start-column="21" selection-end-line="390" selection-end-column="21" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/CMakeTestCCompiler.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8970">
+          <caret line="390" column="21" lean-forward="false" selection-start-line="390" selection-start-column="21" selection-end-line="390" selection-end-column="21" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/minGW/include/boost/asio/impl/use_future.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/minGW/include/boost/asio.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/minGW/include/boost/asio/use_future.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/CMakeTestCCompiler.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="62" column="69" lean-forward="false" selection-start-line="62" selection-start-column="69" selection-end-line="62" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mingw.thread.h" />
+    <entry file="file://$USER_HOME$/.CLion2017.2/system/cygwin_cmake/share/cmake-3.8.2/Modules/FindBoost.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="1841" column="0" lean-forward="false" selection-start-line="1841" selection-start-column="0" selection-end-line="1841" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/share/cmake-3.8/Modules/FindBoost.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="1471" column="0" lean-forward="false" selection-start-line="1471" selection-start-column="0" selection-end-line="1471" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/include/boost/asio/basic_serial_port.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="210" column="28" lean-forward="false" selection-start-line="210" selection-start-column="28" selection-end-line="210" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/include/boost/asio/detail/throw_error.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="37" column="12" lean-forward="false" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protocol.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/include/boost/asio/impl/serial_port_base.ipp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="218" column="0" lean-forward="false" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/src/debug/cygwin-2.10.0-1/winsup/cygwin/sigproc.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="1282" column="0" lean-forward="false" selection-start-line="1282" selection-start-column="0" selection-end-line="1282" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/src/debug/cygwin-2.10.0-1/winsup/cygwin/cygthread.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/src/debug/cygwin-2.10.0-1/winsup/cygwin/cygtls.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/include/boost/throw_exception.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="57" column="4" lean-forward="false" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="50" lean-forward="false" selection-start-line="15" selection-start-column="50" selection-end-line="15" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/src/debug/cygwin-2.10.0-1/newlib/libc/stdio/printf.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1334">
+          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/src/debug/cygwin-2.10.0-1/winsup/cygwin/dcrt0.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23391">
+          <caret line="1017" column="0" lean-forward="false" selection-start-line="1017" selection-start-column="0" selection-end-line="1017" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/software/cygwin/usr/include/boost/asio/buffer.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17618">
+          <caret line="766" column="0" lean-forward="false" selection-start-line="766" selection-start-column="0" selection-end-line="766" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="431">
+          <caret line="21" column="25" lean-forward="false" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#860#1253#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="155" column="14" lean-forward="false" selection-start-line="155" selection-start-column="14" selection-end-line="155" selection-end-column="14" />
+          <folding>
+            <element signature="e#35#63#0" expanded="true" />
+            <element signature="e#199#790#0" expanded="false" />
+            <element signature="e#3639#3765#0" expanded="true" />
+            <element signature="e#4130#5588#0" expanded="false" />
+            <element signature="e#5590#8076#0" expanded="false" />
+            <element signature="e#8078#8955#0" expanded="false" />
+            <element signature="e#9282#12762#0" expanded="false" />
+            <element signature="e#12850#12939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protocol.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-69">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommunicateNode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="38" column="10" lean-forward="false" selection-start-line="38" selection-start-column="10" selection-end-line="38" selection-end-column="10" />
+          <folding>
+            <element signature="e#149#167#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/judgement_info.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/board_info.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="226" column="2" lean-forward="false" selection-start-line="226" selection-start-column="2" selection-end-line="226" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

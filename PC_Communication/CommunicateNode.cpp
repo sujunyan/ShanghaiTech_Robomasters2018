@@ -34,8 +34,8 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
   bool flag = 1;
   while (flag)
   {
-    // independent thread, need not mutex
     byte = readByte();
+      //printf("%x ",byte);
     switch(p_obj->unpack_step)
     {
       case STEP_HEADER_SOF:
@@ -115,11 +115,11 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 
           if ( verify_crc16_check_sum(p_obj->protocol_packet, HEADER_LEN + CMD_LEN + p_obj->data_len + CRC_LEN) )
           {
-            if (sof == UP_REG_ID)
+            //if (sof == UP_REG_ID) // TODO
             {
               board_data_handle(p_obj->protocol_packet);
             }
-            else  //DN_REG_ID
+           // else  //DN_REG_ID
             {
               judgement_data_handle(p_obj->protocol_packet);
             }
@@ -138,14 +138,26 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
 }
 
 void CommunicateNode::send_data(float data1, float data2, float data3, uint8_t mask) {
-  extShowData_t *package;
-  package -> data1 = data1;
-  package -> data2 = data2;
-  package -> data3 = data3;
-  package -> mask =mask;
-  uint8_t buf[14];
-  uint16_t size = protocol_packet_pack(STU_CUSTOM_DATA_ID, (uint8_t*) package, sizeof(package), DN_REG_ID, buf);
+#if 0
+  extShowData_t package;
+  package .data1 = data1;
+  package . data2 = data2;
+  package . data3 = data3;
+  package . mask =mask;
+#endif
+#if 1
+    gimbal_ctrl_t package;
+    package.ctrl_mode=0;
+    package.pit_ref=1;
+    package.yaw_ref=2;
+    package.visual_valid=3;
+#endif
+  uint8_t buf[100];
+  uint16_t size = protocol_packet_pack(GIMBAL_CTRL_ID, (uint8_t*) &package, sizeof(package), DN_REG_ID, buf);
   boost::asio::write(port, boost::asio::buffer(buf,size));
+    //read_and_print();
+
+
 }
 
 void CommunicateNode::board_data_handle(uint8_t *p_frame)
@@ -156,6 +168,7 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
+    //printf("board data handle %x \n",cmd_id);
   switch (cmd_id)
   {
       case CHASSIS_DATA_ID:
@@ -177,7 +190,10 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
           memcpy(&board_rece_msg.cali_response_data, data_addr, data_length);
           break;
       case REMOTE_CTRL_INFO_ID:
+      {
           memcpy(&board_rece_msg.remote_ctrl_data, data_addr, data_length);
+          //printf("remote_data recv\n");
+      }
           break;
       case BOTTOM_VERSION_ID:
           memcpy(&board_rece_msg.version_info_data, data_addr, data_length);
@@ -268,22 +284,28 @@ void CommunicateNode::judgement_data_handle(uint8_t *p_frame) {
 }
 
 CommunicateNode::CommunicateNode(char *portname, int baudrate) {
-    IsOpen=0;
 
-    port.open(portname);
-    port.set_option(asio::serial_port::baud_rate(baudrate));
-    using namespace asio;
+    IsOpen=0;
+    try
     {
+        port.open(portname);
+        port.set_option(asio::serial_port::baud_rate(baudrate));
+        using namespace asio;
+        {
         port. set_option (serial_port :: flow_control (serial_port :: flow_control :: none ) ) ;
         port. set_option (serial_port :: parity (serial_port :: parity :: none ) ) ;
         port. set_option (serial_port :: stop_bits (serial_port :: stop_bits :: one ) ) ;
         port. set_option (serial_port :: character_size (8 ) ) ;
-    };
-    data.p_header = new frame_header_t;
+        };
 
+    }
+    catch (const boost::exception& ex) {
+        // error handling
+        std::cerr << boost::diagnostic_information(ex);
+    }
+    data.p_header = new frame_header_t;
     memset(&judge_rece_mesg,0,sizeof(judge_rece_mesg));
     memset(&board_rece_msg,0,sizeof(board_rece_msg));
-
     IsOpen=1;
 }
 
@@ -399,4 +421,21 @@ uint8_t CommunicateNode::readByte() {
     uint8_t ch;
     asio::read(port,asio::buffer(&ch,1));
     return ch;
+}
+
+void CommunicateNode::read_and_print() {
+    int cnt=0;
+    char ch=readByte();
+    while(ch!='\n' && cnt++<100)
+    {
+        printf("%c",ch);
+        try{
+            ch=readByte();
+        }
+        catch (const boost::exception& ex) {
+        // error handling
+        std::cerr << boost::diagnostic_information(ex);
+    }
+    }
+    printf("\n");
 }

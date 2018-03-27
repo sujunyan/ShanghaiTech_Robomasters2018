@@ -5,10 +5,12 @@
 #ifndef PC_COMMUNICATION_COMMUNICATENODE_H
 #define PC_COMMUNICATION_COMMUNICATENODE_H
 
+#define BOOST_SPIRIT_DEBUG
 #include <cstdint>
 #include "protocol.h"
-#include <boost/asio.hpp>
 
+#include <boost/asio.hpp>
+#include <boost/exception/diagnostic_information.hpp>
 using namespace boost;
 
 class CommunicateNode
@@ -33,13 +35,13 @@ private:
     asio::serial_port port=asio::serial_port(io);
     receive_judge_t judge_rece_mesg;
     receive_board_t board_rece_msg;
-
     bool IsOpen;
     void unpack_data(unpack_data_t *p_obj, uint8_t sof); // unpack one data and return
     void board_data_handle(uint8_t*);
     void judgement_data_handle(uint8_t*);
 
     uint8_t readByte();
+    void read_and_print();
     void print_judge_info();
     void print_board_info();
 

@@ -74,8 +74,7 @@ uint8_t chassis_is_controllable(void);
 uint8_t chassis_is_auto(void);
 uint8_t chassis_is_follow(void);
 void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
-void test_chassis(void);
-
+void chassis_mode_switch(void);
 extern chassis_t chassis;
 #endif
 /*

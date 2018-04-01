@@ -119,8 +119,14 @@ void global_err_detector_init(void)
   */
 void err_detector_hook(int err_id)
 {
-  if (g_err.list[err_id].enable)
+	#if 0
+	if(err_id <8)
+			printf("err_detector_hook invoked id %d\r\n",err_id);
+	#endif
+  if (g_err.list[err_id].enable){
       g_err.list[err_id].dev->last_time = HAL_GetTick();
+		
+	}
 }
 
 void detector_param_init(void)
@@ -178,7 +184,7 @@ static void module_offline_detect(void)
 {
   int max_priority = 0;
   int err_cnt      = 0;
-  for (uint8_t id = GIMBAL_GYRO_OFFLINE; id <= TRIGGER_MOTO_OFFLINE; id++)
+  for (uint8_t id = CHASSIS_M1_OFFLINE; id <= TRIGGER_MOTO_OFFLINE; id++)
   {
     g_err.list[id].dev->delta_time = HAL_GetTick() - g_err.list[id].dev->last_time;
     if (g_err.list[id].enable 
@@ -281,7 +287,8 @@ static void module_offline_callback(void)
         g_err.beep_ctrl = 0;
       }
     }break;
-    
+		
+    #if 0
     case CHASSIS_GYRO_OFFLINE:
     {
       if (g_err.err_count == 1
@@ -299,7 +306,8 @@ static void module_offline_callback(void)
         g_err.beep_ctrl = 0;
       }
     }break;
-    
+    #endif
+		
     default:
     {
       LED_R_ON;

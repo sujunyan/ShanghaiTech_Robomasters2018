@@ -7,8 +7,7 @@ int main(void){
         char buffer[]="hello world\n";
        // char portname[]="/dev/ttyUSB0";
         //char portname[]="COM5";
-        char portname[]="/dev/ttyS19";
-    printf("HEADER_LEN=%d\n",HEADER_LEN);
+        char portname[]="/dev/ttyS10";
 #if 1
     try{
         CommunicateNode node(portname,115200);

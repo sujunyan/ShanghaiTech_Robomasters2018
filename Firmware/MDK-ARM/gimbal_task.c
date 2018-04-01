@@ -45,9 +45,10 @@
 #define PATROL_PERIOD    1500
 /* gimbal back center time (ms) */
 #define BACK_CENTER_TIME 2500
-#define PIT_ECD_DIR  (- 1.0f) 
-#define YAW_ECD_DIR  (- 1.0f)
-#define YAW_IMU_DIR  (- 1.0f)
+#define PIT_ECD_DIR  ( 1.0f) 
+#define YAW_ECD_DIR  ( 1.0f)
+#define YAW_IMU_DIR  ( 1.0f)
+#define PIT_IMU_DIR  ( 1.0f)
 /* keyboard mode gimbal speed limit */
 
 #define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
@@ -56,17 +57,6 @@
 
 /* stack usage monitor */
 UBaseType_t gimbal_stack_surplus;
-
-/* for debug */
-//int yaw_a_fdb;
-//int yaw_a_ref;
-//int yaw_s_fdb;
-//int yaw_s_ref;
-
-//int pit_a_fdb;
-//int pit_a_ref;
-//int pit_s_fdb;
-//int pit_s_ref;
 
 /* gimbal task global parameter */
 gimbal_t gim;
@@ -132,10 +122,10 @@ void gimbal_task(void const *argu)
   }
   
   //memset(gim.current, 0, sizeof(gim.current));
-	
+
   osSignalSet(can_msg_send_task_t, GIMBAL_MOTOR_MSG_SEND);
   osSignalSet(shoot_task_t, SHOT_TASK_EXE_SIGNAL);
-	//printf("gimbal_task done T %d\r\n",osKernelSysTick());
+	
   gimbal_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 
 }
@@ -313,8 +303,8 @@ void update_gimbal_sensor(void){
 	gim.sensor.pit_relative_angle_imu = (atti.roll- gim.sensor.pit_offset_angle_imu);
 	
 	 /* get gimbal relative palstance */
-  gim.sensor.yaw_palstance = YAW_IMU_DIR* (-mpu_data.gz) / 16.384f; //unit: dps
-  gim.sensor.pit_palstance = - mpu_data.gx / 16.384f; //unit: dps
+  gim.sensor.yaw_palstance = -  YAW_IMU_DIR* (mpu_data.gz) / 16.384f; //unit: dps
+  gim.sensor.pit_palstance =  PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
 }
 
 

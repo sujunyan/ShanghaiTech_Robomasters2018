@@ -8,8 +8,9 @@
 #include "shoot_task.h"
 #include "gimbal_task.h"
 #include "Serial_debug.h"
-#define PC_SEND_DURARION 10 
+#define PC_SEND_DURARION 10
 uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
+uint8_t computer_data_pack_buffer[COMPUTER_FRAME_BUFLEN];
 UBaseType_t pc_receive_surplus;
 UBaseType_t pc_send_surplus;
 
@@ -52,26 +53,15 @@ void PC_receive_task(const void * argu){
 
 void PC_send_task(void const * argu){
 	uint32_t wake_time = osKernelSysTick();
-	uint8_t static step=0;
+//	uint8_t static step=0;
 	while(1){
-		switch (step){
-			case 0:
-			{
-				send_all_pack_to_pc();
-				step++;
-			}
-			break;
-			#ifdef SERIAL_DEBUG
-			case 1:
-			{		
-			//static int cnt=0;
-			//printf("test msg from board\r\n");
-			send_serial_debug_msg();
-			step++;			
-			}break;
+		
+			#ifndef SERIAL_DEBUG
+			send_all_pack_to_pc();
+			#else 
+			send_serial_debug_msg();		
 			#endif
-			default: step=0;break;
-		}
+		
 			pc_send_surplus=uxTaskGetStackHighWaterMark(NULL);
 			osDelayUntil(&wake_time, PC_SEND_DURARION);
 	}
@@ -84,24 +74,20 @@ void PC_send_task(void const * argu){
 
 void send_all_pack_to_pc(void){
 	 
-	static int step=0;
-	uint16_t size;
-	switch(step)
-	{
-		case 0: // remote_info
-		{
-			uint16_t size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));	
-			step++;
-		}break;
-		case 1: //gimbal info
-		{
-			uint16_t size=data_pack_handle(GIMBAL_DATA_ID,(uint8_t*)&pc_send_mesg.gimbal_information,sizeof(remote_info));	
-			step=0;
-		}
-		default:step=0;break;
-	}
-	write_uart_noblocking(&COMPUTER_HUART,computer_tx_buf,size);
+	uint16_t index=0;
+	uint16_t size=0;
+	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
 	
+	size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));		
+	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
+	index+=size+1;
+	
+	size=data_pack_handle(GIMBAL_DATA_ID,(uint8_t*)&pc_send_mesg.gimbal_information,sizeof(pc_send_mesg.gimbal_information));
+	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
+	index+=size+1; // add interval bewteen frame
+	
+	
+	write_uart_blocking(&COMPUTER_HUART,computer_tx_buf,index);
 	// TODO 
 }
 void PC_send_msg_update(void){
@@ -279,17 +265,17 @@ void pc_gimbal_control_data_handle(gimbal_ctrl_t* ptr){
 	//printf("gimbal_ctrl_data recv pit %f yaw %f \r\n",ptr->pit_ref,ptr->yaw_ref);
 }
 uint16_t data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len){
-  memset(computer_tx_buf, 0, COMPUTER_FRAME_BUFLEN);
-  frame_header_t *p_header = (frame_header_t*)computer_tx_buf;
+  memset(computer_data_pack_buffer, 0, COMPUTER_FRAME_BUFLEN);
+  frame_header_t *p_header = (frame_header_t*)computer_data_pack_buffer;
   
   p_header->sof          = DN_REG_ID;
   p_header->data_length  = len;
   
-  memcpy(&computer_tx_buf[HEADER_LEN], (uint8_t*)&cmd_id, CMD_LEN);
-  append_crc8_check_sum(computer_tx_buf, HEADER_LEN);
+  memcpy(&computer_data_pack_buffer[HEADER_LEN], (uint8_t*)&cmd_id, CMD_LEN);
+  append_crc8_check_sum(computer_data_pack_buffer, HEADER_LEN);
   
-  memcpy(&computer_tx_buf[HEADER_LEN + CMD_LEN], p_data, len);
-  append_crc16_check_sum(computer_tx_buf, HEADER_LEN + CMD_LEN + len + CRC_LEN);
+  memcpy(&computer_data_pack_buffer[HEADER_LEN + CMD_LEN], p_data, len);
+  append_crc16_check_sum(computer_data_pack_buffer, HEADER_LEN + CMD_LEN + len + CRC_LEN);
 	
 	uint16_t frame_length = HEADER_LEN + CMD_LEN + len + CRC_LEN;
 	return frame_length;

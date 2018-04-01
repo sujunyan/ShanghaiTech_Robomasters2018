@@ -14,12 +14,12 @@ void chassis_task(const void* argu){ // timer
 
 	
 	// TODO swich the mode to handle data from PC 
-	chassis_mode_switch();
-	//chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	//chassis_mode_switch();
+	chassis.ctrl_mode=MANUAL_SEPARATE_GIMBAL;
 	
 	// chassis follow the gimbal
 	if (chassis_is_follow()){
-	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , 0);
+	pid_calc(&pid_chassis_angle,  gim.sensor.yaw_relative_angle_ecd , 0);
 	chassis.vw = pid_chassis_angle.out;
 	}
 	else{
@@ -34,6 +34,7 @@ void chassis_task(const void* argu){ // timer
   if (!chassis_is_controllable())
   {
     memset(chassis.current, 0, sizeof(chassis.current));
+		
   }
 	else
 	{
@@ -43,8 +44,8 @@ void chassis_task(const void* argu){ // timer
 			chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_speed_fdb[i], chassis.wheel_speed_ref[i]);
 		}
 	}
-	//TODO ban chassis for test 
-	
+
+		limit_chassis_power();
 	//memset(chassis.current, 0, sizeof(chassis.current));
 	
 		osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
@@ -102,15 +103,33 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 
 
 uint8_t chassis_is_controllable(void){
+	static int cnt=0;
   if (chassis.ctrl_mode == CHASSIS_RELAX 
-	 ||	gim.ctrl_mode ==  GIMBAL_INIT
+	// ||	gim.ctrl_mode ==  GIMBAL_INIT
    || g_err.list[REMOTE_CTRL_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M1_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M2_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M3_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M4_OFFLINE].err_exist)
 	{
-		//printf("chssis not controllable!\n\r");
+#if 1
+		if (cnt++ %10==0)
+		printf("chssis not controllable! chas %d gim_init %d rc %d  \
+		M1-4 %d %d %d %d \n\r",chassis.ctrl_mode == CHASSIS_RELAX 
+	 ,	gim.ctrl_mode ==  GIMBAL_INIT
+   , g_err.list[REMOTE_CTRL_OFFLINE].err_exist
+	, g_err.list[CHASSIS_M1_OFFLINE].err_exist
+	, g_err.list[CHASSIS_M2_OFFLINE].err_exist
+	, g_err.list[CHASSIS_M3_OFFLINE].err_exist
+	, g_err.list[CHASSIS_M4_OFFLINE].err_exist);
+		
+		printf("chassis delta %d %d %d %d \r\n",g_err.list[CHASSIS_M1_OFFLINE].dev->delta_time,
+		g_err.list[CHASSIS_M2_OFFLINE].dev->delta_time,g_err.list[CHASSIS_M3_OFFLINE].dev->delta_time,g_err.list[CHASSIS_M4_OFFLINE].dev->delta_time);
+		
+		printf("chassis last_time %d %d %d %d \r\n",g_err.list[CHASSIS_M1_OFFLINE].dev->last_time,
+		g_err.list[CHASSIS_M2_OFFLINE].dev->last_time,g_err.list[CHASSIS_M3_OFFLINE].dev->last_time,g_err.list[CHASSIS_M4_OFFLINE].dev->last_time);
+#endif
+		
     return 0;
 	}
   else
@@ -172,6 +191,7 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
 void chassis_mode_switch(void){
 	if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )chassis.ctrl_mode=AUTO_SEPARATE_GIMBAL;
 	else chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 }
 
 	
@@ -211,4 +231,20 @@ uint8_t chassis_is_auto(void){
 
 uint8_t chassis_is_follow(void){
 	return (chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL || chassis.ctrl_mode==AUTO_FOLLOW_GIMBAL);
+}
+
+void limit_chassis_power(void){
+	static float MAX_CHASSIS_CURRENT = 80.0/24.0;
+	float tot_cur=0;
+	for(int i=0;i<4;i++)
+	{
+		tot_cur+=((float) (chassis.current[i] >0 ? chassis.current[i]:-chassis.current[i]) )
+				* CHASSIS_CURRENT_RATIO;
+	}
+	if(tot_cur <= MAX_CHASSIS_CURRENT) return; // it does not goes to to current limit
+	chassis.power_limit_ratio =   tot_cur /MAX_CHASSIS_CURRENT  ;
+	for(int i=0;i<4;i++)
+	{
+		chassis.current[i] = chassis.current[i] / chassis.power_limit_ratio; 
+	}
 }

@@ -14,8 +14,7 @@ void serial_debug_task(void const *argu)
   {
 		// TODO
 		#if 1
-		//printf("test %d\n\r",cnt++);
-		//LED_G_ON;
+	
 		if(serial_debug_buffer_size>0)
 		{
 			write_uart_noblocking(&PC_HUART, serial_debug_buffer, serial_debug_buffer_size);
@@ -31,7 +30,7 @@ void serial_debug_task(void const *argu)
 void send_serial_debug_msg(void){
 	if(serial_debug_buffer_size>0)
 	{
-			write_uart_noblocking(&PC_HUART, serial_debug_buffer, serial_debug_buffer_size);
+			write_uart_blocking(&PC_HUART, serial_debug_buffer, serial_debug_buffer_size);
 			serial_debug_buffer_size=0;
 	}
 }

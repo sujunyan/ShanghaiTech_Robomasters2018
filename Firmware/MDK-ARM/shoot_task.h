@@ -32,7 +32,7 @@
 #include "chassis_task.h"
 /* shoot task control period time (ms) */
 #define SHOT_TASK_PERIOD 5
-#define TRIG_RUN (remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_UP)
+
 typedef enum
 {
   SHOT_DISABLE       = 0,

@@ -15,6 +15,7 @@
 #include "gimbal_task.h"
 #include "stdlib.h"
 #include "shoot_task.h"
+#include "bsp_io.h"
 void sys_init()
 {
 	MX_GPIO_Init();
@@ -39,6 +40,14 @@ void sys_init()
 
 void pram_init(void)
 {
+	//hardware device initialize
+	pwm_device_init();
+  mpu_device_init();
+  can_device_init();
+  can_receive_start();
+  dbus_uart_init();
+	
+  //software parameter initialize
 	chassis_param_init();
 	detector_param_init();
 	imu_param_init();
@@ -73,8 +82,8 @@ void gimbal_param_init(void)
   gim.last_ctrl_mode = GIMBAL_RELAX;
  
 	
-	PID_struct_init(&pid_chassis_angle, POSITION_PID, 300, 10,
-                  10 , 0.0, 0);  // TODO
+	PID_struct_init(&pid_chassis_angle, POSITION_PID, 200, 10,
+                  8 , 0.0, 0);  // TODO
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */
@@ -98,13 +107,13 @@ void gimbal_param_init(void)
 
 void shoot_param_init(void){
 	
-	
   memset(&shoot, 0, sizeof(shoot_t));
   
   shoot.ctrl_mode      = SHOT_DISABLE;
   shoot.fric_wheel_spd = 2000;
   //shot.remain_bullets = 0;
-  
+  turn_off_friction_wheel();
+	
   memset(&trig, 0, sizeof(trigger_t));
  
   trig.dir             = 1;
@@ -114,8 +123,7 @@ void shoot_param_init(void){
 	
 	PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,
                   15, 0, 10);
-  PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 3000,
-                  1.5, 0.1, 5);
-  
+  PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 5000,
+                  3, 0.1, 5); 
 }
 

@@ -35,7 +35,7 @@ void CommunicateNode::unpack_data(unpack_data_t *p_obj, uint8_t sof) {
   while (flag)
   {
     byte = readByte();
-      //printf("%x ",byte);
+    //  printf("%x ",byte);
     switch(p_obj->unpack_step)
     {
       case STEP_HEADER_SOF:
@@ -155,7 +155,7 @@ void CommunicateNode::send_data(float data1, float data2, float data3, uint8_t m
   uint8_t buf[100];
   uint16_t size = protocol_packet_pack(GIMBAL_CTRL_ID, (uint8_t*) &package, sizeof(package), DN_REG_ID, buf);
   boost::asio::write(port, boost::asio::buffer(buf,size));
-    //read_and_print();
+    read_and_print();
 
 
 }
@@ -168,7 +168,7 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
-    //printf("board data handle %x \n",cmd_id);
+    printf("board data handle cmd_id 0x%x \n",cmd_id);
   switch (cmd_id)
   {
       case CHASSIS_DATA_ID:
@@ -192,7 +192,7 @@ void CommunicateNode::board_data_handle(uint8_t *p_frame)
       case REMOTE_CTRL_INFO_ID:
       {
           memcpy(&board_rece_msg.remote_ctrl_data, data_addr, data_length);
-          //printf("remote_data recv\n");
+          printf("remote_data recv %d %d \n" ,board_rece_msg.remote_ctrl_data.sw1,board_rece_msg.remote_ctrl_data.sw2);
       }
           break;
       case BOTTOM_VERSION_ID:
@@ -426,7 +426,7 @@ uint8_t CommunicateNode::readByte() {
 void CommunicateNode::read_and_print() {
     int cnt=0;
     char ch=readByte();
-    while(ch!='\n' && cnt++<100)
+    while(ch!='\n' && cnt++<100 && ch!='\0')
     {
         printf("%c",ch);
         try{

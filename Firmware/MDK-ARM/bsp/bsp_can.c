@@ -51,7 +51,7 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* _hcan){
     case CAN_3510_M3_ID:
     case CAN_3510_M4_ID:
     {
-			if(gim.ctrl_mode == GIMBAL_INIT)break;
+			//if(gim.ctrl_mode == GIMBAL_INIT)break; //TODO
       static uint8_t i;
       i = _hcan->pRxMsg->StdId - CAN_3510_M1_ID;
 			if(chassis.motor[i].msg_cnt++ <= 50)

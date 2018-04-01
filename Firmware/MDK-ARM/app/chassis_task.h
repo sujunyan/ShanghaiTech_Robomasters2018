@@ -7,7 +7,7 @@
 
 
 #define FILTER_BUF 5
-
+#define CHASSIS_CURRENT_RATIO (20.0/16384.0f)
 #define CHASSIS_TASK_PERIOD 10
 
 typedef struct
@@ -51,6 +51,7 @@ typedef struct
   float           vy; // left/right
   float           vw; // 
 
+	float 					power_limit_ratio;
 	chassis_mode_e  ctrl_mode;
   chassis_mode_e  last_ctrl_mode;
 	
@@ -75,12 +76,8 @@ uint8_t chassis_is_auto(void);
 uint8_t chassis_is_follow(void);
 void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 void chassis_mode_switch(void);
+void limit_chassis_power(void);
 extern chassis_t chassis;
 #endif
-/*
-#define CAN_3510_M1_ID 0x201
-#define CAN_3510_M2_ID 0x202
-#define CAN_3510_M3_ID 0x203
-#define CAN_3510_M4_ID 0x204
-*/
+
 

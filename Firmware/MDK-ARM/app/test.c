@@ -32,7 +32,7 @@ void test_task( const void* argu){
 	//	test_shoot_task();
 	
 		// we do not have these module, try to get rid of it
-		 err_detector_hook(TRIGGER_MOTO_OFFLINE);
+		// err_detector_hook(TRIGGER_MOTO_OFFLINE);
 		err_detector_hook(GIMBAL_GYRO_OFFLINE);
     test_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     
@@ -57,6 +57,7 @@ void print_chassis_info(void){
 	printf("chassis speed %d %d %d %d \r\n",chassis.motor[0].speed_rpm,
 	chassis.motor[1].speed_rpm,chassis.motor[2].speed_rpm,chassis.motor[3].speed_rpm);
 	
-
-
+	printf("chassis delta %d %d %d %d \r\n",g_err.list[CHASSIS_M1_OFFLINE].dev->delta_time,
+		g_err.list[CHASSIS_M2_OFFLINE].dev->delta_time,g_err.list[CHASSIS_M3_OFFLINE].dev->delta_time,g_err.list[CHASSIS_M4_OFFLINE].dev->delta_time);
+	
 }

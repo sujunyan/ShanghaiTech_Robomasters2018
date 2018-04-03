@@ -236,7 +236,7 @@ void StartDefaultTask(void const * argument)
 				gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
 				gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;
 				#ifdef CALI_DONE			
-				//osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
+				osTimerStart(gimbal_timer_id, GIMBAL_PERIOD);
 				#endif
 				break;
 			}

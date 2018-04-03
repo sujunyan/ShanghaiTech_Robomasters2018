@@ -3,7 +3,7 @@
 //#define DEBUGSWD
 
 
-#define SERIAL_DEBUG
+//#define SERIAL_DEBUG
 
 #include "usart.h"
 #include "stdio.h"

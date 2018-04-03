@@ -82,8 +82,8 @@ void gimbal_param_init(void)
   gim.last_ctrl_mode = GIMBAL_RELAX;
  
 	
-	PID_struct_init(&pid_chassis_angle, POSITION_PID, 200, 10,
-                  8 , 0.0, 0);  // TODO
+	PID_struct_init(&pid_chassis_angle, POSITION_PID, 500, 10,
+                  10 , 0.0, 0);  // TODO
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */

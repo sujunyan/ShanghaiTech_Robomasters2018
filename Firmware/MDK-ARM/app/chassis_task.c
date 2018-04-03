@@ -14,13 +14,13 @@ void chassis_task(const void* argu){ // timer
 
 	
 	// TODO swich the mode to handle data from PC 
-	//chassis_mode_switch();
-	chassis.ctrl_mode=MANUAL_SEPARATE_GIMBAL;
+	chassis_mode_switch();
+	//chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 	
 	// chassis follow the gimbal
 	if (chassis_is_follow()){
-	pid_calc(&pid_chassis_angle,  gim.sensor.yaw_relative_angle_ecd , 0);
-	chassis.vw = pid_chassis_angle.out;
+	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , 0);
+	chassis.vw = pid_chassis_angle.out; 
 	}
 	else{
 		chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
@@ -45,7 +45,7 @@ void chassis_task(const void* argu){ // timer
 		}
 	}
 
-		limit_chassis_power();
+		//limit_chassis_power();
 	//memset(chassis.current, 0, sizeof(chassis.current));
 	
 		osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
@@ -105,14 +105,14 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 uint8_t chassis_is_controllable(void){
 	static int cnt=0;
   if (chassis.ctrl_mode == CHASSIS_RELAX 
-	// ||	gim.ctrl_mode ==  GIMBAL_INIT
+	 ||	gim.ctrl_mode ==  GIMBAL_INIT
    || g_err.list[REMOTE_CTRL_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M1_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M2_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M3_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M4_OFFLINE].err_exist)
 	{
-#if 1
+#if 0
 		if (cnt++ %10==0)
 		printf("chssis not controllable! chas %d gim_init %d rc %d  \
 		M1-4 %d %d %d %d \n\r",chassis.ctrl_mode == CHASSIS_RELAX 
@@ -225,8 +225,8 @@ void chasis_remote_handle(void){
 		
 }
 uint8_t chassis_is_auto(void){
-	//return (remote_info.rc.s1==RC_DN);
-	return (chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL || chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL); //TODO
+	return (remote_info.rc.s2==RC_DN);
+	//return (chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL || chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL); //TODO
 }
 
 uint8_t chassis_is_follow(void){

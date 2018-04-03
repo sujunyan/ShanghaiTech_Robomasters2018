@@ -93,8 +93,8 @@
 #define GIMBAL_CASCADE_CTRL
 #define PIT_ANGLE_MAX        10
 #define PIT_ANGLE_MIN        -20
-#define YAW_ANGLE_MAX        40
-#define YAW_ANGLE_MIN        -40
+#define YAW_ANGLE_MAX        20
+#define YAW_ANGLE_MIN        -20
 #define LEFT_FRICTION        TIM12->CCR1
 #define RIGHT_FIRCTION       TIM12->CCR2
 /**************************shot  setting********************************/

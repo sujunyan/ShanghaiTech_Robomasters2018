@@ -76,6 +76,7 @@ void send_all_pack_to_pc(void){
 	 
 	uint16_t index=0;
 	uint16_t size=0;
+	PC_send_msg_update();
 	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
 	
 	size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));		

@@ -45,10 +45,10 @@
 #define PATROL_PERIOD    1500
 /* gimbal back center time (ms) */
 #define BACK_CENTER_TIME 2500
-#define PIT_ECD_DIR  ( 1.0f) 
-#define YAW_ECD_DIR  ( 1.0f)
-#define YAW_IMU_DIR  ( 1.0f)
-#define PIT_IMU_DIR  ( 1.0f)
+#define PIT_ECD_DIR  (- 1.0f) 
+#define YAW_ECD_DIR  (- 1.0f)
+#define YAW_IMU_DIR  (- 1.0f)
+#define PIT_IMU_DIR  (- 1.0f)
 /* keyboard mode gimbal speed limit */
 
 #define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
@@ -179,7 +179,7 @@ void close_loop_handle(void){
 												-remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
                     //   + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW 
 			,step);
-    VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);
+    VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);	
   }
   /* limit gimbal pitch axis angle */
   if ((gim.sensor.pit_relative_angle_ecd >= PIT_ANGLE_MIN - limit_angle_range) && \

@@ -3,7 +3,7 @@
 //#define DEBUGSWD
 
 
-//#define SERIAL_DEBUG
+#include "PC_communication_task.h"
 
 #include "usart.h"
 #include "stdio.h"

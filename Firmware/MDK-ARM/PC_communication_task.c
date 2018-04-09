@@ -44,8 +44,6 @@ void PC_receive_task(const void * argu){
 		}
 		
    // send_all_pack_to_pc();
-		
-		
 		pc_receive_surplus=uxTaskGetStackHighWaterMark(NULL);
 		
 	}
@@ -87,24 +85,48 @@ void send_all_pack_to_pc(void){
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1; // add interval bewteen frame
 	
+	size=data_pack_handle(CHASSIS_DATA_ID,(uint8_t*)&pc_send_mesg.chassis_information,sizeof(pc_send_mesg.chassis_information));
+	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
+	index+=size+1; // add interval bewteen frame
 	
 	write_uart_blocking(&COMPUTER_HUART,computer_tx_buf,index);
-	// TODO 
+	
 }
 void PC_send_msg_update(void){
+	// update gimbal
 	pc_send_mesg.gimbal_information.pit_absolute_angle=0;
 	pc_send_mesg.gimbal_information.pit_palstance=gim.sensor.pit_palstance;
 	pc_send_mesg.gimbal_information.pit_relative_angle=gim.sensor.pit_relative_angle_ecd;
 	pc_send_mesg.gimbal_information.yaw_absolute_angle=0;
 	pc_send_mesg.gimbal_information.yaw_palstance=gim.sensor.yaw_palstance;
 	pc_send_mesg.gimbal_information.yaw_relative_angle=gim.sensor.yaw_relative_angle_imu;
+	
+	// update 
+	  static float rotate_ratio_fr=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_fl=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_bl=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float rotate_ratio_br=((WHEELBASE+WHEELTRACK)/2.0f)/RADIAN_COEF;
+  static float wheel_rpm_ratio = 60.0f/(PERIMETER*CHASSIS_DECELE_RATIO);
+#if 0
+	 wheel_rpm[2] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
+  wheel_rpm[3] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
+	// these wheels are reversed due to sysmetry
+  wheel_rpm[0] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
+  wheel_rpm[1] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
+#endif
+	pc_send_mesg.chassis_information.x_speed = (chassis.motor[2].speed_rpm - chassis.motor[3].speed_rpm + 
+	chassis.motor[1].speed_rpm - chassis.motor[0].speed_rpm) /4 / wheel_rpm_ratio;
+	
+		pc_send_mesg.chassis_information.y_speed = (chassis.motor[2].speed_rpm - chassis.motor[1].speed_rpm + 
+	chassis.motor[3].speed_rpm - chassis.motor[0].speed_rpm) /4 / wheel_rpm_ratio;
+	
+	//pc_send_mesg.chassis_information.y_speed = chassis.vy;
 }
 
 void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
 	static unpack_data_t p_obj;	
 	memset(&p_obj,0,sizeof(p_obj));
   uint8_t byte = 0;
-	//printf("")
   while (*begin < end)
   {
     byte = buffer[(*begin)++];

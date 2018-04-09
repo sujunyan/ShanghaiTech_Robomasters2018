@@ -15,11 +15,14 @@ void chassis_task(const void* argu){ // timer
 	
 	// TODO swich the mode to handle data from PC 
 	chassis_mode_switch();
-	//chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 	
 	// chassis follow the gimbal
+	
+	
+		
 	if (chassis_is_follow()){
-	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , 0);
+	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , chassis_twist_angle());
 	chassis.vw = pid_chassis_angle.out; 
 	}
 	else{
@@ -189,9 +192,9 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
 */
  
 void chassis_mode_switch(void){
-	if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )chassis.ctrl_mode=AUTO_SEPARATE_GIMBAL;
+	if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )chassis.ctrl_mode=AUTO_FOLLOW_GIMBAL;
 	else chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
-	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	//chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 }
 
 	
@@ -225,8 +228,8 @@ void chasis_remote_handle(void){
 		
 }
 uint8_t chassis_is_auto(void){
-	return (remote_info.rc.s2==RC_DN);
-	//return (chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL || chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL); //TODO
+	//return (remote_info.rc.s2==RC_DN && remote_info.rc.s1==RC_DN);
+	return (chassis.ctrl_mode==AUTO_SEPARATE_GIMBAL || chassis.ctrl_mode==AUTO_FOLLOW_GIMBAL); //TODO
 }
 
 uint8_t chassis_is_follow(void){
@@ -247,4 +250,34 @@ void limit_chassis_power(void){
 	{
 		chassis.current[i] = chassis.current[i] / chassis.power_limit_ratio; 
 	}
+}
+
+float chassis_twist_angle(void){
+	float static angle = 0;
+	int static cnt = 0;
+	float static step = 0.5;
+	float static max_angle = 30;
+	
+	int static cnt1 = 0;
+	int  tot_step =(int) ( max_angle / step) ;
+	//if (cnt1++  %2!=0)return angle;
+	if(remote_info.rc.s2==RC_UP)
+	{
+			cnt++;
+		
+			if(cnt<tot_step)angle+=step;
+			else if (cnt < 3*tot_step) angle-=step;
+			else if (cnt < 4*tot_step) angle += step;
+			else 
+			{
+				cnt=0;
+				angle=0;
+			}
+	}
+	else
+	{
+		angle=0;
+		cnt=0;
+	}		
+	return angle;
 }

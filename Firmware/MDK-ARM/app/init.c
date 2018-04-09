@@ -90,13 +90,13 @@ void gimbal_param_init(void)
   PID_struct_init(&pid_pit, POSITION_PID, 300, 10,
                   30, 0, 0); //
   PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
-                  15, 0.1, 0);
+                  8, 0.1, 0);
 
   /* yaw axis motor pid parameter */
   PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50, // TODO MAX=1000 previously
-                  20, 0.00, 0); //
+                  15, 0.00, 0); //
   PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
-                  13, 0, 0 );
+                  10, 0.1, 0 );
   //pid_yaw_speed.min_out= 200;
 	//pid_yaw.min_out=100;
 	
@@ -124,6 +124,6 @@ void shoot_param_init(void){
 	PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,
                   15, 0, 10);
   PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 5000,
-                  3, 0.1, 5); 
+                  10, 0.1, 5); 
 }
 

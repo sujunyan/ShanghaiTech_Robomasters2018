@@ -25,7 +25,7 @@ void test_task( const void* argu){
 		#endif
 		
 		//LED_G_TOGGLE;		
-		#if 1
+		#if 0
 		print_chassis_info();
 		#endif
 	

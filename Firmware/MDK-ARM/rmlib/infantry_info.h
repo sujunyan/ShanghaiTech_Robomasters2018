@@ -91,6 +91,7 @@ typedef __packed struct
   int16_t y_speed;        /* chassis y-axis move speed(mm/s) from chassis motor encoder calculated */
   int32_t x_position;     /* chassis x-axis position(mm) relative to the starting point */
   int32_t y_position;     /* chassis y-axis position(mm) relative to the starting point */
+	//int32_t speed[4];				
 } chassis_info_t;
 
 /** 
@@ -212,6 +213,7 @@ typedef struct
   gimbal_info_t     gimbal_information;
   shoot_info_t      shoot_task_information;
   rc_info_t         remote_ctrl_data;
+	
 } send_pc_t;
 
 

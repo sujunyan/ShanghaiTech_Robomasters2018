@@ -322,7 +322,7 @@ static void imu_AHRS_update(void) {
 #if 1
 static void imu_attitude_update(void){
 	static float yaw_offset=0.0f;
-	yaw_offset-=0.0001f; // yaw may  shift  during the time // 0.0007 is stable but may slow down the response
+	yaw_offset+=0.0009f; // yaw may  shift  during the time // 0.0007 is stable but may slow down the response
   imu.rol =  atan2(2*q2*q3 + 2*q0*q1, -2*q1*q1 - 2*q2*q2 + 1)* 57.3; // roll       -pi----pi
   imu.pit = -asin(-2*q1*q3 + 2*q0*q2)* 57.3;                         // pitch    -pi/2----pi/2 
   imu.yaw =  atan2(2*q1*q2 + 2*q0*q3, -2*q2*q2 - 2*q3*q3 + 1)* 57.3 + yaw_offset; // yaw        -pi----pi
@@ -358,6 +358,7 @@ void imu_task(void const *argu)
     //imu_time_ms = HAL_GetTick() - imu_time_last;
     //imu_time_last = HAL_GetTick();
     
+		
     imu_temp_keep();
     
     mpu_get_data();

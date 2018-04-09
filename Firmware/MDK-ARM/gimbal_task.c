@@ -44,11 +44,11 @@
 /* patrol period time (ms) */
 #define PATROL_PERIOD    1500
 /* gimbal back center time (ms) */
-#define BACK_CENTER_TIME 2500
+#define BACK_CENTER_TIME 2000 //TODO
 #define PIT_ECD_DIR  (- 1.0f) 
 #define YAW_ECD_DIR  (- 1.0f)
 #define YAW_IMU_DIR  (- 1.0f)
-#define PIT_IMU_DIR  (- 1.0f)
+#define PIT_IMU_DIR  ( 1.0f)
 /* keyboard mode gimbal speed limit */
 
 #define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
@@ -303,8 +303,8 @@ void update_gimbal_sensor(void){
 	gim.sensor.pit_relative_angle_imu = (atti.roll- gim.sensor.pit_offset_angle_imu);
 	
 	 /* get gimbal relative palstance */
-  gim.sensor.yaw_palstance = -  YAW_IMU_DIR* (mpu_data.gz) / 16.384f; //unit: dps
-  gim.sensor.pit_palstance =  PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
+  gim.sensor.yaw_palstance =   YAW_IMU_DIR* (mpu_data.gy) / 16.384f; //unit: dps
+  gim.sensor.pit_palstance = - PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
 }
 
 

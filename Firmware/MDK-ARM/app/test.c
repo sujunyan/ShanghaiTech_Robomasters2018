@@ -29,10 +29,15 @@ void test_task( const void* argu){
 		print_chassis_info();
 		#endif
 	
+		#ifdef CHASSIS_ONLY
+		err_detector_hook(GIMBAL_YAW_OFFLINE);
+		err_detector_hook(GIMBAL_PIT_OFFLINE);
+		err_detector_hook(TRIGGER_MOTO_OFFLINE);
+		#endif
 	//	test_shoot_task();
 	
 		// we do not have these module, try to get rid of it
-		// err_detector_hook(TRIGGER_MOTO_OFFLINE);
+		 
 		err_detector_hook(GIMBAL_GYRO_OFFLINE);
     test_task_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     

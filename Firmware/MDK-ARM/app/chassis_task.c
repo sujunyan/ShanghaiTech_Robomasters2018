@@ -108,7 +108,9 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 uint8_t chassis_is_controllable(void){
 	static int cnt=0;
   if (chassis.ctrl_mode == CHASSIS_RELAX 
+		#ifndef CHASSIS_ONLY
 	 ||	gim.ctrl_mode ==  GIMBAL_INIT
+		#endif
    || g_err.list[REMOTE_CTRL_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M1_OFFLINE].err_exist
 	|| g_err.list[CHASSIS_M2_OFFLINE].err_exist
@@ -222,8 +224,10 @@ void chasis_remote_handle(void){
 			chassis.vx = (- remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X) 
 										+ pc_rece_mesg.chassis_control_data.x_speed; // left-right
 			chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y)
-										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 		
-			//chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
+										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 
+#ifdef CHASSIS_ONLY			
+			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
+#endif
 		}
 		
 }

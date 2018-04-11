@@ -9,7 +9,7 @@
 #define FILTER_BUF 5
 #define CHASSIS_CURRENT_RATIO (20.0/16384.0f)
 #define CHASSIS_TASK_PERIOD 10
-
+//#define CHASSIS_ONLY
 typedef struct
 {
   uint16_t ecd;   // encoder value

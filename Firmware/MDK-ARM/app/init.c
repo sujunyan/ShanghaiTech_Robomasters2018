@@ -88,13 +88,13 @@ void gimbal_param_init(void)
   
   /* pitch axis motor pid parameter */
   PID_struct_init(&pid_pit, POSITION_PID, 300, 10,
-                  30, 0, 0); //
+                  30, 0.1, 0); //
   PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
                   8, 0.1, 0);
 
   /* yaw axis motor pid parameter */
   PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50, // TODO MAX=1000 previously
-                  15, 0.00, 0); //
+                  20, 0.1, 0); //
   PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
                   10, 0.1, 0 );
   //pid_yaw_speed.min_out= 200;

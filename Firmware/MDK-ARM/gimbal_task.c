@@ -160,7 +160,7 @@ float remote_ctrl_map(float offset,float step){
 void close_loop_handle(void){
   static float chassis_angle_tmp=0;
   static float limit_angle_range = 3;
-  static float step= GIMBAL_RC_MOVE_RATIO_YAW*660;
+  static float step= GIMBAL_RC_MOVE_RATIO_YAW*330;
 	
   gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
   gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu; // 
@@ -242,7 +242,7 @@ void init_mode_handle(void){
     gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_ecd * ( 1 - ramp_calc(&yaw_ramp));
     gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd;
 		
-    if (gim.pid.yaw_angle_fdb >= -1.5f && gim.pid.yaw_angle_fdb <= 1.5f)
+    if (gim.pid.yaw_angle_fdb >= -3.0f && gim.pid.yaw_angle_fdb <= 3.0f)
     {
       /* yaw arrive and switch gimbal state */
       gim.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;

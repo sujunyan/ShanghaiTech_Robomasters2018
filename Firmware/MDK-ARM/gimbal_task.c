@@ -105,7 +105,7 @@ void gimbal_task(void const *argu)
   
 	cascade_pid_ctrl();
   
-  pid_calc(&pid_yaw_speed, gim.pid.yaw_speed_fdb, gim.pid.yaw_speed_ref + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW);
+  pid_calc(&pid_yaw_speed, gim.pid.yaw_speed_fdb, gim.pid.yaw_speed_ref);
   pid_calc(&pid_pit_speed, gim.pid.pit_speed_fdb, gim.pid.pit_speed_ref);
 
   /* safe protect */
@@ -290,7 +290,6 @@ int16_t get_relative_pos(int16_t raw_ecd, int16_t center_offset){
 
 
 void update_gimbal_sensor(void){
-	
 	static float yaw_ecd_ratio = YAW_ECD_DIR*YAW_DECELE_RATIO*ENCODER_ANGLE_RATIO;
   static float pit_ecd_ratio = PIT_ECD_DIR*PIT_DECELE_RATIO*ENCODER_ANGLE_RATIO;
   gim.sensor.yaw_relative_angle_ecd =  yaw_ecd_ratio*get_relative_pos(gim.yaw_motor.ecd, YAW_ECD_CENTER_OFFSET);

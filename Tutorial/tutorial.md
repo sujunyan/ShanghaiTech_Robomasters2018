@@ -8,12 +8,13 @@
 
 ## 2.电机控制
 ### 2.1 PID control (RmLib/pid.c)
-
+#### (PID 控制各参数的配置详见main/init.c)
 ``` c
 void PID_struct_init(pid_t* pid, uint32_t mode,
     uint32_t maxout, uint32_t intergral_limit,
     float kp,float ki,float kd)
-
+```
+```c
 float pid_calc(pid_t *pid, float get, float set)
 {
   pid->get = get;
@@ -44,6 +45,8 @@ float pid_calc(pid_t *pid, float get, float set)
 }
 
 ```
+
+
 
 ### 2.2 电机反馈数据(User_bsp/bsp_can.c)
 电机反馈数据由电机所接的can总线发送至主控板，主控板接收到一帧can信号后会自动调用以下函数

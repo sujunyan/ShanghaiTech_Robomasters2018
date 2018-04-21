@@ -245,8 +245,10 @@ void limit_chassis_power(void){
 	float tot_cur=0;
 	for(int i=0;i<4;i++)
 	{
+		/*
 		tot_cur+=((float) (chassis.current[i] >0 ? chassis.current[i]:-chassis.current[i]) )
 				* CHASSIS_CURRENT_RATIO;
+		*/
 	}
 	if(tot_cur <= MAX_CHASSIS_CURRENT) return; // it does not goes to to current limit
 	chassis.power_limit_ratio =   tot_cur /MAX_CHASSIS_CURRENT  ;

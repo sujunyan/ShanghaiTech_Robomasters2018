@@ -12,7 +12,8 @@
 //hero
 //#define PIT_ECD_CENTER_OFFSET 6904
 //#define YAW_ECD_CENTER_OFFSET 7430
-
+#define GIMBAL_FOLLOW_CHASSIS
+#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
 #define PIT_ECD_CENTER_OFFSET 201
 #define YAW_ECD_CENTER_OFFSET 3801
 
@@ -114,4 +115,5 @@ void gimbal_self_check(void);
 void cascade_pid_ctrl(void);
 void update_gimbal_sensor(void);
 int16_t get_relative_pos(int16_t raw_ecd, int16_t center_offset);
+void no_cascade_pid_ctrl(void);
 #endif

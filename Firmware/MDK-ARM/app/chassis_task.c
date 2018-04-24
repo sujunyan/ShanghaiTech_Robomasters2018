@@ -17,19 +17,9 @@ void chassis_task(const void* argu){ // timer
 	chassis_mode_switch();
 	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
 	
-	// chassis follow the gimbal
-	
-	
-		
-	if (chassis_is_follow()){
-	pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , chassis_twist_angle());
-	chassis.vw = pid_chassis_angle.out; 
-	}
-	else{
-		chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
-	}
-	
+
 	if(!chassis_is_auto())chasis_remote_handle();
+	else chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
 	
 	
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
@@ -225,9 +215,10 @@ void chasis_remote_handle(void){
 										+ pc_rece_mesg.chassis_control_data.x_speed; // left-right
 			chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y)
 										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 
-#ifdef CHASSIS_ONLY			
-			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R; // rotate 
-#endif
+			
+			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R
+												+ (remote_info.mouse.x) * CHASSIS_RC_MAX_SPEED_R /100; // rotate 
+
 		}
 		
 }

@@ -87,7 +87,13 @@ void gimbal_param_init(void)
 	/*gimbal offset */
   
   /* pitch axis motor pid parameter */
-  PID_struct_init(&pid_pit, POSITION_PID, 300, 10,
+#ifdef NO_CASCADE_CONTROL
+	 PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
+                  240, 0.1, 0);
+		PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
+                  200, 0.1, 0 );
+#else
+  PID_struct_init(&pid_pit, POSITION_PID, 100, 10,
                   30, 0.1, 0); //
   PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
                   8, 0.1, 0);
@@ -97,10 +103,7 @@ void gimbal_param_init(void)
                   20, 0.1, 0); //
   PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
                   10, 0.1, 0 );
-  //pid_yaw_speed.min_out= 200;
-	//pid_yaw.min_out=100;
-	
-  /* bullet trigger motor pid parameter */
+#endif
   
 }
 

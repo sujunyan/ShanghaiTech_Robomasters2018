@@ -74,8 +74,6 @@ void shoot_task(void const *argu)
 					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1500);
 					else turn_off_friction_wheel();
 					turn_on_laser();
-					
-				
 					if(remote_info.rc.s2 == RC_MI || remote_info.mouse.press_l)pid_calc(&pid_trigger_speed,trig.motor.speed_rpm,500);
 					else if (remote_info.rc.s2 == RC_UP || remote_info.mouse.press_r)pid_calc(&pid_trigger_speed,trig.motor.speed_rpm,-500);
 					else pid_trigger_speed.out = 0;

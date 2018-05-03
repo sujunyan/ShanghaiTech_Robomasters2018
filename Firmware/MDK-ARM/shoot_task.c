@@ -89,7 +89,7 @@ void shoot_task(void const *argu)
 					#else 
 					
 					
-					if(remote_info.rc.last_s2 != remote_info.rc.s2)
+					if(remote_info.rc.last_s2 != remote_info.rc.s2 || CONTINUOUS_SHOOT)
 						shoot_one_bullet_success = 0;
 					
 					if (!shoot_one_bullet_success) // reserve the direction 

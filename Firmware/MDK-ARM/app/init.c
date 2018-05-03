@@ -16,6 +16,7 @@
 #include "stdlib.h"
 #include "shoot_task.h"
 #include "bsp_io.h"
+#include "calibrate.h"
 void sys_init()
 {
 	MX_GPIO_Init();
@@ -46,7 +47,8 @@ void pram_init(void)
   can_device_init();
   can_receive_start();
   dbus_uart_init();
-	
+	//BEEP_TUNE = 0;
+ // BEEP_CTRL = 0;//g_err.beep_ctrl;
   //software parameter initialize
 	chassis_param_init();
 	detector_param_init();
@@ -54,6 +56,7 @@ void pram_init(void)
 	gimbal_param_init();
 	gimbal_back_param();
 	shoot_param_init();
+	cali_param_init();
 }
 
 void chassis_param_init(void)
@@ -93,16 +96,16 @@ void gimbal_param_init(void)
 		PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
                   200, 0.1, 0 );
 #else
-  PID_struct_init(&pid_pit, POSITION_PID, 100, 10,
+  PID_struct_init(&pid_pit, POSITION_PID, 200, 10,
                   30, 0.1, 0); //
   PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
-                  8, 0.1, 0);
+                  15, 0.1, 0);
 
   /* yaw axis motor pid parameter */
   PID_struct_init(&pid_yaw, POSITION_PID, 1000, 50, // TODO MAX=1000 previously
-                  20, 0.1, 0); //
+                  30, 0.1, 0); //
   PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
-                  10, 0.1, 0 );
+                  15, 0.1, 0 );
 #endif
   
 }
@@ -124,9 +127,9 @@ void shoot_param_init(void){
   trig.c_shot_spd      = 4000;
   trig.state         = TRIG_INIT;
 	
-	PID_struct_init(&pid_trigger, POSITION_PID, 10000, 2000,
-                  15, 0, 10);
-  PID_struct_init(&pid_trigger_speed, POSITION_PID, 7000, 5000,
-                  10, 0.1, 5); 
+	PID_struct_init(&pid_trigger, POSITION_PID, 10000, 7000,
+                  30, 0.3, 0);
+  PID_struct_init(&pid_trigger_speed, POSITION_PID, 10000, 5000,
+                  20, 0.2, 0); 
 }
 

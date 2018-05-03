@@ -765,6 +765,16 @@
               <FileType>1</FileType>
               <FilePath>.\app\detect_task.c</FilePath>
             </File>
+            <File>
+              <FileName>calibrate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\rmlib\calibrate.c</FilePath>
+            </File>
+            <File>
+              <FileName>calibrate.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rmlib\calibrate.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -774,6 +784,11 @@
               <FileName>RemoteTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\app\RemoteTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>RemoteTask.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app\RemoteTask.h</FilePath>
             </File>
             <File>
               <FileName>chassis_task.c</FileName>

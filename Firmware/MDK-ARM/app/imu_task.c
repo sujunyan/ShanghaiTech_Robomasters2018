@@ -320,24 +320,41 @@ static void imu_AHRS_update(void) {
 
 }
 #if 1
+#define MAX_IMU_INIT_CNT 2000
+#define SET_YAW_OFFSET
 static void imu_attitude_update(void){
 	static float yaw_offset=0.0f;
-	yaw_offset+=0.0009f; // yaw may  shift  during the time // 0.0007 is stable but may slow down the response
+	static float yaw_offset_plus = 0.0f;
+	static int cnt = 0;
+	yaw_offset+=yaw_offset_plus; // yaw may  shift  during the time // 0.0007 is stable but may slow down the response
+	
+	atti.last_yaw = imu.yaw;
+	
   imu.rol =  atan2(2*q2*q3 + 2*q0*q1, -2*q1*q1 - 2*q2*q2 + 1)* 57.3; // roll       -pi----pi
   imu.pit = -asin(-2*q1*q3 + 2*q0*q2)* 57.3;                         // pitch    -pi/2----pi/2 
-  imu.yaw =  atan2(2*q1*q2 + 2*q0*q3, -2*q2*q2 - 2*q3*q3 + 1)* 57.3 + yaw_offset; // yaw        -pi----pi
+  imu.yaw =  atan2(2*q1*q2 + 2*q0*q3, -2*q2*q2 - 2*q3*q3 + 1)* 57.3  ; // yaw        -pi----pi
   
+	
+#ifdef 	SET_YAW_OFFSET
+	if (cnt++ < MAX_IMU_INIT_CNT) // this should be stable
+	{
+		yaw_offset_plus += (atti.last_yaw - imu.yaw )* (1.0f/MAX_IMU_INIT_CNT); 
+		//if(cnt%10 == 0)
+			//printf("yaw_offset_plus %f \r\n",yaw_offset_plus);
+	}
+#endif  
+	
   
+  atti.yaw   = imu.yaw + atti.yaw_cnt*360 + yaw_offset  ;
+  atti.pitch = imu.pit;
+  atti.roll  = imu.rol;
+	
   if (imu.yaw - atti.last_yaw > 330)
     atti.yaw_cnt--;
   else if (imu.yaw - atti.last_yaw < -330)
     atti.yaw_cnt++;
   
-  atti.last_yaw = imu.yaw;
   
-  atti.yaw   = imu.yaw + atti.yaw_cnt*360  ;
-  atti.pitch = imu.pit;
-  atti.roll  = imu.rol;
 	//printf("update T %d\r\n",osKernelSysTick());
    
 }

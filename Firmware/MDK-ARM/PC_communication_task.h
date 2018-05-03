@@ -6,7 +6,6 @@
 #define COMMUNICATION_PERIOD 20
 #define PROTOCAL_FRAME_MAX_SIZE  200
 
-#define SERIAL_DEBUG
 
 #include "bsp_uart.h"
 #include "protocol.h"

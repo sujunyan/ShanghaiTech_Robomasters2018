@@ -145,6 +145,7 @@ void detector_param_init(void)
   * @retval    None
   * @usage     used in CAN/usart.. rx interrupt callback
   */
+
 uint32_t detect_time_last;
 int detect_time_ms;
 void detect_task(void const *argu)
@@ -170,9 +171,9 @@ void detect_task(void const *argu)
       g_err.beep_ctrl = 0;
       LED_G_ON;
     }
-    
+    g_err.beep_ctrl = 0;
     //BEEP_TUNE = g_err.beep_tune;
-    //BEEP_CTRL = 0;//g_err.beep_ctrl;
+   // BEEP_CTRL = 0;//g_err.beep_ctrl;
     
     detect_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     

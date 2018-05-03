@@ -8,6 +8,7 @@
 #include "shoot_task.h"
 #include "gimbal_task.h"
 #include "Serial_debug.h"
+#include "calibrate.h"
 #define PC_SEND_DURARION 10
 uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 uint8_t computer_data_pack_buffer[COMPUTER_FRAME_BUFLEN];
@@ -94,12 +95,13 @@ void send_all_pack_to_pc(void){
 }
 void PC_send_msg_update(void){
 	// update gimbal
+	// TODO send ecd and imu massage
 	pc_send_mesg.gimbal_information.pit_absolute_angle=0;
-	pc_send_mesg.gimbal_information.pit_palstance=gim.sensor.pit_palstance;
-	pc_send_mesg.gimbal_information.pit_relative_angle=gim.sensor.pit_relative_angle_ecd;
+	pc_send_mesg.gimbal_information.pit_palstance= gim.sensor.pit_palstance;
+	pc_send_mesg.gimbal_information.pit_relative_angle= gim.sensor.pit_relative_angle_ecd;
 	pc_send_mesg.gimbal_information.yaw_absolute_angle=0;
-	pc_send_mesg.gimbal_information.yaw_palstance=gim.sensor.yaw_palstance;
-	pc_send_mesg.gimbal_information.yaw_relative_angle=gim.sensor.yaw_relative_angle_imu;
+	pc_send_mesg.gimbal_information.yaw_palstance= gim.sensor.yaw_palstance;
+	pc_send_mesg.gimbal_information.yaw_relative_angle= gim.sensor.yaw_relative_angle_imu;
 	
 	// update 
 	 
@@ -269,6 +271,10 @@ void pc_data_handle(uint8_t *p_frame){
       memcpy(&pc_rece_mesg.shoot_control_data, data_addr, data_length);
 			pc_shoot_control_data_handle(&pc_rece_mesg.shoot_control_data);
     }break;
+		case CALI_GIMBAL_ID:
+		{
+			gimbal_cali_hook(gim.pit_motor.ecd,gim.yaw_motor.ecd);
+		}break;
   }
   
   taskEXIT_CRITICAL();

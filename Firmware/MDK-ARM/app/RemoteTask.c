@@ -7,7 +7,8 @@ RC_Ctl_t remote_info;   //remote control data
 uint8_t RemoteData[DBUS_MAX_LEN];
 
 
-void testRemoteTask(){
+void print_remote_info(){
+
 	static int cnt=0;
 	static int cnt1=0;
 
@@ -20,13 +21,7 @@ void testRemoteTask(){
 					remote_info.rc.ch2,remote_info.rc.ch3,
 					remote_info.rc.s1,remote_info.rc.s2,cnt1++);
 	#endif
-		/*
-		printf("Remote Raw Data:"); 
-		for(int i=0;i<18;i++)printf("%d,",RemoteData[i]);
-		printf("\n\r");
-		*/
-		
-		// key board data test
+
 		#if 1
 		printf("KeyBoard Data: \r\n");
 		printf("mouse: x: %d y: %d z: %d left:%d right %d \r\n",remote_info.mouse.x,remote_info.mouse.y,
@@ -51,6 +46,8 @@ void RemoteDataPrcess(uint8_t *pData){
     { 
         return;
     }
+		remote_info.rc.last_s1 = remote_info.rc.s1;
+		remote_info.rc.last_s2 = remote_info.rc.s2;
 		
     remote_info.rc.ch0 = ((int16_t)pData[0] | ((int16_t)pData[1] << 8)) & 0x07FF; 
 		remote_info.rc.ch0 -=1024;

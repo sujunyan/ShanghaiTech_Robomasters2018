@@ -223,10 +223,19 @@ void StartDefaultTask(void const * argument)
 {
   /* init code for FATFS */
   MX_FATFS_Init();
-	
 	// update the offset		
 	osDelay(1000); // wait for imu and ecd to be stable
-	osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD);
+	osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD); 
+	for(;;)
+	{
+		if(LAUNCH_INFANTRY)
+		{
+			//cali_gimbal(); // read from the flash, if the gimbal cali data is 0, set the default value
+			break;
+		}
+		osDelay(1);
+	}
+	
 	for(;;)
 	{
 		if(gimbal_is_controllable())

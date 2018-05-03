@@ -96,7 +96,7 @@ void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr){
 
 
 uint8_t chassis_is_controllable(void){
-	static int cnt=0;
+//	static int cnt=0;
   if (chassis.ctrl_mode == CHASSIS_RELAX 
 		#ifndef CHASSIS_ONLY
 	 ||	gim.ctrl_mode ==  GIMBAL_INIT
@@ -207,7 +207,7 @@ void chasis_remote_handle(void){
 		else if (KEY_S)chassis.vy =  -CHASSIS_KB_MAX_SPEED_Y * ratio;
 		else chassis.vy=0;
 		
-		//chassis.vw  = remote_info.mouse.x* CHASSIS_KB_MAX_SPEED_R *ratio; // rotate 
+		chassis.vw  = remote_info.mouse.x * CHASSIS_KB_MAX_SPEED_R; // rotate 
 	}
 	else
 		{
@@ -216,11 +216,9 @@ void chasis_remote_handle(void){
 			chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y)
 										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 
 			
-			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R
-												+ (remote_info.mouse.x) * CHASSIS_RC_MAX_SPEED_R /100; // rotate 
-
+			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R ; // rotate 
 		}
-		
+		VAL_LIMIT(chassis.vw , - CHASSIS_RC_MAX_SPEED_R , CHASSIS_RC_MAX_SPEED_R);
 }
 uint8_t chassis_is_auto(void){
 	//return (remote_info.rc.s2==RC_DN && remote_info.rc.s1==RC_DN);
@@ -255,7 +253,7 @@ float chassis_twist_angle(void){
 	float static step = 0.5;
 	float static max_angle = 30;
 	
-	int static cnt1 = 0;
+//	int static cnt1 = 0;
 	int  tot_step =(int) ( max_angle / step) ;
 	//if (cnt1++  %2!=0)return angle;
 	if(remote_info.rc.s2==RC_UP)

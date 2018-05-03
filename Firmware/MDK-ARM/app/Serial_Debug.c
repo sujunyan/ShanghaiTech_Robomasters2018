@@ -5,7 +5,7 @@ UBaseType_t serial_debug_stack_surplus;
 
 #define MAX_SERIAL_BUFFER_SIZE 10000
 uint8_t serial_debug_buffer[MAX_SERIAL_BUFFER_SIZE];
-uint16_t serial_debug_buffer_size=0;
+uint32_t serial_debug_buffer_size=0;
 void serial_debug_task(void const *argu)
 {
 //  static uint32_t cnt=0;
@@ -13,7 +13,7 @@ void serial_debug_task(void const *argu)
   while(1)
   {
 		// TODO
-		#if 1
+		#if 0
 	
 		if(serial_debug_buffer_size>0)
 		{
@@ -38,7 +38,7 @@ void send_serial_debug_msg(void){
 //  redirect the printf function
 int fputc(int ch, FILE *f){   
 	#ifdef SERIAL_DEBUG
-	if(serial_debug_buffer_size<MAX_SERIAL_BUFFER_SIZE)
+	if(serial_debug_buffer_size < MAX_SERIAL_BUFFER_SIZE)
 		serial_debug_buffer[serial_debug_buffer_size++]=ch;
 	#endif
 	//else MAX_SERIAL_BUFFER_SIZE=0;

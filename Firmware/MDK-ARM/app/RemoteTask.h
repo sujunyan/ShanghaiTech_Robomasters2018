@@ -71,6 +71,7 @@
 #define KEY_C 			(remote_info.key_code &0x2000	)
 #define KEY_V 			(remote_info.key_code &0x4000	)	//bit 15
 #define KEY_B				(remote_info.key_code &0x8000	)
+
 /******************************************************/
 
 
@@ -93,6 +94,9 @@ typedef __packed struct
 	int16_t ch3;
 	int8_t s1;
 	int8_t s2;
+	// TODO may wrong
+	int8_t last_s1;
+	int8_t last_s2;
 }Remote;
 typedef __packed struct
 {
@@ -120,7 +124,7 @@ enum
 
 
 
-void testRemoteTask(void);
+void print_remote_info(void);
 void dbus_uart_init(void);
 void RemoteDataPrcess(uint8_t *pData);
 int is_keyboard_mode(void);

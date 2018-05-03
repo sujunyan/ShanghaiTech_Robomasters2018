@@ -37,7 +37,7 @@
 #include "string.h"
 #include "imu_task.h"
 #include "detect_task.h"
-
+#include "calibrate.h"
 //#define OLD_TRIGGER
 /* gimbal patrol angle (degree)*/
 #define PATROL_ANGLE     40
@@ -60,10 +60,8 @@ UBaseType_t gimbal_stack_surplus;
 
 /* gimbal task global parameter */
 gimbal_t gim;
-
-/* gimbal task static parameter */
-/* shot buff parameter */
-
+static int PIT_ECD_CENTER_OFFSET = 201;
+static int YAW_ECD_CENTER_OFFSET = 3801;
 /* control ramp parameter */
 static ramp_t     yaw_ramp = RAMP_GEN_DAFAULT;
 static ramp_t     pit_ramp = RAMP_GEN_DAFAULT;
@@ -77,8 +75,6 @@ extern TaskHandle_t can_msg_send_task_t;
 extern TaskHandle_t shoot_task_t;
 void gimbal_task(void const *argu)
 {
- 
-	//printf("gimbal mode is %d \r\n",gim.ctrl_mode);
 	
 	//get sensor info
 	update_gimbal_sensor();
@@ -176,11 +172,14 @@ void close_loop_handle(void){
   if ((gim.pid.yaw_angle_fdb >= chassis_angle_tmp+ YAW_ANGLE_MIN - limit_angle_range) && \
       (gim.pid.yaw_angle_fdb <= chassis_angle_tmp+ YAW_ANGLE_MAX + limit_angle_range))
   {
+		if(KEY_X) gim.pid.yaw_angle_ref = 0;
 		
     gim.pid.yaw_angle_ref += YAW_ECD_DIR*remote_ctrl_map( 
 											 (KEY_Q)?(step):0 -  (KEY_E)?(-step):0 
-										//		-remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
-                    //   + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW 
+		#ifndef GIMBAL_FOLLOW_CHASSIS
+											 - remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
+                       + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW 
+		#endif
 			,step);
 		
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);	
@@ -320,6 +319,20 @@ void update_gimbal_sensor(void){
 	 /* get gimbal relative palstance */
   gim.sensor.yaw_palstance =   YAW_IMU_DIR* (mpu_data.gy) / 16.384f; //unit: dps
   gim.sensor.pit_palstance = - PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
+}
+
+void cali_gimbal(void){
+	// cali_data_read(); // read the calibrate data
+	if(cali_param.gim_cali_data[CALI_GIMBAL_CENTER].pitch_offset == 0 ||
+		cali_param.gim_cali_data[CALI_GIMBAL_CENTER].yaw_offset == 0 )
+	{
+		gimbal_cali_hook(PIT_ECD_CENTER_OFFSET,YAW_ECD_CENTER_OFFSET);
+		cali_data_read();
+	}
+	
+	PIT_ECD_CENTER_OFFSET = cali_param.gim_cali_data[CALI_GIMBAL_CENTER].pitch_offset;
+	YAW_ECD_CENTER_OFFSET = cali_param.gim_cali_data[CALI_GIMBAL_CENTER].yaw_offset;
+	
 }
 
 

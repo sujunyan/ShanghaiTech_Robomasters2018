@@ -6,6 +6,7 @@
 #include "chassis_task.h"
 #include "shoot_task.h"
 #include "PC_communication_task.h"
+#include "calibrate.h"
 #define TEST_TASK_PERIOD 100
 UBaseType_t test_task_stack_surplus;
 uint32_t test_wake_time;
@@ -33,7 +34,8 @@ void test_task( const void* argu){
 		#if 0
 		print_chassis_info();
 		#endif
-		print_remote_info();
+		//print_remote_info();
+		test_cali();
 		printf("\r\n TEST END\r\n");
 	#endif
 		
@@ -84,3 +86,16 @@ void print_imu_info(void){
 	printf("mpu  gx %d gy %d gz:%d \r\n",mpu_data.gx,mpu_data.gy,mpu_data.gz);
 	printf("atti is pitch: %f yaw: %f roll: %f\r\n",atti.pitch,atti.yaw,atti.roll);
 }
+
+extern int PIT_ECD_CENTER_OFFSET;
+extern int YAW_ECD_CENTER_OFFSET;
+void test_cali(void){
+	
+	printf("In flash pit_offset %d yaw_offset %d\r\n",
+		cali_param.gim_cali_data[CALI_GIMBAL_CENTER].pitch_offset,
+		cali_param.gim_cali_data[CALI_GIMBAL_CENTER].yaw_offset );
+	printf("PIT_ECD_CENTER_OFFSET %d YAW_ECD_CENTER_OFFSET %d \r\n",PIT_ECD_CENTER_OFFSET,YAW_ECD_CENTER_OFFSET);
+
+}
+
+

@@ -690,6 +690,11 @@
               <FileType>1</FileType>
               <FilePath>.\app\init.c</FilePath>
             </File>
+            <File>
+              <FileName>test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app\test.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -731,14 +736,14 @@
           <GroupName>RmLib</GroupName>
           <Files>
             <File>
-              <FileName>ramp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\rmlib\ramp.c</FilePath>
-            </File>
-            <File>
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\rmlib\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\rmlib\ramp.c</FilePath>
             </File>
             <File>
               <FileName>data_fifo.c</FileName>

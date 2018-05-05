@@ -9,7 +9,7 @@
 #include "gimbal_task.h"
 #include "Serial_debug.h"
 #include "calibrate.h"
-#define PC_SEND_DURARION 10
+#define PC_SEND_DURARION 20
 uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 uint8_t computer_data_pack_buffer[COMPUTER_FRAME_BUFLEN];
 UBaseType_t pc_receive_surplus;
@@ -33,6 +33,7 @@ void PC_receive_task(const void * argu){
 		if 	(event.value.signals & PC_UART_IDLE_SIGNAL) 						
     {
         get_dma_memory_msg(COMPUTER_HUART.hdmarx->Instance, &current_memory_id, &remain_data_counter);
+				
 				//printf("In IDLE memory id %d remain_data_counter %d \r\n",current_memory_id,remain_data_counter);
 				unpack_data(pc_dma_rxbuff[current_memory_id],& begin,UART_RX_DMA_SIZE-remain_data_counter);
     }
@@ -76,8 +77,9 @@ void send_all_pack_to_pc(void){
 	uint16_t index=0;
 	uint16_t size=0;
 	PC_send_msg_update();
-	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
 	
+	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
+#if 0
 	size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));		
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1;
@@ -89,10 +91,18 @@ void send_all_pack_to_pc(void){
 	size=data_pack_handle(CHASSIS_DATA_ID,(uint8_t*)&pc_send_mesg.chassis_information,sizeof(pc_send_mesg.chassis_information));
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1; // add interval bewteen frame
+#endif
+	
+	size=data_pack_handle(CALI_DATA_ID,(uint8_t*)&pc_send_mesg.cali_information,sizeof(pc_send_mesg.cali_information));
+	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
+	index+=size+1; // add interval bewteen frame
+	
 	
 	write_uart_blocking(&COMPUTER_HUART,computer_tx_buf,index);
-	
 }
+
+extern int PIT_ECD_CENTER_OFFSET;
+extern int YAW_ECD_CENTER_OFFSET;
 void PC_send_msg_update(void){
 	// update gimbal
 	// TODO send ecd and imu massage
@@ -103,7 +113,11 @@ void PC_send_msg_update(void){
 	pc_send_mesg.gimbal_information.yaw_palstance= gim.sensor.yaw_palstance;
 	pc_send_mesg.gimbal_information.yaw_relative_angle= gim.sensor.yaw_relative_angle_imu;
 	
-	// update 
+	// update cali information
+	pc_send_mesg.cali_information.pit_ecd = gim.pit_motor.ecd;
+	pc_send_mesg.cali_information.yaw_ecd = gim.yaw_motor.ecd;
+	pc_send_mesg.cali_information.pit_offset = PIT_ECD_CENTER_OFFSET;
+	pc_send_mesg.cali_information.yaw_offset = YAW_ECD_CENTER_OFFSET;
 	 
   static float wheel_rpm_ratio = 60.0f/(PERIMETER*CHASSIS_DECELE_RATIO);
 #if 0
@@ -134,6 +148,7 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
   while (*begin < end)
   {
     byte = buffer[(*begin)++];
+		
 		//printf("step %d begin=%d end=%d \r\n",p_obj.unpack_step,(*begin),end);
     switch(p_obj.unpack_step)
     {			
@@ -141,6 +156,7 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
       {
         if(byte == UP_REG_ID || byte== DN_REG_ID)
         {
+					pc_send_mesg.cali_information.debug_info =1;
           p_obj.unpack_step = STEP_LENGTH_LOW;
           p_obj.protocol_packet[p_obj.index++] = byte;
         }
@@ -182,15 +198,17 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
       case STEP_HEADER_CRC8:
       {
         p_obj.protocol_packet[p_obj.index++] = byte;
-
+				
         if (p_obj.index == HEADER_LEN)
         {
           if ( verify_crc8_check_sum(p_obj.protocol_packet, HEADER_LEN) )
           {
+						pc_send_mesg.cali_information.debug_info =2;
             p_obj.unpack_step = STEP_DATA_CRC16;
           }
           else
           {
+						pc_send_mesg.cali_information.debug_info =3;
             p_obj.unpack_step = STEP_HEADER_SOF;
             p_obj.index = 0;
           }
@@ -210,6 +228,7 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
 
           if ( verify_crc16_check_sum(p_obj.protocol_packet, HEADER_LEN + CMD_LEN + p_obj.data_len + CRC_LEN) )
           {
+						pc_send_mesg.cali_information.debug_info =4;
 						p_obj.index++;
 						pc_data_handle(p_obj.protocol_packet);
 						#if 0
@@ -219,6 +238,7 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
             }
             else  //DN_REG_ID
             {
+							pc_send_mesg.cali_information.debug_info =5;
 							pc_data_handle(p_obj.protocol_packet);
               //judgement_data_handle(p_obj->protocol_packet);
             }
@@ -251,6 +271,7 @@ void pc_data_handle(uint8_t *p_frame){
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
   taskENTER_CRITICAL();
+	pc_send_mesg.cali_information.debug_info = cmd_id;
   //printf("pc data recv with cmd_id %d\r\n",cmd_id);
   switch (cmd_id)
   {
@@ -274,6 +295,7 @@ void pc_data_handle(uint8_t *p_frame){
 		case CALI_GIMBAL_ID:
 		{
 			gimbal_cali_hook(gim.pit_motor.ecd,gim.yaw_motor.ecd);
+			read_gimbal_cali();
 		}break;
   }
   

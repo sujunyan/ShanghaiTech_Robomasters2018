@@ -42,6 +42,7 @@ typedef enum
   CALI_RESPONSE_ID    = 0x0015,
   REMOTE_CTRL_INFO_ID = 0x0016,
   BOTTOM_VERSION_ID   = 0x0017,
+	CALI_DATA_ID				= 0x0018,
   
   CHASSIS_CTRL_ID     = 0x00A0,
   GIMBAL_CTRL_ID      = 0x00A1,
@@ -107,6 +108,25 @@ typedef __packed struct
   float   pit_palstance;      /* pitch axis palstance(degree/s) */
   float   yaw_palstance;      /* yaw axis palstance(degree/s) */
 } gimbal_info_t;
+
+typedef __packed struct
+{
+	// cali info
+	int pit_offset;
+	int yaw_offset;
+	int pit_ecd;
+	int yaw_ecd;
+	
+	int debug_info;
+	// debug info
+#if 0
+	float mpu_ax;
+	float mpu_ay;
+	float mpu_az;
+#endif
+	
+} cali_info_t;
+
 
 /** 
   * @brief  shoot information
@@ -213,7 +233,7 @@ typedef struct
   gimbal_info_t     gimbal_information;
   shoot_info_t      shoot_task_information;
   rc_info_t         remote_ctrl_data;
-	
+	cali_info_t				cali_information;
 } send_pc_t;
 
 

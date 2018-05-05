@@ -60,8 +60,8 @@ UBaseType_t gimbal_stack_surplus;
 
 /* gimbal task global parameter */
 gimbal_t gim;
-static int PIT_ECD_CENTER_OFFSET = 201;
-static int YAW_ECD_CENTER_OFFSET = 3801;
+int PIT_ECD_CENTER_OFFSET = 201;
+int YAW_ECD_CENTER_OFFSET = 3801;
 /* control ramp parameter */
 static ramp_t     yaw_ramp = RAMP_GEN_DAFAULT;
 static ramp_t     pit_ramp = RAMP_GEN_DAFAULT;
@@ -321,10 +321,11 @@ void update_gimbal_sensor(void){
   gim.sensor.pit_palstance = - PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
 }
 
-void cali_gimbal(void){
-	// cali_data_read(); // read the calibrate data
-	if(cali_param.gim_cali_data[CALI_GIMBAL_CENTER].pitch_offset == 0 ||
-		cali_param.gim_cali_data[CALI_GIMBAL_CENTER].yaw_offset == 0 )
+// called when initialize the gimbal 
+// read from flash and set the cali data
+void read_gimbal_cali(void){
+	cali_data_read(); // read the calibrate data
+	if(cali_param.gim_cali_data[CALI_GIMBAL_CENTER].calied_done != CALIED_FLAG )
 	{
 		gimbal_cali_hook(PIT_ECD_CENTER_OFFSET,YAW_ECD_CENTER_OFFSET);
 		cali_data_read();

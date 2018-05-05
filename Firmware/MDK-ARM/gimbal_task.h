@@ -107,5 +107,5 @@ void cascade_pid_ctrl(void);
 void update_gimbal_sensor(void);
 int16_t get_relative_pos(int16_t raw_ecd, int16_t center_offset);
 void no_cascade_pid_ctrl(void);
-void cali_gimbal(void);
+void read_gimbal_cali(void); // called when initialize the gimbal 
 #endif

@@ -199,15 +199,16 @@ void MX_FREERTOS_Init(void) {
 		osThreadDef(PC_receiveTask, PC_receive_task, osPriorityNormal, 0, 128);  // wait for uart signal 
     PC_receive_task_t = osThreadCreate(osThread(PC_receiveTask), NULL);
 		
+		osThreadDef(testTask, test_task, osPriorityNormal, 0, 512);  // 20 ms
+    test_task_t = osThreadCreate(osThread(testTask), NULL);
+		
 		
 		// low priority
-		
 		osThreadDef(PC_sendTask, PC_send_task, osPriorityBelowNormal, 0, 128);  //  30 ms
     PC_send_task_t = osThreadCreate(osThread(PC_sendTask), NULL);
 		
 		
-		osThreadDef(testTask, test_task, osPriorityBelowNormal, 0, 512);  // 20 ms
-    test_task_t = osThreadCreate(osThread(testTask), NULL);
+		
     /* unpack task */
 	
   taskEXIT_CRITICAL();
@@ -230,7 +231,7 @@ void StartDefaultTask(void const * argument)
 	{
 		if(LAUNCH_INFANTRY)
 		{
-			//cali_gimbal(); // read from the flash, if the gimbal cali data is 0, set the default value
+			read_gimbal_cali(); // read from the flash, if the gimbal cali data is 0, set the default value
 			break;
 		}
 		osDelay(1);

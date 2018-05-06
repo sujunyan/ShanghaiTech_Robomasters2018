@@ -1,0 +1,6 @@
+*.pyc
+.idea
+__pycache__
+test.py
+serial_read.log
+media/tutorial_origin.mp4

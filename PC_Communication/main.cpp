@@ -5,10 +5,9 @@
 #include <boost/exception/diagnostic_information.hpp>
 int main(void){
         char buffer[]="hello world\n";
-       // char portname[]="/dev/ttyUSB0";
         //char portname[]="COM5";
         char portname[]="/dev/ttyS10";
-#if 1
+#if 0
     try{
         CommunicateNode node(portname,115200);
         int cnt=0;
@@ -28,9 +27,19 @@ int main(void){
         // error handling
         std::cerr << boost::diagnostic_information(ex);
     }
-
 #endif
-
+        uint8_t p_data[] = "cali";
+        uint8_t msg [100];
+        uint16_t  size = protocol_packet_pack(CALI_GIMBAL_ID, p_data , sizeof(p_data),DN_REG_ID,msg );
+        for (int i = 0; i < size ; ++i) {
+                printf("%x, ",msg[i]);
+        }
+        printf("\n");
+        uint16_t test = CALI_GIMBAL_ID;
+        printf("%x %x \n",
+               *( (uint8_t*)(&test)) ,
+               *( (uint8_t*) ( (&test)+1) )
+        );
 #if 0
         SerialPort serialPort(portname,115200);
         int cnt=0;

@@ -75,7 +75,7 @@ void gimbal_cali_hook(int32_t pit_ecd, int32_t yaw_ecd)
     cali_param.gim_cali_data[CALI_GIMBAL_CENTER].yaw_offset   = yaw_ecd;
     cali_param.gim_cali_data[CALI_GIMBAL_CENTER].calied_done  = CALIED_FLAG;
     cali_param.gim_cali_data[CALI_GIMBAL_CENTER].cali_cmd     = 0;
-    //save_cali_data();
+    save_cali_data();
   }
   //if (cali_param.gim_cali_data[CALI_CAMERA_CENTER].cali_cmd == 1)
   {

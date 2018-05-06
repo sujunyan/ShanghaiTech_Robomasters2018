@@ -7,3 +7,4 @@
 安装教程可见其中的README.txt
 
 ### You can find the toturial [HERE](Tutorial/tutorial.md)
+### 校准程序PC_Communication_PY 目录下

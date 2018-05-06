@@ -24,9 +24,6 @@
 #### 4. 将炮管移动到中心位置，点击“Send calibrate data” 即可完成校准
 
 ## 视频
-<video height=450 
-    width=800 src="media/tutorial_origin_0.mp4"  controls="controls">
-您的浏览器不支持 video 标签。
-</video>
+[可以在这里下载视频](media/tutorial_origin_0.mp4)
     
 

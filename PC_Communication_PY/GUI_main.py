@@ -221,7 +221,7 @@ class Mode_control(Frame):
 if __name__ == "__main__":
 	print("""
 		Welcome use this software, you can find a tutorial at
-		
+		https://github.com/sujuanyan/ShanghaiTech_Robomasters2018/tree/basic/PC_Communication_PY
 		""")
 	root = Tk()
 	root.geometry('640x420')

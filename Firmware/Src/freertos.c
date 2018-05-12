@@ -232,7 +232,7 @@ void StartDefaultTask(void const * argument)
 		{
 			break;
 		}
-		osDelay(1000);
+		osDelay(1);
 	}
 	
 	for(;;)

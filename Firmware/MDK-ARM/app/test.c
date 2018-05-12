@@ -95,11 +95,11 @@ void test_cali(void){
 }
 
 void print_gim_pid(void){
-	printf("yaw postion pid fdb %f ref %f out %f \r\n",pid_yaw.get, pid_yaw.set, pid_yaw.out);
-	printf("pitch postion pid fdb %f ref %f out %f \r\n",pid_pit.get, pid_pit.set, pid_pit.out);
+	printf("yaw pos pid fdb %f ref %f out %f \r\n",pid_yaw.get, pid_yaw.set, pid_yaw.out);
+	printf("pit pos pid fdb %f ref %f out %f \r\n",pid_pit.get, pid_pit.set, pid_pit.out);
 	
-	printf("yaw speed pid fdb %f ref %f out %f \r\n",pid_yaw_speed.get, pid_yaw_speed.set, pid_yaw_speed.out);
-	printf("pitch speed pid fdb %f ref %f out %f \r\n",pid_pit_speed.get, pid_pit_speed.set, pid_pit_speed.out);
+	printf("yaw spd pid fdb %f ref %f out %f \r\n",pid_yaw_speed.get, pid_yaw_speed.set, pid_yaw_speed.out);
+	printf("pit spd pid fdb %f ref %f out %f \r\n",pid_pit_speed.get, pid_pit_speed.set, pid_pit_speed.out);
 	
 }
 

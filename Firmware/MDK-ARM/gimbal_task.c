@@ -45,7 +45,7 @@
 #define PATROL_PERIOD    1500
 /* gimbal back center time (ms) */
 #define BACK_CENTER_TIME 2000 //TODO
-#define PIT_ECD_DIR  ( 1.0f) 
+#define PIT_ECD_DIR  (- 1.0f) 
 #define PIT_IMU_DIR  ( 1.0f)
 #define YAW_ECD_DIR  (- 1.0f)
 #define YAW_IMU_DIR  ( 1.0f)
@@ -61,8 +61,8 @@ UBaseType_t gimbal_stack_surplus;
 
 /* gimbal task global parameter */
 gimbal_t gim;
-int PIT_ECD_CENTER_OFFSET = 201;
-int YAW_ECD_CENTER_OFFSET = 3801;
+int PIT_ECD_CENTER_OFFSET = 3583;
+int YAW_ECD_CENTER_OFFSET = 5429;
 /* control ramp parameter */
 static ramp_t     yaw_ramp = RAMP_GEN_DAFAULT;
 static ramp_t     pit_ramp = RAMP_GEN_DAFAULT;
@@ -332,7 +332,7 @@ void update_gimbal_sensor(void){
 	
 	 /* get gimbal relative palstance */
   gim.sensor.yaw_palstance =   YAW_IMU_DIR* (mpu_data.gy) / 16.384f; //unit: dps
-  gim.sensor.pit_palstance =  PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
+  gim.sensor.pit_palstance =  PIT_IMU_DIR *  mpu_data.gx / 16.384f; //unit: dps
 }
 
 // called when initialize the gimbal 

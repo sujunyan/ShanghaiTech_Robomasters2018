@@ -78,7 +78,7 @@
 #define KEY_GPIO_Port GPIOD
 #define LED1_Pin GPIO_PIN_14
 #define LED1_GPIO_Port GPIOF
-#define LED2_Pin GPIO_PIN_7
+#define LED2_Pin GPIO_PIN_11 // modified for A board 
 #define LED2_GPIO_Port GPIOE
 #define SD_EXTI_Pin GPIO_PIN_15
 #define SD_EXTI_GPIO_Port GPIOE

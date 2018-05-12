@@ -368,7 +368,7 @@ uint32_t imu_time_last;
 int imu_time_ms;
 void imu_task(void const *argu)
 {
-  
+  printf("imu task start\n\r");
   uint32_t imu_wake_time = osKernelSysTick();
   while(1)
   {

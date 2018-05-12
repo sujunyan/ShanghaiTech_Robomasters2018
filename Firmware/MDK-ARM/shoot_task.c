@@ -59,6 +59,7 @@ void shoot_task(void const *argu)
 	int last_shoot_pos = 0;
   int flag =1; 
 	int shoot_one_bullet_success = 0;
+	printf("shoot task start\n\r");
   while (1)
   {
     event = osSignalWait(SHOT_TASK_EXE_SIGNAL, osWaitForever);

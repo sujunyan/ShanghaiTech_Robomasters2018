@@ -10,6 +10,7 @@ UBaseType_t can_send_surplus;
 void can_msg_send_task(void const *argu)
 {
   osEvent event;
+	printf("can_msg_send task start\n\r");
   while (1)
   {
     event = osSignalWait(GIMBAL_MOTOR_MSG_SEND | \

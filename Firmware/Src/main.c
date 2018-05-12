@@ -103,20 +103,34 @@ int main(void)
 	sys_init();
 	pram_init();	
   /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
+ #if 1
+	MX_FREERTOS_Init();
 
   /* Start scheduler */
   osKernelStart();
-  
-  /* We should never get here as control is now taken by the scheduler */
+ #endif
+  /* We should NEVER get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	int flag =1;
   while (1)
   {
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
+		if(flag)
+		{
+			flag =0;
+			LED_R_ON;
+			LED_G_ON;
+		}			
+		else 		
+		{
+			flag =1;
+			LED_R_OFF;
+			LED_G_OFF;
+		}
+		
+		osDelay(100);
+		//HAL_Delay(100);
 
   }
   /* USER CODE END 3 */

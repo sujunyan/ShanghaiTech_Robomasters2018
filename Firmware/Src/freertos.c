@@ -160,8 +160,7 @@ void MX_FREERTOS_Init(void) {
   
    
 		
-    
-  
+
 		
   /* USER CODE END RTOS_TIMERS */
 	// timer start in StartDefaultTask
@@ -176,10 +175,9 @@ void MX_FREERTOS_Init(void) {
 	
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);  // initialize and start timer
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  
+ 
+    
+#if 1
    /* high priority task */
 	osThreadDef(canTask, can_msg_send_task, osPriorityAboveNormal, 0, 128); //wait for signal set by gimbal/chasis_task
 	can_msg_send_task_t = osThreadCreate(osThread(canTask), NULL);
@@ -199,15 +197,13 @@ void MX_FREERTOS_Init(void) {
 		osThreadDef(PC_receiveTask, PC_receive_task, osPriorityNormal, 0, 128);  // wait for uart signal 
     PC_receive_task_t = osThreadCreate(osThread(PC_receiveTask), NULL);
 		
-		osThreadDef(testTask, test_task, osPriorityNormal, 0, 512);  // 20 ms
-    test_task_t = osThreadCreate(osThread(testTask), NULL);
-		
-		
 		// low priority
 		osThreadDef(PC_sendTask, PC_send_task, osPriorityBelowNormal, 0, 128);  //  30 ms
     PC_send_task_t = osThreadCreate(osThread(PC_sendTask), NULL);
+#endif 		
 		
-		
+		osThreadDef(testTask, test_task, osPriorityNormal, 0, 512);  // 20 ms
+    test_task_t = osThreadCreate(osThread(testTask), NULL);
 		
     /* unpack task */
 	
@@ -222,11 +218,13 @@ void MX_FREERTOS_Init(void) {
 /* StartDefaultTask function */
 void StartDefaultTask(void const * argument)
 {
+	printf("default task start\n\r");
   /* init code for FATFS */
   MX_FATFS_Init();
+
 	// update the offset		
 	osDelay(1000); // wait for imu and ecd to be stable
-	osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD); 
+	//osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD); 
 	read_gimbal_cali(); // read from the flash, if the gimbal cali data is 0, set the default value
 	for(;;)
 	{
@@ -234,7 +232,7 @@ void StartDefaultTask(void const * argument)
 		{
 			break;
 		}
-		osDelay(1);
+		osDelay(1000);
 	}
 	
 	for(;;)

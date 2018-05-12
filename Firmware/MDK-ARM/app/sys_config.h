@@ -15,8 +15,8 @@
 
 #define CALI_DONE
 #define GIMBAL_FOLLOW_CHASSIS
-//#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
-//#define SERIAL_DEBUG
+#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
+#define SERIAL_DEBUG
 #define LAUNCH_INFANTRY (remote_info.rc.s2 == RC_MI && remote_info.rc.last_s2 == RC_DN && remote_info.rc.s1 == RC_DN)
 #define CHASSIS_TWIST ( remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )
 #define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_DN && remote_info.rc.last_s2 == RC_DN )
@@ -113,8 +113,8 @@
 #define PIT_ANGLE_MIN        -30
 #define YAW_ANGLE_MAX        20
 #define YAW_ANGLE_MIN        -20
-#define LEFT_FRICTION        TIM12->CCR1
-#define RIGHT_FIRCTION       TIM12->CCR2
+#define LEFT_FRICTION        TIM1->CCR1
+#define RIGHT_FIRCTION       TIM1->CCR4
 /**************************shot  setting********************************/
 /* shot speed */
 #define DEFAULT_FRIC_WHEEL_SPEED 2500 //maximum value is 2500
@@ -161,8 +161,8 @@ else if((val) >= (max))\
 #define IMU_PWM_PULSE      TIM3->CCR2
 #define DEFAULT_IMU_TEMP   50
 /******************BEEP*********************/
-#define BEEP_TUNE TIM3->ARR
-#define BEEP_CTRL TIM3->CCR1
+#define BEEP_TUNE TIM12->ARR
+#define BEEP_CTRL TIM12->CCR1
 /* communication task macros ******************************************/
 #define JUDGE_UART_TX_SIGNAL   ( 1 << 0 )
 #define JUDGE_UART_IDLE_SIGNAL ( 1 << 1 )

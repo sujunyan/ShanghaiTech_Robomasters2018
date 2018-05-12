@@ -151,6 +151,7 @@ int detect_time_ms;
 void detect_task(void const *argu)
 {
   uint32_t detect_wake_time = osKernelSysTick();
+	printf("detect task start\n\r");
   while(1)
   {
     detect_time_ms = HAL_GetTick() - detect_time_last;

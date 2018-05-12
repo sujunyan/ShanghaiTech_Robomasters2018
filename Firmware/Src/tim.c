@@ -49,7 +49,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
-
+#include "sys_config.h"
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -416,6 +416,10 @@ void MX_TIM12_Init(void)
   }
 
   HAL_TIM_MspPostInit(&htim12);
+	
+	// turn off the beep
+	BEEP_TUNE = 0;
+	BEEP_CTRL = 0;
 
 }
 

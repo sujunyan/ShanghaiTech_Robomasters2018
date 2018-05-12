@@ -35,9 +35,9 @@ void mpu_heat_ctrl(uint16_t pwm_pulse)
 void pwm_device_init(void)
 {
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // ctrl imu temperature
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // beep
-  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2); // friction wheel //TODO
-  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1); // beep
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4); // friction wheel //TODO
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 
 uint8_t sd_insert(void)

@@ -17,25 +17,19 @@ void test_task( const void* argu){
 	
 	//osDelay(1000); // wait for imu and ecd to be stable
 	  test_wake_time= osKernelSysTick();
-	
+	printf("test task start\n\r");
+	int flag =1;
   while(1)
   {
-		
 		//used in calibrate
 		
 	#ifdef SERIAL_DEBUG
 		printf("\r\n TEST BEGIN\r\n");
 		#ifndef CALI_DONE
 		printf_cali_info();
-		//osSignalSet(shoot_task_t, SHOT_TASK_EXE_SIGNAL);		
 		#endif
-		
-		//LED_G_TOGGLE;		
-		#if 0
-		print_chassis_info();
-		#endif
-		//print_remote_info();
-		test_cali();
+		//test_cali();
+		printf("imu tmp = %f \r\n",imu.temp);
 		printf("\r\n TEST END\r\n");
 	#endif
 		

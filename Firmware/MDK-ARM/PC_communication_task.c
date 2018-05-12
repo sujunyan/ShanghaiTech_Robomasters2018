@@ -22,6 +22,7 @@ void PC_receive_task(const void * argu){
  // uint8_t unpack_flag = 0;
 	static uint16_t begin;
 	computer_uart_init();
+	printf("PC_receive task start\n\r");
 	while(1)
 	{
 		event = osSignalWait(PC_UART_TX_SIGNAL | \
@@ -53,6 +54,7 @@ void PC_receive_task(const void * argu){
 
 void PC_send_task(void const * argu){
 	uint32_t wake_time = osKernelSysTick();
+	printf("PC_send task start\n\r");
 //	uint8_t static step=0;
 	while(1){
 		

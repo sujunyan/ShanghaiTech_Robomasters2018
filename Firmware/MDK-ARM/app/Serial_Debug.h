@@ -10,9 +10,10 @@
 #include "stdlib.h"
 #include "string.h"
 
-#define LED_R_ON        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET)
-#define LED_R_OFF       HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET)
-#define LED_R_TOGGLE   HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_7)
+// Red led change from E7 to E11
+#define LED_R_ON        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_RESET)
+#define LED_R_OFF       HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET)
+#define LED_R_TOGGLE   HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_11)
 #define LED_G_ON      HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_RESET)
 #define LED_G_OFF     HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_SET)
 #define LED_G_TOGGLE  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_14)
@@ -21,7 +22,7 @@
 #define LED_INIT \
 {\
   HAL_GPIO_WritePin(GPIOF, GPIO_PIN_14, GPIO_PIN_SET);\
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);\
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET);\
 }\
 
 

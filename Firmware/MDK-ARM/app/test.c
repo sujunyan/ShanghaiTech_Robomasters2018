@@ -7,6 +7,7 @@
 #include "shoot_task.h"
 #include "PC_communication_task.h"
 #include "calibrate.h"
+#include "pid.h"
 #define TEST_TASK_PERIOD 100
 UBaseType_t test_task_stack_surplus;
 uint32_t test_wake_time;
@@ -18,7 +19,6 @@ void test_task( const void* argu){
 	//osDelay(1000); // wait for imu and ecd to be stable
 	  test_wake_time= osKernelSysTick();
 	printf("test task start\n\r");
-	int flag =1;
   while(1)
   {
 		//used in calibrate
@@ -28,7 +28,9 @@ void test_task( const void* argu){
 		#ifndef CALI_DONE
 		printf_cali_info();
 		#endif
+		printf_cali_info();
 		//test_cali();
+		print_gim_pid();
 		printf("imu tmp = %f \r\n",imu.temp);
 		printf("\r\n TEST END\r\n");
 	#endif
@@ -92,4 +94,12 @@ void test_cali(void){
 
 }
 
+void print_gim_pid(void){
+	printf("yaw postion pid fdb %f ref %f out %f \r\n",pid_yaw.get, pid_yaw.set, pid_yaw.out);
+	printf("pitch postion pid fdb %f ref %f out %f \r\n",pid_pit.get, pid_pit.set, pid_pit.out);
+	
+	printf("yaw speed pid fdb %f ref %f out %f \r\n",pid_yaw_speed.get, pid_yaw_speed.set, pid_yaw_speed.out);
+	printf("pitch speed pid fdb %f ref %f out %f \r\n",pid_pit_speed.get, pid_pit_speed.set, pid_pit_speed.out);
+	
+}
 

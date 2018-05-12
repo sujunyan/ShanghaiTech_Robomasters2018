@@ -1,33 +1,33 @@
 
-T0690 000:021 SEGGER J-Link V6.16c Log File (0000ms, 0021ms total)
-T0690 000:021 DLL Compiled: Jun 16 2017 18:14:49 (0000ms, 0021ms total)
-T0690 000:021 Logging started @ 2018-04-07 12:48 (0000ms, 0021ms total)
-T0690 000:021 JLINK_SetWarnOutHandler(...) (0000ms, 0021ms total)
-T0690 000:021 JLINK_OpenEx(...)
-Firmware: J-Link V9 compiled Jun  2 2222 22:22:22
-Hardware: V9.00
-S/N: 30000299
-Feature(s): GDB, RDI, FlashBP, FlashDL, JFlash, RDDIWEBSRV Webserver running on local port 19080 (0053ms, 0074ms total)
-T0690 000:021   returns O.K. (0053ms, 0074ms total)
-T0690 000:074 JLINK_GetEmuCaps()  returns 0xB9FF7BBF (0000ms, 0074ms total)
-T0690 000:074 JLINK_TIF_GetAvailable(...) (0000ms, 0074ms total)
-T0690 000:074 JLINK_SetErrorOutHandler(...) (0000ms, 0074ms total)
-T0690 000:074 JLINK_ExecCommand("ProjectFile = "E:\2018\robomaster2018\NewInfantry\src\ShanghaiTech_Robomasters2018\Firmware\MDK-ARM\JLinkSettings.ini"", ...).   returns 0x00 (0195ms, 0269ms total)
-T0690 000:272 JLINK_ExecCommand("Device = STM32F427IIHx", ...). Device "STM32F427II" selected.  returns 0x00 (0005ms, 0274ms total)
-T0690 000:277 JLINK_ExecCommand("DisableConnectionTimeout", ...).   returns 0x01 (0000ms, 0274ms total)
-T0690 000:277 JLINK_GetHardwareVersion()  returns 0x15F90 (0000ms, 0274ms total)
-T0690 000:277 JLINK_GetDLLVersion()  returns 61603 (0000ms, 0274ms total)
-T0690 000:277 JLINK_GetFirmwareString(...) (0000ms, 0274ms total)
-T0690 000:283 JLINK_GetDLLVersion()  returns 61603 (0000ms, 0274ms total)
-T0690 000:283 JLINK_GetCompileDateTime() (0000ms, 0274ms total)
-T0690 000:285 JLINK_GetFirmwareString(...) (0000ms, 0274ms total)
-T0690 000:287 JLINK_GetHardwareVersion()  returns 0x15F90 (0000ms, 0274ms total)
-T0690 000:296 JLINK_TIF_Select(JLINKARM_TIF_SWD)  returns 0x00 (0001ms, 0275ms total)
-T0690 000:297 JLINK_SetSpeed(5000) (0000ms, 0275ms total)
-T0690 000:297 JLINK_GetId() >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>STM32 (connect): Can not attach to CPU. Trying connect under reset. >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>
+T144C 000:018 SEGGER J-Link V6.16c Log File (0000ms, 0018ms total)
+T144C 000:018 DLL Compiled: Jun 16 2017 18:14:49 (0000ms, 0018ms total)
+T144C 000:018 Logging started @ 2018-05-12 14:34 (0000ms, 0018ms total)
+T144C 000:018 JLINK_SetWarnOutHandler(...) (0012ms, 0030ms total)
+T144C 000:030 JLINK_OpenEx(...)
+Firmware: J-Link ARM V8 compiled Nov 28 2014 13:44:46
+Hardware: V8.00
+S/N: 87461523
+Feature(s): RDI, FlashBP, FlashDL, JFlash, GDBFullWEBSRV Webserver running on local port 19080 (0042ms, 0072ms total)
+T144C 000:030   returns O.K. (0042ms, 0072ms total)
+T144C 000:072 JLINK_GetEmuCaps()  returns 0xB9FF7BBF (0000ms, 0072ms total)
+T144C 000:072 JLINK_TIF_GetAvailable(...) (0001ms, 0073ms total)
+T144C 000:073 JLINK_SetErrorOutHandler(...) (0000ms, 0073ms total)
+T144C 000:073 JLINK_ExecCommand("ProjectFile = "E:\2018\robomaster2018\NewInfantry\src\ShanghaiTech_Robomasters2018\Firmware\MDK-ARM\JLinkSettings.ini"", ...).   returns 0x00 (0167ms, 0240ms total)
+T144C 000:245 JLINK_ExecCommand("Device = STM32F427IIHx", ...). Device "STM32F427II" selected.  returns 0x00 (0007ms, 0247ms total)
+T144C 000:252 JLINK_ExecCommand("DisableConnectionTimeout", ...).   returns 0x01 (0000ms, 0247ms total)
+T144C 000:252 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0247ms total)
+T144C 000:252 JLINK_GetDLLVersion()  returns 61603 (0000ms, 0247ms total)
+T144C 000:252 JLINK_GetFirmwareString(...) (0000ms, 0247ms total)
+T144C 000:264 JLINK_GetDLLVersion()  returns 61603 (0000ms, 0247ms total)
+T144C 000:264 JLINK_GetCompileDateTime() (0000ms, 0247ms total)
+T144C 000:266 JLINK_GetFirmwareString(...) (0000ms, 0247ms total)
+T144C 000:272 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0247ms total)
+T144C 000:285 JLINK_TIF_Select(JLINKARM_TIF_SWD)  returns 0x00 (0004ms, 0251ms total)
+T144C 000:289 JLINK_SetSpeed(5000) (0001ms, 0252ms total)
+T144C 000:290 JLINK_GetId() >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>STM32 (connect): Can not attach to CPU. Trying connect under reset. >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>
   ***** Error: STM32: Connecting to CPU via connect under reset failed.
- >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>STM32 (connect): Can not attach to CPU. Trying connect under reset. >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>
-  ***** Error: STM32: Connecting to CPU via connect under reset failed.  returns 0x00000000 (1235ms, 1510ms total)
-T0690 003:104 JLINK_Close() (0004ms, 1514ms total)
-T0690 003:104  (0004ms, 1514ms total)
-T0690 003:104 Closed (0004ms, 1514ms total)
+ >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>STM32 (connect): Can not attach to CPU. Trying connect under reset. >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>
+  ***** Error: STM32: Connecting to CPU via connect under reset failed.  returns 0x00000000 (1293ms, 1545ms total)
+T144C 002:780 JLINK_Close() (0004ms, 1549ms total)
+T144C 002:780  (0004ms, 1549ms total)
+T144C 002:780 Closed (0004ms, 1549ms total)

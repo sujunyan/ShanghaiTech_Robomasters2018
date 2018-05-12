@@ -45,10 +45,11 @@
 #define PATROL_PERIOD    1500
 /* gimbal back center time (ms) */
 #define BACK_CENTER_TIME 2000 //TODO
-#define PIT_ECD_DIR  (- 1.0f) 
-#define YAW_ECD_DIR  (- 1.0f)
-#define YAW_IMU_DIR  (- 1.0f)
+#define PIT_ECD_DIR  ( 1.0f) 
 #define PIT_IMU_DIR  ( 1.0f)
+#define YAW_ECD_DIR  (- 1.0f)
+#define YAW_IMU_DIR  ( 1.0f)
+
 /* keyboard mode gimbal speed limit */
 
 #define GIMBAL_PC_MOVE_RATIO_PIT 0.1f 
@@ -250,7 +251,7 @@ void init_mode_handle(void){
   gim.pid.pit_angle_ref = gim.sensor.pit_relative_angle_ecd * (1 - ramp_calc(&pit_ramp)); // desired ref is 0
   
 	/* keep yaw unmove this time */
-  gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu;
+  gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd;
   gim.pid.yaw_angle_ref = gim.pid.yaw_angle_fdb;
 
   if(gim.pid.pit_angle_fdb >= -2.0f && gim.pid.pit_angle_fdb < 2.0f)
@@ -331,7 +332,7 @@ void update_gimbal_sensor(void){
 	
 	 /* get gimbal relative palstance */
   gim.sensor.yaw_palstance =   YAW_IMU_DIR* (mpu_data.gy) / 16.384f; //unit: dps
-  gim.sensor.pit_palstance = - PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
+  gim.sensor.pit_palstance =  PIT_IMU_DIR* mpu_data.gx / 16.384f; //unit: dps
 }
 
 // called when initialize the gimbal 

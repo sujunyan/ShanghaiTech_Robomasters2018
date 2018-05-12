@@ -91,9 +91,9 @@ void gimbal_param_init(void)
   
   /* pitch axis motor pid parameter */
 #ifdef NO_CASCADE_CONTROL
-	 PID_struct_init(&pid_pit_speed, POSITION_PID, 7000, 1000,
+	 PID_struct_init(&pid_pit_speed, POSITION_PID, 9000, 2000,
                   240, 0.1, 0);
-		PID_struct_init(&pid_yaw_speed, POSITION_PID, 7000, 2000,
+		PID_struct_init(&pid_yaw_speed, POSITION_PID, 9000, 2000,
                   200, 0.1, 0 );
 #else
   PID_struct_init(&pid_pit, POSITION_PID, 200, 10,

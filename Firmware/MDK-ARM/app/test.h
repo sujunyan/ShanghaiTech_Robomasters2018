@@ -7,5 +7,6 @@ void printf_cali_info(void);
 void print_chassis_info(void);
 void print_imu_info(void);
 void test_cali(void);
+void print_gim_pid(void);
 #endif
 

@@ -55,7 +55,7 @@ void PC_send_task(void const * argu){
 	uint32_t wake_time = osKernelSysTick();
 //	uint8_t static step=0;
 	while(1){
-		
+		 
 			#ifndef SERIAL_DEBUG
 			send_all_pack_to_pc();
 			#else 

@@ -7,12 +7,15 @@
 #include "shoot_task.h"
 #include "PC_communication_task.h"
 #include "calibrate.h"
+#include "pid.h"
 #define TEST_TASK_PERIOD 100
 UBaseType_t test_task_stack_surplus;
 uint32_t test_wake_time;
 extern float can2_buf[3];
 extern TaskHandle_t shoot_task_t;
 extern TaskHandle_t can_msg_send_task_t;
+
+void print_gim_pid(void);
 void test_task( const void* argu){
 	
 	//osDelay(1000); // wait for imu and ecd to be stable
@@ -29,13 +32,10 @@ void test_task( const void* argu){
 		printf_cali_info();
 		//osSignalSet(shoot_task_t, SHOT_TASK_EXE_SIGNAL);		
 		#endif
+	
 		
-		//LED_G_TOGGLE;		
-		#if 0
-		print_chassis_info();
-		#endif
-		//print_remote_info();
 		test_cali();
+		print_gim_pid();
 		printf("\r\n TEST END\r\n");
 	#endif
 		
@@ -47,7 +47,8 @@ void test_task( const void* argu){
 	//	test_shoot_task();
 	
 		// we do not have these module, try to get rid of it
-		 
+		err_detector_hook(GIMBAL_PIT_OFFLINE);
+		err_detector_hook(GIMBAL_YAW_OFFLINE);
 		err_detector_hook(GIMBAL_GYRO_OFFLINE);
 		
 		
@@ -99,3 +100,10 @@ void test_cali(void){
 }
 
 
+void print_gim_pid(void){
+	printf("pos yaw fdb %f ref %f out(speed) %f \r\n",pid_yaw.get,pid_yaw.set,pid_yaw.out);
+	printf("pos pit fdb %f ref %f out(speed) %f \r\n",pid_pit.get,pid_pit.set,pid_pit.out);
+	
+	printf("spd yaw fdb %f ref %f out(speed) %f cur %d \r\n",pid_yaw_speed.get,pid_yaw_speed.set,pid_yaw_speed.out,gim.current[0]);
+	printf("spd pit fdb %f ref %f out(speed) %f cur %d \r\n",pid_pit_speed.get,pid_pit_speed.set,pid_pit_speed.out,gim.current[1]);
+}

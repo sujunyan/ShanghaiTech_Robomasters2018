@@ -158,11 +158,6 @@ void MX_FREERTOS_Init(void) {
     /* real time control task */
   taskENTER_CRITICAL();
   
-   
-		
-    
-  
-		
   /* USER CODE END RTOS_TIMERS */
 	// timer start in StartDefaultTask
 		osTimerDef(chassisTimer, chassis_task);
@@ -204,7 +199,7 @@ void MX_FREERTOS_Init(void) {
 		
 		
 		// low priority
-		osThreadDef(PC_sendTask, PC_send_task, osPriorityBelowNormal, 0, 128);  //  30 ms
+		osThreadDef(PC_sendTask, PC_send_task, osPriorityNormal, 0, 128);  //  30 ms
     PC_send_task_t = osThreadCreate(osThread(PC_sendTask), NULL);
 		
 		
@@ -230,6 +225,7 @@ void StartDefaultTask(void const * argument)
 	read_gimbal_cali(); // read from the flash, if the gimbal cali data is 0, set the default value
 	for(;;)
 	{
+		
 		if(LAUNCH_INFANTRY)
 		{
 			break;
@@ -242,6 +238,8 @@ void StartDefaultTask(void const * argument)
 		if(gimbal_is_controllable())
 			{
 				osDelay(1000); // wait for imu and ecd to be stable
+				//cali_gimbal_motor();
+				
 				update_gimbal_sensor();
 				gim.sensor.pit_offset_angle_imu = -gim.sensor.pit_relative_angle_ecd + atti.roll;
 				gim.sensor.yaw_offset_angle_imu = -gim.sensor.yaw_relative_angle_ecd + atti.yaw;

@@ -234,6 +234,14 @@ void send_chassis_cur(int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4){
   HAL_CAN_Transmit(&CHASSIS_CAN, 10);
 }
 
+void cali_gimbal_motor(void){
+	CHASSIS_CAN.pTxMsg->StdId   = 0x3F0;
+  CHASSIS_CAN.pTxMsg->IDE     = CAN_ID_STD;
+  CHASSIS_CAN.pTxMsg->RTR     = CAN_RTR_DATA;
+	CHASSIS_CAN.pTxMsg->Data[0] = 'c';
+	HAL_CAN_Transmit(&CHASSIS_CAN, 10);
+}
+
 #if 0
 void CAN1_Configuration(void)
 {

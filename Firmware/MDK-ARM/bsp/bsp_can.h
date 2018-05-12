@@ -65,4 +65,5 @@ void can_receive_start(void);
 void gyro_device_init(void);
 void send_gimbal_cur(int16_t yaw_iq, int16_t pit_iq, int16_t trigger_iq);
 void send_chassis_cur(int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4);
+void cali_gimbal_motor(void);
 #endif

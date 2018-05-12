@@ -92,7 +92,7 @@ extern gimbal_t gim;
 
 
 static void init_mode_handle(void);
-static void close_loop_handle(void);
+static void close_loop_handle(int use_imu);
 
 
 

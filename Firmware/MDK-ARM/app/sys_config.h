@@ -18,6 +18,11 @@
 //#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
 //#define SERIAL_DEBUG
 #define LAUNCH_INFANTRY (remote_info.rc.s2 == RC_MI && remote_info.rc.last_s2 == RC_DN && remote_info.rc.s1 == RC_DN)
+#define CHASSIS_TWIST ( remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )
+#define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_DN && remote_info.rc.last_s2 == RC_DN )
+
+
+
 
 
 /*************************chassis setting*********************************************************/
@@ -92,7 +97,7 @@
 /* remote mode gimbal speed limit */
 
 #define GIMBAL_RC_MOVE_RATIO_PIT 0.002f
-#define GIMBAL_RC_MOVE_RATIO_YAW 0.001f 
+#define GIMBAL_RC_MOVE_RATIO_YAW 0.003f 
  
 
 /************************** gimbal parameter ******************************************************************/

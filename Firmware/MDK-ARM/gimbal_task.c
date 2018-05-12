@@ -86,13 +86,15 @@ void gimbal_task(void const *argu)
     break;
     
     case GIMBAL_FOLLOW_ZGYRO:
-      close_loop_handle();
+      close_loop_handle(0);
     break;
 		
     default:
-			close_loop_handle();
+			close_loop_handle(0);
     break;
   }
+	if(CHASSIS_TWIST)
+		close_loop_handle(1); // use the imu for yaw
 
 #ifdef NO_CASCADE_CONTROL
 	pid_calc(&pid_yaw_speed, gim.pid.yaw_angle_fdb, gim.pid.yaw_angle_ref);
@@ -152,35 +154,46 @@ float remote_ctrl_map(float offset,float step){
 *  s1 left  switch  ÉÏ-ÖÐ-ÏÂ  1-3-2
 *  s2 right ... 
 */
-void close_loop_handle(void){
+// the bool type use_imu to indicate if we want to use imu for yaw
+void close_loop_handle(int use_imu){
 	
-
   static float chassis_angle_tmp=0;
   static float limit_angle_range = 3;
   static float step= GIMBAL_RC_MOVE_RATIO_YAW*330;
 	
   gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
-	#ifdef GIMBAL_FOLLOW_CHASSIS
-	gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd ; // 
+	#if defined(GIMBAL_FOLLOW_CHASSIS) 
+	if (use_imu)
+		gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu ; //
+	else 
+	{
+		gim.sensor.yaw_offset_angle_imu =atti.yaw;  // if we do not use imu, update the offset
+		gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd;
+	}
 	#else
-	gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu; // 
+		gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu; // 
 	#endif 
   
  
-  chassis_angle_tmp =  gim.pid.yaw_angle_ref ;
+  chassis_angle_tmp =   gim.pid.yaw_angle_ref ;
 	
+	float change_from_remote_yaw = - remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
+                       + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW ;
   if ((gim.pid.yaw_angle_fdb >= chassis_angle_tmp+ YAW_ANGLE_MIN - limit_angle_range) && \
       (gim.pid.yaw_angle_fdb <= chassis_angle_tmp+ YAW_ANGLE_MAX + limit_angle_range))
   {
 		if(KEY_X) gim.pid.yaw_angle_ref = 0;
 		
     gim.pid.yaw_angle_ref += YAW_ECD_DIR*remote_ctrl_map( 
-											 (KEY_Q)?(step):0 -  (KEY_E)?(-step):0 
+											 ((KEY_Q)?(step):0)  +  ((KEY_E)?(-step):0)
 		#ifndef GIMBAL_FOLLOW_CHASSIS
-											 - remote_info.rc.ch2 * GIMBAL_RC_MOVE_RATIO_YAW
-                       + remote_info.mouse.x * GIMBAL_PC_MOVE_RATIO_YAW 
+											 + change_from_remote_yaw
 		#endif
+											+ (use_imu)?change_from_remote_yaw:0	
 			,step);
+		
+		if (CHASSIS_TWIST_LAST && !CHASSIS_TWIST) // change the mode 
+				gim.pid.yaw_angle_ref = 0;
 		
     VAL_LIMIT(gim.pid.yaw_angle_ref, chassis_angle_tmp + YAW_ANGLE_MIN, chassis_angle_tmp + YAW_ANGLE_MAX);	
   }

@@ -78,6 +78,7 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 void chassis_mode_switch(void);
 void limit_chassis_power(void);
 float chassis_twist_angle(void);
+void chassis_twist_handle(void);
 
 extern chassis_t chassis;
 #endif

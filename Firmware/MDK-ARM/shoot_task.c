@@ -125,7 +125,7 @@ void shoot_task(void const *argu)
         else
         {
 					turn_off_friction_wheel();
-					turn_off_laser();
+					//turn_off_laser();
           pid_trigger_speed.out = 0;
         }
         

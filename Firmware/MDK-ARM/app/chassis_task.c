@@ -6,6 +6,7 @@
 #include "bsp_can.h"
 #include "gimbal_task.h"
 #include "infantry_info.h"
+#include "bsp_io.h"
 chassis_t chassis;
 UBaseType_t chasis_task_stack_surplus;
 extern TaskHandle_t can_msg_send_task_t;
@@ -15,13 +16,17 @@ void chassis_task(const void* argu){ // timer
 	
 	// TODO swich the mode to handle data from PC 
 	chassis_mode_switch();
-	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
 	
 
 	if(!chassis_is_auto())chasis_remote_handle();
 	else chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
 	
-	
+	if(CHASSIS_TWIST)
+	{
+		turn_on_laser();
+		chassis_twist_handle();
+	}
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
   
   if (!chassis_is_controllable())
@@ -247,32 +252,14 @@ void limit_chassis_power(void){
 	}
 }
 
-float chassis_twist_angle(void){
-	float static angle = 0;
-	int static cnt = 0;
-	float static step = 0.5;
-	float static max_angle = 30;
-	
-//	int static cnt1 = 0;
-	int  tot_step =(int) ( max_angle / step) ;
-	//if (cnt1++  %2!=0)return angle;
-	if(remote_info.rc.s2==RC_UP)
-	{
-			cnt++;
-		
-			if(cnt<tot_step)angle+=step;
-			else if (cnt < 3*tot_step) angle-=step;
-			else if (cnt < 4*tot_step) angle += step;
-			else 
-			{
-				cnt=0;
-				angle=0;
-			}
-	}
-	else
-	{
-		angle=0;
-		cnt=0;
-	}		
-	return angle;
+
+void chassis_twist_handle(void){
+	static const float 	TWIST_SPEED = CHASSIS_RC_MAX_SPEED_R / 3.0f;
+	static const int 		TWIST_MAX_ANGLE = 20;
+	static int DIR = 1;
+	if ( gim.sensor.yaw_relative_angle_ecd > TWIST_MAX_ANGLE)
+		DIR = 1;
+	if ( gim.sensor.yaw_relative_angle_ecd < - TWIST_MAX_ANGLE)
+		DIR = -1;
+	chassis.vw = DIR * TWIST_SPEED;
 }

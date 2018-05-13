@@ -49,9 +49,9 @@ trigger_t trig;
 
 uint32_t shoot_time_last;
 int shoot_time_ms;
-#define SHOOT_TIME_OUT  1500 // wait for 1.5 second  
+#define SHOOT_TIME_OUT  200 // wait for 0.2 second  
 #define ONE_SHOOT_POS  (8192/8)
-#define TRIG_SPEED 4000
+#define TRIG_SPEED 2500
 void shoot_task(void const *argu)
 {
   osEvent event;

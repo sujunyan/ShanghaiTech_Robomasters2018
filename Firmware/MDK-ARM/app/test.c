@@ -22,8 +22,12 @@ void test_task( const void* argu){
   while(1)
   {
 		//used in calibrate
-
-		
+		#if 0
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT2_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT4_Pin, GPIO_PIN_RESET);
+		#endif
 	#ifdef SERIAL_DEBUG
 		printf("\r\n TEST BEGIN\r\n");
 		#ifndef CALI_DONE

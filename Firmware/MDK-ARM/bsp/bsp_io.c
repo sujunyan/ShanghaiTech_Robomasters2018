@@ -44,3 +44,31 @@ uint8_t sd_insert(void)
 {
   return !HAL_GPIO_ReadPin(SD_EXTI_GPIO_Port, SD_EXTI_Pin);
 }
+
+void turn_on_voltage_ctrl(int id){
+	uint16_t pin;
+	switch (id)
+	{
+		case 1:pin = VOLTAGE_OUT1_Pin;break;
+		case 2:pin = VOLTAGE_OUT2_Pin;break;
+		case 3:pin = VOLTAGE_OUT3_Pin;break;
+		case 4:pin = VOLTAGE_OUT4_Pin;break;
+		default:return;
+	}
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , pin, GPIO_PIN_RESET);
+}
+
+
+void turn_off_voltage_ctrl(int id){
+	uint16_t pin;
+	switch (id)
+	{
+		case 1:pin = VOLTAGE_OUT1_Pin;break;
+		case 2:pin = VOLTAGE_OUT2_Pin;break;
+		case 3:pin = VOLTAGE_OUT3_Pin;break;
+		case 4:pin = VOLTAGE_OUT4_Pin;break;
+		default:return;
+	}
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , pin, GPIO_PIN_SET);
+}
+

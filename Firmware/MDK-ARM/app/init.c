@@ -47,9 +47,7 @@ void pram_init(void)
   can_device_init();
   can_receive_start();
   dbus_uart_init();
-	//BEEP_TUNE = 0;
- // BEEP_CTRL = 0;//g_err.beep_ctrl;
-  //software parameter initialize
+	
 	chassis_param_init();
 	detector_param_init();
 	imu_param_init();
@@ -57,6 +55,10 @@ void pram_init(void)
 	gimbal_back_param();
 	shoot_param_init();
 	cali_param_init();
+	
+	// open the voltage for test 
+	turn_on_voltage_ctrl(1);
+	turn_off_voltage_ctrl(2);
 }
 
 void chassis_param_init(void)

@@ -41,5 +41,7 @@ void mpu_heat_ctrl(uint16_t pwm_pulse);
 uint8_t get_trigger_key_state(void);
 uint8_t sd_insert(void);
 
+void turn_on_voltage_ctrl(int); // turn on the voltage ctrl 
+void turn_off_voltage_ctrl(int id);
 #endif
 

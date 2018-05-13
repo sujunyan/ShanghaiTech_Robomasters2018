@@ -142,6 +142,15 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SD_EXTI_GPIO_Port, &GPIO_InitStruct);
+	
+	/* user defined added for voltage control*/
+	/*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = VOLTAGE_OUT1_Pin | VOLTAGE_OUT2_Pin | 
+												VOLTAGE_OUT3_Pin | VOLTAGE_OUT4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(VOLTAGE_OUT_GPIO_Port , &GPIO_InitStruct);
 
 }
 

@@ -320,7 +320,7 @@ static void imu_AHRS_update(void) {
 
 }
 #if 1
-#define MAX_IMU_INIT_CNT 2000
+const float MAX_IMU_INIT_CNT = 1000.0f;
 #define SET_YAW_OFFSET
 static void imu_attitude_update(void){
 	static float yaw_offset=0.0f;
@@ -336,12 +336,12 @@ static void imu_attitude_update(void){
   
 	
 #ifdef 	SET_YAW_OFFSET
-	if (cnt++ < MAX_IMU_INIT_CNT) // this should be stable
+	if (is_imu_stable()) // this should be stable
 	{
-		yaw_offset_plus += (atti.last_yaw - imu.yaw )* (1.0f/MAX_IMU_INIT_CNT); 
-		//if(cnt%10 == 0)
-			//printf("yaw_offset_plus %f \r\n",yaw_offset_plus);
+		yaw_offset_plus = ( (MAX_IMU_INIT_CNT -1.0f) / MAX_IMU_INIT_CNT ) * yaw_offset_plus + 
+											(atti.last_yaw - imu.yaw )* (1.0f/ MAX_IMU_INIT_CNT); 
 	}
+	
 #endif  
 	
   
@@ -381,7 +381,8 @@ void imu_task(void const *argu)
     mpu_get_data();
     imu_AHRS_update();
     imu_attitude_update();
-    
+		
+    //imu_attitude_update_without_AHRS();
     imu_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     //printf("imu_task done T %d\r\n",HAL_GetTick());
     osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);  
@@ -396,10 +397,24 @@ void imu_temp_ctrl_init(void)
                   10, 1, 0);
 }
 
-#if 1
+
 void imu_temp_keep(void){
   imu.temp_ref = DEFAULT_IMU_TEMP;
   pid_calc(&pid_imu_tmp, imu.temp, imu.temp_ref);
   mpu_heat_ctrl(pid_imu_tmp.out);
 }
-#endif
+
+void imu_attitude_update_without_AHRS(void){
+	
+}
+
+// see if the board is stable by checking the imu
+int is_imu_stable(void){
+	static float threshold = 0.01;
+	int flag = ( ABS(imu.wx)< threshold &&
+							ABS(imu.wy)< threshold &&
+							ABS(imu.wz)< threshold
+								);
+	return flag;
+}
+

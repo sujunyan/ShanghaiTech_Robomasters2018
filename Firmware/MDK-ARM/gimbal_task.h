@@ -72,8 +72,6 @@ typedef struct
   
   /* gimbal information */
   gim_sensor_t  sensor;
-	
-  
   
   /* gimbal ctrl parameter */
   gim_pid_t     pid;

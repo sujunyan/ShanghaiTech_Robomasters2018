@@ -83,8 +83,15 @@ void print_chassis_info(void){
 
 void print_imu_info(void){
 	printf("IMU INFORMATION\n\r");
+	/*
 	printf("mpu ax %d ay %d az %d \r\n",mpu_data.ax,mpu_data.ay,mpu_data.az);
 	printf("mpu  gx %d gy %d gz:%d \r\n",mpu_data.gx,mpu_data.gy,mpu_data.gz);
+	printf("mpu  mx %d my %d mz:%d \r\n",mpu_data.mx,mpu_data.my,mpu_data.mz);
+	*/
+	printf("imu ax %d ay %d az %d \r\n",imu.ax,imu.ay,imu.az);
+	printf("imu wx %f wy %f wz:%f \r\n",imu.wx,imu.wy,imu.wz);
+	printf("imu mx %d my %d mz:%d \r\n",imu.mx,imu.my,imu.mz);
+	
 	printf("atti is pitch: %f yaw: %f roll: %f\r\n",atti.pitch,atti.yaw,atti.roll);
 }
 

@@ -227,12 +227,12 @@ void mpu_get_data(void)
   imu.wy   = mpu_data.gy / 16.384f / 57.3f; //2000dps -> rad/s
   imu.wz   = mpu_data.gz / 16.384f / 57.3f; //2000dps -> rad/s
 
-  /*
+  
   imu.vx   += (mpu_data.ax - mpu_data.ax_offset) / 4096.*100.*0.005; //2000dps -> rad/s
   imu.vy   += (mpu_data.ay - mpu_data.ay_offset) / 4096.*100.*0.005; //2000dps -> rad/s
   imu.vz   += (mpu_data.az - mpu_data.az_offset) /4096.*100.*0.005; //2000dps -> rad/s
   
-
+/*
   imu_cali_hook(CALI_GYRO, &mpu_data.gx);
   imu_cali_hook(CALI_ACC, &mpu_data.ax);
   imu_cali_hook(CALI_MAG, &mpu_data.mx);

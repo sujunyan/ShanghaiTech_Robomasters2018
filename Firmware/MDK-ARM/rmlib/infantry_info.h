@@ -203,6 +203,7 @@ typedef __packed struct
 typedef __packed struct
 {
   uint8_t          ctrl_mode; /* chassis control mode */
+	uint8_t       pc_ctrl_mode;
   int16_t          x_speed;   /* x-axis move speed(mm/s) of chassis */
   int16_t          y_speed;   /* y-axis move speed(mm/s) of chassis */
   chassis_rotate_t w_info;    /* rotation control of chassis */
@@ -220,6 +221,7 @@ typedef __packed struct
 
 typedef __packed struct
 {
+	uint8_t ctrl_mode;
   uint8_t shoot_cmd;      /* single shoot command */
   uint8_t c_shoot_cmd;    /* continuous shoot command */
   uint8_t fric_wheel_run; /* friction run or not */

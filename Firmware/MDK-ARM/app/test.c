@@ -8,7 +8,6 @@
 #include "PC_communication_task.h"
 #include "calibrate.h"
 #include "pid.h"
-#include "bsp_io.h"
 #define TEST_TASK_PERIOD 100
 UBaseType_t test_task_stack_surplus;
 uint32_t test_wake_time;
@@ -23,10 +22,7 @@ void test_task( const void* argu){
   while(1)
   {
 		//used in calibrate
-		if(remote_info.rc.s2 == RC_DN )
-			turn_off_bullet_box();
-		else 
-			turn_on_bullet_box();
+		
 	#ifdef SERIAL_DEBUG
 		printf("\r\n TEST BEGIN\r\n");
 		#ifndef CALI_DONE
@@ -82,15 +78,8 @@ void print_chassis_info(void){
 
 void print_imu_info(void){
 	printf("IMU INFORMATION\n\r");
-	/*
 	printf("mpu ax %d ay %d az %d \r\n",mpu_data.ax,mpu_data.ay,mpu_data.az);
 	printf("mpu  gx %d gy %d gz:%d \r\n",mpu_data.gx,mpu_data.gy,mpu_data.gz);
-	printf("mpu  mx %d my %d mz:%d \r\n",mpu_data.mx,mpu_data.my,mpu_data.mz);
-	*/
-	printf("imu ax %d ay %d az %d \r\n",imu.ax,imu.ay,imu.az);
-	printf("imu wx %f wy %f wz:%f \r\n",imu.wx,imu.wy,imu.wz);
-	printf("imu mx %d my %d mz:%d \r\n",imu.mx,imu.my,imu.mz);
-	
 	printf("atti is pitch: %f yaw: %f roll: %f\r\n",atti.pitch,atti.yaw,atti.roll);
 }
 

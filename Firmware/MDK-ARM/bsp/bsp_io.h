@@ -28,12 +28,18 @@
 #define __BSP_IO_H__
 
 #include "stm32f4xx_hal.h"
-#define BULLET_BOX TIM2->CCR1
+
 
 void turn_on_laser(void);
 void turn_off_laser(void);
 void turn_on_friction_wheel(uint16_t spd);
 void turn_off_friction_wheel(void);
+
+void open_bullet(void);
+void close_bullet(void);
+
+void turn_on_voltage_ctrl(int id);
+void turn_off_voltage_ctrl(int id);
 
 void pwm_device_init(void);
 void mpu_heat_ctrl(uint16_t pwm_pulse);
@@ -41,9 +47,5 @@ void mpu_heat_ctrl(uint16_t pwm_pulse);
 uint8_t get_trigger_key_state(void);
 uint8_t sd_insert(void);
 
-void turn_on_voltage_ctrl(int); // turn on the voltage ctrl 
-void turn_off_voltage_ctrl(int id);
-void turn_on_bullet_box(void);
-void turn_off_bullet_box(void);
 #endif
 

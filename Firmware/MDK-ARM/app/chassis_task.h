@@ -44,6 +44,15 @@ typedef enum
   AUTO_FOLLOW_GIMBAL     = 6,
 } chassis_mode_e;
 
+typedef enum
+{
+	CHASSIS_NO_CONTROL     = 0,
+	CHASSIS_FULL_CONTROL   = 1,
+	CHASSIS_XY_CONTROL     = 2,
+	CHASSIS_W_CONTROL      = 3,
+	
+} chassis_pc_ctrl_e;
+
 
 typedef struct
 {
@@ -68,7 +77,10 @@ void chassis_task(const void* argu);
 void test_motor(void);
 void encoder_data_handle(CAN_HandleTypeDef* hcan,moto_measure_t* ptr);
 void get_moto_offset(moto_measure_t* ptr, CAN_HandleTypeDef* hcan);
-void chasis_remote_handle(void);
+void chasis_seperate_handle(void);
+void chasis_follow_handle(void);
+void chasis_dodge_handle(void);
+void chasis_auto_seperate_handle(void);
 void print_encoder(moto_measure_t*);
 int is_Motor_Reversed(int i);
 uint8_t chassis_is_controllable(void);
@@ -78,7 +90,6 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 void chassis_mode_switch(void);
 void limit_chassis_power(void);
 float chassis_twist_angle(void);
-void chassis_twist_handle(void);
 
 extern chassis_t chassis;
 #endif

@@ -42,5 +42,8 @@ void pc_shoot_control_data_handle(shoot_ctrl_t*);
 void PC_send_task(void const * argu);
 void PC_send_msg_update(void);
 
+
+void judge_data_handle(uint8_t *p_frame);
+void judge_shoot_data_handle(void);
 extern uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 #endif

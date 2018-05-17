@@ -16,17 +16,32 @@ void chassis_task(const void* argu){ // timer
 	
 	// TODO swich the mode to handle data from PC 
 	chassis_mode_switch();
-	chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
+
+	//chassis.ctrl_mode=CHASSIS_RELAX;
 	
 
-	if(!chassis_is_auto())chasis_remote_handle();
-	else chassis.vw = pc_rece_mesg.chassis_control_data.w_info.w_speed;
-	
-	if(CHASSIS_TWIST)
-	{
-		turn_on_laser();
-		chassis_twist_handle();
+	switch (chassis.ctrl_mode) {
+		case CHASSIS_RELAX:
+		case CHASSIS_STOP:
+			break;
+		case MANUAL_SEPARATE_GIMBAL:
+			chasis_seperate_handle();
+			break;
+		case MANUAL_FOLLOW_GIMBAL:
+			chasis_follow_handle();
+			break;
+		case DODGE_MODE:
+			chasis_dodge_handle();
+			break;
+		case AUTO_FOLLOW_GIMBAL:
+		case AUTO_SEPARATE_GIMBAL:
+			chasis_auto_seperate_handle();
+			break;
+		default:
+			break;
 	}
+	
+
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_speed_ref);
   
   if (!chassis_is_controllable())
@@ -189,20 +204,44 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
 */
  
 void chassis_mode_switch(void){
-	if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )chassis.ctrl_mode=AUTO_FOLLOW_GIMBAL;
-	else chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
-	//chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	//static int return_cnt = 0;
+	//const static int return_finished = 20;
+	if (KEY_G) {
+		chassis.ctrl_mode=DODGE_MODE;
+	} else if (KEY_F) {
+		//if (chassis.ctrl_mode == DODGE_MODE) {
+		//	return_cnt = 0;
+		//	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+		//} else if (return_cnt >= return_finished) {
+			chassis.ctrl_mode=MANUAL_SEPARATE_GIMBAL;
+		//} else {
+		//	return_cnt++;
+		//}
+	}
+	if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_MI ){
+		//if (chassis.ctrl_mode == DODGE_MODE) {
+		//	return_cnt = 0;
+		//	chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+		//} else if (return_cnt >= return_finished) {
+			chassis.ctrl_mode=MANUAL_SEPARATE_GIMBAL;
+		//} else {
+		//	return_cnt++;
+		//}
+	}
+	//else if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=CHASSIS_RELAX;
+	//else if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
+	else if (remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=DODGE_MODE;
 }
-
 	
 
-void chasis_remote_handle(void){
+void chasis_seperate_handle(void){
 	if(is_keyboard_mode())
 	{
 		float ratio;
-		if (KEY_SHIFT)ratio=0.7 ;
-		else if (KEY_CTRL) ratio=1;
-		else ratio=0.5;
+		if ((KEY_SHIFT) && (KEY_CTRL)) ratio = 0.4;
+		else if (KEY_SHIFT)ratio= 1.65;
+		else if (KEY_CTRL) ratio=1.8;
+		else ratio=1.0;
 		
 		if(KEY_A)chassis.vx =  CHASSIS_KB_MAX_SPEED_X * ratio; // left-right
 		else if(KEY_D)chassis.vx = - CHASSIS_KB_MAX_SPEED_X * ratio;
@@ -223,6 +262,103 @@ void chasis_remote_handle(void){
 			
 			chassis.vw  =   remote_info.rc.ch2 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_R ; // rotate 
 		}
+		VAL_LIMIT(chassis.vw , - CHASSIS_RC_MAX_SPEED_R , CHASSIS_RC_MAX_SPEED_R);
+}
+
+void chasis_auto_seperate_handle(void){
+	{
+		float ratio;
+		if ((KEY_SHIFT) && (KEY_CTRL)) ratio = 0.4;
+		else if (KEY_SHIFT)ratio= 1.65;
+		else if (KEY_CTRL) ratio=1.8;
+		else ratio=1.0;
+		
+		if (pc_rece_mesg.chassis_control_data.pc_ctrl_mode == CHASSIS_FULL_CONTROL || pc_rece_mesg.chassis_control_data.pc_ctrl_mode == CHASSIS_XY_CONTROL) {
+			chassis.vx  = pc_rece_mesg.chassis_control_data.x_speed;
+			chassis.vy  = pc_rece_mesg.chassis_control_data.y_speed;
+		} else {
+			if(KEY_A)chassis.vx =  (- remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X) + CHASSIS_KB_MAX_SPEED_X * ratio; // left-right
+			else if(KEY_D)chassis.vx = (- remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X) - CHASSIS_KB_MAX_SPEED_X * ratio;
+			else chassis.vx=0;
+		
+			if(KEY_W)chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y) + CHASSIS_KB_MAX_SPEED_Y * ratio; //   forward-backward 
+			else if (KEY_S)chassis.vy = (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y) - CHASSIS_KB_MAX_SPEED_Y * ratio;
+			else chassis.vy=0;
+		}
+		
+		if (pc_rece_mesg.chassis_control_data.pc_ctrl_mode == CHASSIS_FULL_CONTROL || pc_rece_mesg.chassis_control_data.pc_ctrl_mode == CHASSIS_W_CONTROL)
+			chassis.vw  = pc_rece_mesg.chassis_control_data.w_info.w_speed;
+		else {
+					chassis.vw  = remote_info.mouse.x * CHASSIS_KB_MAX_SPEED_R; // rotate 
+		}
+	}
+		VAL_LIMIT(chassis.vw , - CHASSIS_RC_MAX_SPEED_R , CHASSIS_RC_MAX_SPEED_R);
+}
+
+
+void chasis_follow_handle(void){
+	if(is_keyboard_mode())
+	{
+		float ratio;
+		if ((KEY_SHIFT) && (KEY_CTRL)) ratio = 0.4;
+		else if (KEY_SHIFT)ratio= 1.65;
+		else if (KEY_CTRL) ratio=1.8;
+		else ratio=1.0;
+		
+		if(KEY_A)chassis.vx =  CHASSIS_KB_MAX_SPEED_X * ratio; // left-right
+		else if(KEY_D)chassis.vx = - CHASSIS_KB_MAX_SPEED_X * ratio;
+		else chassis.vx=0;
+
+		if(KEY_W)chassis.vy =  CHASSIS_KB_MAX_SPEED_Y * ratio; // front-end
+		else if(KEY_S)chassis.vy = - CHASSIS_KB_MAX_SPEED_Y * ratio;
+		else chassis.vy=0;
+		
+	}
+	else
+		{
+			chassis.vx = (- remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X) 
+										+ pc_rece_mesg.chassis_control_data.x_speed; // left-right
+			chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y)
+										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 
+			
+		}
+		
+		pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , 0);
+		chassis.vw = pid_chassis_angle.out;
+		
+		VAL_LIMIT(chassis.vw , - CHASSIS_RC_MAX_SPEED_R , CHASSIS_RC_MAX_SPEED_R);
+}
+
+void chasis_dodge_handle(void){
+	if(is_keyboard_mode())
+	{
+		float ratio;
+		if (KEY_SHIFT)ratio=0.7 ;
+		else if (KEY_CTRL) ratio=1;
+		else ratio=0.5;
+		
+		if(KEY_A)chassis.vx =  CHASSIS_KB_MAX_SPEED_X * ratio; // left-right
+		else if(KEY_D)chassis.vx = - CHASSIS_KB_MAX_SPEED_X * ratio;
+		else chassis.vx=0;
+
+		if(KEY_W)chassis.vy =  CHASSIS_KB_MAX_SPEED_Y * ratio; // front-end
+		else if(KEY_S)chassis.vy = - CHASSIS_KB_MAX_SPEED_Y * ratio;
+		else chassis.vy=0;
+		
+	}
+	else
+		{
+			chassis.vx = (- remote_info.rc.ch0 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_X) 
+										+ pc_rece_mesg.chassis_control_data.x_speed; // left-right
+			chassis.vy =  (remote_info.rc.ch1 / RC_RESOLUTION * CHASSIS_RC_MAX_SPEED_Y)
+										+ pc_rece_mesg.chassis_control_data.y_speed; //  forward-backward 
+			
+		}
+		
+		pid_calc(&pid_chassis_angle, - gim.sensor.yaw_relative_angle_ecd , chassis_twist_angle());
+		chassis.vw = pid_chassis_angle.out;
+	  chassis_twist_angle();	
+		
 		VAL_LIMIT(chassis.vw , - CHASSIS_RC_MAX_SPEED_R , CHASSIS_RC_MAX_SPEED_R);
 }
 uint8_t chassis_is_auto(void){
@@ -253,13 +389,17 @@ void limit_chassis_power(void){
 }
 
 
-void chassis_twist_handle(void){
-	static const float 	TWIST_SPEED = CHASSIS_RC_MAX_SPEED_R / 3.0f;
-	static const int 		TWIST_MAX_ANGLE = 20;
-	static int DIR = 1;
-	if ( gim.sensor.yaw_relative_angle_ecd > TWIST_MAX_ANGLE)
-		DIR = 1;
-	if ( gim.sensor.yaw_relative_angle_ecd < - TWIST_MAX_ANGLE)
-		DIR = -1;
-	chassis.vw = DIR * TWIST_SPEED;
+float chassis_twist_angle(void){
+	
+	
+	static const float TWIST_SPPED = CHASSIS_RC_MAX_SPEED_R / 4 * 1.3;
+	static const float TWIST_MAX_AGNLE = 33;
+	static int dir = 1;
+	
+	if (gim.sensor.yaw_relative_angle_ecd > TWIST_MAX_AGNLE)
+		dir = 1;
+	else if (gim.sensor.yaw_relative_angle_ecd < - TWIST_MAX_AGNLE)
+		dir = -1;
+	chassis.vw = dir * TWIST_SPPED;
+	return 0;
 }

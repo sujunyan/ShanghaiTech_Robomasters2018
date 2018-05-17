@@ -47,7 +47,9 @@ void pram_init(void)
   can_device_init();
   can_receive_start();
   dbus_uart_init();
-	
+	//BEEP_TUNE = 0;
+ // BEEP_CTRL = 0;//g_err.beep_ctrl;
+  //software parameter initialize
 	chassis_param_init();
 	detector_param_init();
 	imu_param_init();
@@ -56,11 +58,10 @@ void pram_init(void)
 	shoot_param_init();
 	cali_param_init();
 	
-	// open the voltage for test 
-	//turn_on_voltage_ctrl(1); 
-	//turn_on_voltage_ctrl(1); 
+	//turn_on_voltage_ctrl(1);
+	//turn_off_voltage_ctrl(2);
 	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT1_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT2_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT2_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT3_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT4_Pin, GPIO_PIN_RESET);
 }

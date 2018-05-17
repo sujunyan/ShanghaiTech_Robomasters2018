@@ -61,6 +61,7 @@ typedef __packed struct
   uint16_t     fric_wheel_spd;
   uint16_t     shot_bullets;
   uint16_t     remain_bullets;
+	uint8_t			 one_shoot_status;
 } shoot_t;
 
 typedef  struct

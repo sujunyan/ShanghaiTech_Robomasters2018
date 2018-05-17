@@ -9,7 +9,7 @@
 #include "gimbal_task.h"
 #include "Serial_debug.h"
 #include "calibrate.h"
-#include "imu_task.h"
+#include "judgement_info.h"
 #define PC_SEND_DURARION 20
 uint8_t computer_tx_buf[COMPUTER_TX_BUF_SIZE];
 uint8_t computer_data_pack_buffer[COMPUTER_FRAME_BUFLEN];
@@ -26,6 +26,8 @@ void PC_receive_task(const void * argu){
 	printf("PC_receive task start\n\r");
 	while(1)
 	{
+		
+		LED6_ON;
 		event = osSignalWait(PC_UART_TX_SIGNAL | \
                          PC_UART_IDLE_SIGNAL | \
                          PC_DMA_FULL_SIGNAL, osWaitForever);
@@ -35,12 +37,13 @@ void PC_receive_task(const void * argu){
 		if 	(event.value.signals & PC_UART_IDLE_SIGNAL) 						
     {
         get_dma_memory_msg(COMPUTER_HUART.hdmarx->Instance, &current_memory_id, &remain_data_counter);
-				
+				LED8_ON;
 				//printf("In IDLE memory id %d remain_data_counter %d \r\n",current_memory_id,remain_data_counter);
 				unpack_data(pc_dma_rxbuff[current_memory_id],& begin,UART_RX_DMA_SIZE-remain_data_counter);
     }
     if (event.value.signals & PC_DMA_FULL_SIGNAL)
 		{
+				LED7_ON;
 				get_dma_memory_msg(COMPUTER_HUART.hdmarx->Instance, &current_memory_id, &remain_data_counter);
 				//printf("In FULL memory id %d remain_data_counter %d \r\n",current_memory_id,remain_data_counter);
 				unpack_data(pc_dma_rxbuff[current_memory_id],& begin,UART_RX_DMA_SIZE);
@@ -82,7 +85,7 @@ void send_all_pack_to_pc(void){
 	PC_send_msg_update();
 	
 	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
-#if 0
+#if 1
 	size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));		
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1;
@@ -109,13 +112,12 @@ extern int YAW_ECD_CENTER_OFFSET;
 void PC_send_msg_update(void){
 	// update gimbal
 	// TODO send ecd and imu massage
-	update_gimbal_sensor();
-	pc_send_mesg.gimbal_information.pit_absolute_angle=atti.roll;
+	pc_send_mesg.gimbal_information.pit_absolute_angle=0;
 	pc_send_mesg.gimbal_information.pit_palstance= gim.sensor.pit_palstance;
 	pc_send_mesg.gimbal_information.pit_relative_angle= gim.sensor.pit_relative_angle_ecd;
-	pc_send_mesg.gimbal_information.yaw_absolute_angle=atti.yaw;
+	pc_send_mesg.gimbal_information.yaw_absolute_angle=0;
 	pc_send_mesg.gimbal_information.yaw_palstance= gim.sensor.yaw_palstance;
-	pc_send_mesg.gimbal_information.yaw_relative_angle= gim.sensor.yaw_relative_angle_imu;
+	pc_send_mesg.gimbal_information.yaw_relative_angle= gim.sensor.yaw_relative_angle_ecd;
 	
 	// update cali information
 	pc_send_mesg.cali_information.pit_ecd = gim.pit_motor.ecd;
@@ -235,6 +237,8 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
 						pc_send_mesg.cali_information.debug_info =4;
 						p_obj.index++;
 						pc_data_handle(p_obj.protocol_packet);
+						LED1_ON;
+						judge_data_handle(p_obj.protocol_packet);
 						#if 0
             if (p_obj.protocol_packet[p_obj.index++] == UP_REG_ID) //sof
             {
@@ -242,9 +246,10 @@ void unpack_data(uint8_t* buffer, uint16_t *begin, uint16_t end){
             }
             else  //DN_REG_ID
             {
+							LED1_ON;
 							pc_send_mesg.cali_information.debug_info =5;
 							pc_data_handle(p_obj.protocol_packet);
-              //judgement_data_handle(p_obj->protocol_packet);
+              judgement_data_handle(p_obj->protocol_packet);
             }
 						#endif
           }
@@ -309,14 +314,58 @@ void pc_data_handle(uint8_t *p_frame){
 void pc_chassis_control_data_handle(chassis_ctrl_t* ptr){
 	
 	//chassis.ctrl_mode =ptr->ctrl_mode;
-	chassis.vx=ptr->x_speed;
-	chassis.vy=ptr->y_speed;
-	chassis.vw=ptr->w_info.w_speed;
+	
+	if (ptr->ctrl_mode == 0) {
+		chassis.ctrl_mode = CHASSIS_RELAX;
+	}
+	else if (ptr->ctrl_mode == 1) {
+		chassis.ctrl_mode = CHASSIS_STOP;
+	}
+	else if (ptr->ctrl_mode == 2) {
+		chassis.ctrl_mode = MANUAL_SEPARATE_GIMBAL;
+	}
+	else if (ptr->ctrl_mode == 3) {
+		chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
+	}		
+	else if (ptr->ctrl_mode == 4) {
+		chassis.ctrl_mode = DODGE_MODE;
+	}
+	else if (ptr->ctrl_mode == 5) {
+		chassis.ctrl_mode = AUTO_SEPARATE_GIMBAL;
+	}		
+	else if (ptr->ctrl_mode == 6) {
+		chassis.ctrl_mode = AUTO_FOLLOW_GIMBAL;
+	}
 	//printf("chasis ctrl data recv. vx %d vy %d vw %f\r\n",ptr->x_speed,ptr->y_speed,ptr->w_info.w_speed);
 }
 void pc_gimbal_control_data_handle(gimbal_ctrl_t* ptr){
 	
 	//gim.ctrl_mode=ptr->ctrl_mode;
+
+	if (ptr->ctrl_mode == 0) {
+		gim.ctrl_mode = GIMBAL_RELAX;
+	}
+	else if(ptr->ctrl_mode == 1) {
+		gim.ctrl_mode = GIMBAL_INIT;
+	}
+	else if(ptr->ctrl_mode == 2) {
+		gim.ctrl_mode = GIMBAL_NO_ARTI_INPUT;
+	}
+	else if(ptr->ctrl_mode == 3) {
+		gim.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
+	}
+	else if(ptr->ctrl_mode == 4) {
+		gim.ctrl_mode = GIMBAL_FOLLOW_CHASSIS;
+	}
+	else if(ptr->ctrl_mode == 5) {
+		gim.ctrl_mode = GIMBAL_PATROL_MODE;
+	}
+	else if(ptr->ctrl_mode == 6) {
+		gim.ctrl_mode = GIMBAL_SHOOT_BUFF;
+	}
+	else if(ptr->ctrl_mode == 7) {
+		gim.ctrl_mode = GIMBAL_POSITION_MODE;
+	}	
 	gim.pid.pit_angle_ref=ptr->pit_ref;
 	gim.pid.yaw_angle_ref=ptr->yaw_ref;
 	//printf("gimbal_ctrl_data recv pit %f yaw %f \r\n",ptr->pit_ref,ptr->yaw_ref);
@@ -343,6 +392,45 @@ void pc_shoot_control_data_handle(shoot_ctrl_t* ptr){
 	//shoot.ctrl_mode=ptr->shoot_cmd;
 	shoot.fric_wheel_run = ptr->fric_wheel_run;
 	shoot.fric_wheel_spd = ptr->fric_wheel_spd;
+	if (ptr->shoot_cmd) shoot.one_shoot_status = 0;
 	//printf("shoot_ctrl_data recv \r\n");
+}
+
+receive_judge_t judge_rece_mesg;
+void judge_data_handle(uint8_t *p_frame){
+  frame_header_t *p_header = (frame_header_t*)p_frame;
+  memcpy(p_header, p_frame, HEADER_LEN);
+
+  uint16_t data_length = p_header->data_length;
+  uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
+  uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
+
+  taskENTER_CRITICAL();
+	pc_send_mesg.cali_information.debug_info = cmd_id;
+  //printf("pc data recv with cmd_id %d\r\n",cmd_id);
+  switch (cmd_id)
+  {
+    case REAL_SHOOT_DATA_ID:
+		{
+      memcpy(&judge_rece_mesg.real_shoot_data, data_addr, data_length);
+			judge_shoot_data_handle();
+		}break;
+		case GAME_INFO_ID:
+		{
+      memcpy(&judge_rece_mesg.game_information, data_addr, data_length);
+			if(judge_rece_mesg.game_information.max_hp != 0)
+				LED4_ON;
+		}break;
+  }
+  
+  taskEXIT_CRITICAL();
+}
+
+void judge_shoot_data_handle(void){
+	real_shoot_t real_shoot_data =  judge_rece_mesg.real_shoot_data;
+	LED2_ON;
+	if(real_shoot_data.bullet_freq != 0 || real_shoot_data.bullet_speed != 0)
+		LED3_ON;
+	else LED3_OFF;
 }
 

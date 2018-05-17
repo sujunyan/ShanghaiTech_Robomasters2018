@@ -338,14 +338,12 @@ static void imu_attitude_update(void){
 #ifdef 	SET_YAW_OFFSET
 	if (is_imu_stable()) // this should be stable
 	{
-		yaw_offset_plus = ( (MAX_IMU_INIT_CNT -1.0f) / MAX_IMU_INIT_CNT ) * yaw_offset_plus + 
-											(atti.last_yaw - imu.yaw )* (1.0f/ MAX_IMU_INIT_CNT); 
+	 yaw_offset_plus = ( (MAX_IMU_INIT_CNT -1.0f) / MAX_IMU_INIT_CNT ) * yaw_offset_plus + (atti.last_yaw - imu.yaw )* (1.0f/  MAX_IMU_INIT_CNT);
 	}
-	
 #endif  
 	
   
-  atti.yaw   = imu.yaw + atti.yaw_cnt*360 + yaw_offset  ;
+  atti.yaw   = imu.yaw + atti.yaw_cnt*360 + yaw_offset ;
   atti.pitch = imu.pit;
   atti.roll  = imu.rol;
 	
@@ -381,8 +379,7 @@ void imu_task(void const *argu)
     mpu_get_data();
     imu_AHRS_update();
     imu_attitude_update();
-		
-    //imu_attitude_update_without_AHRS();
+    
     imu_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
     //printf("imu_task done T %d\r\n",HAL_GetTick());
     osDelayUntil(&imu_wake_time, IMU_TASK_PERIOD);  
@@ -397,15 +394,16 @@ void imu_temp_ctrl_init(void)
                   10, 1, 0);
 }
 
-
+#if 1
 void imu_temp_keep(void){
   imu.temp_ref = DEFAULT_IMU_TEMP;
   pid_calc(&pid_imu_tmp, imu.temp, imu.temp_ref);
   mpu_heat_ctrl(pid_imu_tmp.out);
 }
+#endif
 
 void imu_attitude_update_without_AHRS(void){
-	
+
 }
 
 // see if the board is stable by checking the imu
@@ -417,4 +415,3 @@ int is_imu_stable(void){
 								);
 	return flag;
 }
-

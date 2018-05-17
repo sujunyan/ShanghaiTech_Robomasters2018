@@ -14,7 +14,7 @@ typedef enum
   GIMBAL_INIT          = 1,
   GIMBAL_NO_ARTI_INPUT = 2,
   GIMBAL_FOLLOW_ZGYRO  = 3,
-  GIMBAL_TRACK_ARMOR   = 4,
+  GIMBAL_FOLLOW_CHASSIS   = 4,
   GIMBAL_PATROL_MODE   = 5,
   GIMBAL_SHOOT_BUFF    = 6,
   GIMBAL_POSITION_MODE = 7,
@@ -72,6 +72,8 @@ typedef struct
   
   /* gimbal information */
   gim_sensor_t  sensor;
+	
+  
   
   /* gimbal ctrl parameter */
   gim_pid_t     pid;
@@ -90,9 +92,10 @@ extern gimbal_t gim;
 
 
 static void init_mode_handle(void);
-static void close_loop_handle(int use_imu);
+static void gimbal_seperate_handle(void);
+static void gimbal_follow_handle(void);
 
-
+void gimbal_mode_switch(void);
 
 static void cascade_pid_ctrl(void);
 float remote_ctrl_map(float offset,float step);

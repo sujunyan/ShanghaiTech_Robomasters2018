@@ -224,7 +224,7 @@ void StartDefaultTask(void const * argument)
 
 	// update the offset		
 	osDelay(1000); // wait for imu and ecd to be stable
-	//osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD); 
+	osTimerStart(chassis_timer_id, CHASSIS_TASK_PERIOD); 
 	read_gimbal_cali(); // read from the flash, if the gimbal cali data is 0, set the default value
 	for(;;)
 	{

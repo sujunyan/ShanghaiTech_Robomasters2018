@@ -142,7 +142,7 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SD_EXTI_GPIO_Port, &GPIO_InitStruct);
-	
+
 	/* user defined added for voltage control*/
 	/*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = VOLTAGE_OUT1_Pin | VOLTAGE_OUT2_Pin | 
@@ -151,7 +151,15 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(VOLTAGE_OUT_GPIO_Port , &GPIO_InitStruct);
-
+	
+	// init for user-defined leds
+	 GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 |
+												 GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 ;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOG , &GPIO_InitStruct);
+ 	 
 }
 
 /* USER CODE BEGIN 2 */

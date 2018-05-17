@@ -57,6 +57,7 @@ void imu_param_init(void);
 
 static void imu_temp_ctrl_init(void);
 static void imu_temp_keep(void);
+
 void imu_attitude_update_without_AHRS(void);
 int is_imu_stable(void);
 

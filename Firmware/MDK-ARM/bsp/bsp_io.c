@@ -16,8 +16,8 @@ void turn_off_laser(void)
 
 void turn_on_friction_wheel(uint16_t spd)
 {
-  LEFT_FRICTION  = spd;
-  RIGHT_FIRCTION = spd;
+	LEFT_FRICTION  = spd;
+	RIGHT_FIRCTION = spd; 
 }
 
 void turn_off_friction_wheel(void)
@@ -26,23 +26,20 @@ void turn_off_friction_wheel(void)
   RIGHT_FIRCTION = 1000;
 }
 
+void open_bullet(void)
+{
+	BULLET_SERVO = 2280;
+}
+
+void close_bullet(void)
+{
+	BULLET_SERVO = 600;
+	//BULLET_SERVO = 1400;
+}
+
 void mpu_heat_ctrl(uint16_t pwm_pulse)
 {
   IMU_PWM_PULSE = pwm_pulse;
-}
-
-
-void pwm_device_init(void)
-{
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // ctrl imu temperature
-  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1); // beep
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4); // friction wheel //TODO
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-}
-
-uint8_t sd_insert(void)
-{
-  return !HAL_GPIO_ReadPin(SD_EXTI_GPIO_Port, SD_EXTI_Pin);
 }
 
 void turn_on_voltage_ctrl(int id){
@@ -72,11 +69,19 @@ void turn_off_voltage_ctrl(int id){
 	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , pin, GPIO_PIN_SET);
 }
 
-void turn_on_bullet_box(void){
-	BULLET_BOX = 500;
+
+void pwm_device_init(void)
+{
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); // ctrl imu temperature
+  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1); // beep
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4); // friction wheel //TODO
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);	// servo
+	
+	BULLET_SERVO = 1000;
 }
 
-
-void turn_off_bullet_box(void){
-	BULLET_BOX = 2500;
+uint8_t sd_insert(void)
+{
+  return !HAL_GPIO_ReadPin(SD_EXTI_GPIO_Port, SD_EXTI_Pin);
 }

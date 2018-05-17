@@ -83,12 +83,14 @@
 #define SD_EXTI_Pin GPIO_PIN_15
 #define SD_EXTI_GPIO_Port GPIOE
 
-/* USER CODE BEGIN Private defines */
 #define VOLTAGE_OUT_GPIO_Port GPIOH
 #define VOLTAGE_OUT1_Pin GPIO_PIN_2
 #define VOLTAGE_OUT2_Pin GPIO_PIN_3
 #define VOLTAGE_OUT3_Pin GPIO_PIN_4
-#define VOLTAGE_OUT4_Pin GPIO_PIN_5
+#define VOLTAGE_OUT4_Pin GPIO_PIN_5 
+
+/* USER CODE BEGIN Private defines */
+
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

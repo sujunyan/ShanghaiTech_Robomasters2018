@@ -870,6 +870,11 @@
               <FileType>5</FileType>
               <FilePath>.\rmlib\infantry_info.h</FilePath>
             </File>
+            <File>
+              <FileName>judgement_info.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app\judgement_info.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

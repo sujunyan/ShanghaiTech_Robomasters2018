@@ -14,12 +14,11 @@
 /******************************* config macros *********************************************/
 
 #define CALI_DONE
-#define GIMBAL_FOLLOW_CHASSIS
 //#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
 //#define SERIAL_DEBUG
 #define LAUNCH_INFANTRY (remote_info.rc.s2 == RC_MI && remote_info.rc.last_s2 == RC_DN && remote_info.rc.s1 == RC_DN)
-#define CHASSIS_TWIST ( remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_DN )
-#define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_UP && remote_info.rc.last_s2 == RC_DN )
+#define CHASSIS_TWIST ( remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )
+#define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_DN && remote_info.rc.last_s2 == RC_DN )
 
 
 
@@ -30,7 +29,7 @@
 /* left and right speed (mm/s) */
 #define CHASSIS_RC_MAX_SPEED_X  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_X 1.0f
-/* back and forward speed (mm/s) */ 
+/* back and forward speed (mm/s) */
 #define CHASSIS_RC_MAX_SPEED_Y  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_Y 1.0f
 /* chassis rotation speed (deg/s) */
@@ -115,6 +114,7 @@
 #define YAW_ANGLE_MIN        -20
 #define LEFT_FRICTION        TIM1->CCR1
 #define RIGHT_FIRCTION       TIM1->CCR4
+#define BULLET_SERVO				 TIM2->CCR1
 /**************************shot  setting********************************/
 /* shot speed */
 #define DEFAULT_FRIC_WHEEL_SPEED 2500 //maximum value is 2500

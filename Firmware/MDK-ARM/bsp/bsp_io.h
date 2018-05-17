@@ -28,7 +28,7 @@
 #define __BSP_IO_H__
 
 #include "stm32f4xx_hal.h"
-
+#define BULLET_BOX TIM2->CCR1
 
 void turn_on_laser(void);
 void turn_off_laser(void);
@@ -43,5 +43,7 @@ uint8_t sd_insert(void);
 
 void turn_on_voltage_ctrl(int); // turn on the voltage ctrl 
 void turn_off_voltage_ctrl(int id);
+void turn_on_bullet_box(void);
+void turn_off_bullet_box(void);
 #endif
 

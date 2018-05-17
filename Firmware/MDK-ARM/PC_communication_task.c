@@ -82,7 +82,7 @@ void send_all_pack_to_pc(void){
 	PC_send_msg_update();
 	
 	memset(computer_tx_buf,0,sizeof(computer_tx_buf));
-#if 1
+#if 0
 	size=data_pack_handle(REMOTE_CTRL_INFO_ID,(uint8_t*)&remote_info,sizeof(remote_info));		
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1;

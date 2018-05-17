@@ -72,3 +72,11 @@ void turn_off_voltage_ctrl(int id){
 	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , pin, GPIO_PIN_SET);
 }
 
+void turn_on_bullet_box(void){
+	BULLET_BOX = 500;
+}
+
+
+void turn_off_bullet_box(void){
+	BULLET_BOX = 2500;
+}

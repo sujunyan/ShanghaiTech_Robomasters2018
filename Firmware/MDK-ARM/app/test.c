@@ -8,6 +8,7 @@
 #include "PC_communication_task.h"
 #include "calibrate.h"
 #include "pid.h"
+#include "bsp_io.h"
 #define TEST_TASK_PERIOD 100
 UBaseType_t test_task_stack_surplus;
 uint32_t test_wake_time;
@@ -22,12 +23,10 @@ void test_task( const void* argu){
   while(1)
   {
 		//used in calibrate
-		#if 0
-	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT1_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT2_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT3_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(VOLTAGE_OUT_GPIO_Port , VOLTAGE_OUT4_Pin, GPIO_PIN_RESET);
-		#endif
+		if(remote_info.rc.s2 == RC_DN )
+			turn_off_bullet_box();
+		else 
+			turn_on_bullet_box();
 	#ifdef SERIAL_DEBUG
 		printf("\r\n TEST BEGIN\r\n");
 		#ifndef CALI_DONE

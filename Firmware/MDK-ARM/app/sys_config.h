@@ -18,8 +18,8 @@
 //#define NO_CASCADE_CONTROL // only use position as the feedback but no imu data
 //#define SERIAL_DEBUG
 #define LAUNCH_INFANTRY (remote_info.rc.s2 == RC_MI && remote_info.rc.last_s2 == RC_DN && remote_info.rc.s1 == RC_DN)
-#define CHASSIS_TWIST ( remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_DN )
-#define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_DN && remote_info.rc.last_s2 == RC_DN )
+#define CHASSIS_TWIST ( remote_info.rc.s1 == RC_UP && remote_info.rc.s2 == RC_DN )
+#define CHASSIS_TWIST_LAST ( remote_info.rc.last_s1 == RC_UP && remote_info.rc.last_s2 == RC_DN )
 
 
 
@@ -30,7 +30,7 @@
 /* left and right speed (mm/s) */
 #define CHASSIS_RC_MAX_SPEED_X  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_X 1.0f
-/* back and forward speed (mm/s) */
+/* back and forward speed (mm/s) */ 
 #define CHASSIS_RC_MAX_SPEED_Y  3300.0f
 #define CHASSIS_RC_MOVE_RATIO_Y 1.0f
 /* chassis rotation speed (deg/s) */

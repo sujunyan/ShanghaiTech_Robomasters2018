@@ -49,9 +49,9 @@ trigger_t trig;
 
 uint32_t shoot_time_last;
 int shoot_time_ms;
-#define SHOOT_TIME_OUT  200 // wait for 0.2 second  
+#define SHOOT_TIME_OUT  250 // wait for 0.2 second  
 #define ONE_SHOOT_POS  (8192/8)
-#define TRIG_SPEED 2500
+#define TRIG_SPEED 3000
 void shoot_task(void const *argu)
 {
   osEvent event;
@@ -79,8 +79,8 @@ void shoot_task(void const *argu)
        
         if ( (shoot.fric_wheel_run && TRIG_RUN )&& gimbal_is_controllable())
         {
-					if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(2400);
-					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1500);
+					if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(2200);
+					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1800);
 					else turn_off_friction_wheel();
 					turn_on_laser();
 					#ifndef SMART_SHOOT

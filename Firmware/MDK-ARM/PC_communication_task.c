@@ -396,6 +396,7 @@ void pc_shoot_control_data_handle(shoot_ctrl_t* ptr){
 	//printf("shoot_ctrl_data recv \r\n");
 }
 
+real_power_data_t real_power_data;
 receive_judge_t judge_rece_mesg;
 void judge_data_handle(uint8_t *p_frame){
   frame_header_t *p_header = (frame_header_t*)p_frame;
@@ -418,19 +419,27 @@ void judge_data_handle(uint8_t *p_frame){
 		case GAME_INFO_ID:
 		{
       memcpy(&judge_rece_mesg.game_information, data_addr, data_length);
-			if(judge_rece_mesg.game_information.max_hp != 0)
-				LED4_ON;
+		}break;
+		case REAL_POWER_DATA_ID:
+		{
+      memcpy(&real_power_data, data_addr, data_length);
+			LED4_ON;
 		}break;
   }
   
   taskEXIT_CRITICAL();
 }
 
+
+
+
 void judge_shoot_data_handle(void){
+	#if 0
 	real_shoot_t real_shoot_data =  judge_rece_mesg.real_shoot_data;
-	LED2_ON;
+	//LED2_ON;
 	if(real_shoot_data.bullet_freq != 0 || real_shoot_data.bullet_speed != 0)
 		LED3_ON;
 	else LED3_OFF;
+	#endif
 }
 

@@ -85,7 +85,7 @@ typedef  struct
 
 void test_shoot_task(void);
 void shoot_task(void const *argu);
-
+void limit_the_shoot_heat(void);
 static void shoot_bullet_handle(void);
 static void fric_wheel_ctrl(void);
 

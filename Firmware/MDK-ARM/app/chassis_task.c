@@ -11,6 +11,12 @@ chassis_t chassis;
 UBaseType_t chasis_task_stack_surplus;
 extern TaskHandle_t can_msg_send_task_t;
 
+#define CHASSIS_KB_MAX_SPEED_X  1000.0f 
+#define CHASSIS_KB_MOVE_RATIO_X 1.0f
+
+#define CHASSIS_KB_MAX_SPEED_Y  1000.0f
+#define CHASSIS_KB_MOVE_RATIO_Y 1.0f
+
 void chassis_task(const void* argu){ // timer
 
 	
@@ -31,8 +37,8 @@ void chassis_task(const void* argu){ // timer
 			chasis_follow_handle();
 			break;
 		case DODGE_MODE:
-			chasis_dodge_handle();
-			break;
+			chasis_follow_handle(); //TODO DOGE
+		break;
 		case AUTO_FOLLOW_GIMBAL:
 		case AUTO_SEPARATE_GIMBAL:
 			chasis_auto_seperate_handle();
@@ -207,7 +213,7 @@ void chassis_mode_switch(void){
 	//static int return_cnt = 0;
 	//const static int return_finished = 20;
 	if (KEY_G) {
-		chassis.ctrl_mode=DODGE_MODE;
+		//chassis.ctrl_mode=DODGE_MODE;
 	} else if (KEY_F) {
 		//if (chassis.ctrl_mode == DODGE_MODE) {
 		//	return_cnt = 0;
@@ -230,7 +236,7 @@ void chassis_mode_switch(void){
 	}
 	//else if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=CHASSIS_RELAX;
 	//else if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=MANUAL_FOLLOW_GIMBAL;
-	else if (remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=DODGE_MODE;
+	//else if (remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP )chassis.ctrl_mode=DODGE_MODE;
 }
 	
 

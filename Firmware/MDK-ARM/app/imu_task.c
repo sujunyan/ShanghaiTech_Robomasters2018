@@ -320,7 +320,7 @@ static void imu_AHRS_update(void) {
 
 }
 #if 1
-const float MAX_IMU_INIT_CNT = 1000.0f;
+const float MAX_IMU_INIT_CNT = 2000.0f;
 #define SET_YAW_OFFSET
 static void imu_attitude_update(void){
 	static float yaw_offset=0.0f;

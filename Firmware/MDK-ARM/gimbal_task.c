@@ -96,7 +96,7 @@ void gimbal_task(void const *argu)
 		break;
     
     case GIMBAL_FOLLOW_ZGYRO:
-      gimbal_seperate_handle();
+      gimbal_follow_handle(); // TODO for imu
     break;
 		
 		case GIMBAL_FOLLOW_CHASSIS:
@@ -179,7 +179,7 @@ void gimbal_seperate_handle(void){
 	float ratio = (KEY_SHIFT) ? 0.3 : 0.5;
 	
   gim.pid.pit_angle_fdb = gim.sensor.pit_relative_angle_ecd;
-	//gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd ;
+	//gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_ecd ; // TODO No imu 
 	gim.pid.yaw_angle_fdb = gim.sensor.yaw_relative_angle_imu; 
   
 	//printf("[CH2 = %d]", remote_info.rc.ch2);
@@ -398,8 +398,8 @@ void read_gimbal_cali(void){
 void gimbal_mode_switch(void){
 	if (KEY_B) open_bullet();
 	if (KEY_G) {
-		if (gim.ctrl_mode==GIMBAL_FOLLOW_CHASSIS) gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_imu;
-		gim.ctrl_mode=GIMBAL_FOLLOW_ZGYRO;
+		//if (gim.ctrl_mode==GIMBAL_FOLLOW_CHASSIS) gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_imu;
+		//gim.ctrl_mode=GIMBAL_FOLLOW_ZGYRO;
 	} else if (KEY_F) {
 		if (gim.ctrl_mode==GIMBAL_FOLLOW_ZGYRO) gim.pid.yaw_angle_ref = 0; 
 		gim.ctrl_mode=GIMBAL_FOLLOW_CHASSIS;
@@ -411,9 +411,9 @@ void gimbal_mode_switch(void){
 		close_bullet();
 	}
 	else if(remote_info.rc.s1 == RC_DN && remote_info.rc.s2 == RC_UP ){
-		if (gim.ctrl_mode==GIMBAL_FOLLOW_CHASSIS) gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_imu;
-		gim.ctrl_mode=GIMBAL_FOLLOW_ZGYRO;
-		printf("[gim ref = %.4f  , imu = %.4f]", gim.pid.yaw_angle_ref, gim.sensor.yaw_relative_angle_imu);
+		//if (gim.ctrl_mode==GIMBAL_FOLLOW_CHASSIS) gim.pid.yaw_angle_ref = gim.sensor.yaw_relative_angle_imu;
+		//gim.ctrl_mode=GIMBAL_FOLLOW_ZGYRO;
+		//printf("[gim ref = %.4f  , imu = %.4f]", gim.pid.yaw_angle_ref, gim.sensor.yaw_relative_angle_imu);
 		open_bullet();
 	}
 }

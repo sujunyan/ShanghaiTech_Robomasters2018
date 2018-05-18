@@ -39,6 +39,7 @@ typedef enum
   GAME_INFO_ID       = 0x0001,  //10Hz
   REAL_BLOOD_DATA_ID = 0x0002,
   REAL_SHOOT_DATA_ID = 0x0003,
+	REAL_POWER_DATA_ID  = 0x0004,
   REAL_FIELD_DATA_ID = 0x0005,  //10hZ
   GAME_RESULT_ID     = 0x0006,
   GAIN_BUFF_ID       = 0x0007,
@@ -47,6 +48,16 @@ typedef enum
   ROBOT_TO_CLIENT_ID = 0x0101,
   CLIENT_TO_ROBOT_ID = 0x0102,
 } judge_data_id_e;
+
+typedef __packed struct
+{
+  float chassis_volt;
+  float chassis_current;
+  float chassis_power;
+  float chassis_pwr_buf;
+  uint16_t shooter1_heat;
+  uint16_t shooter2_heat;
+} real_power_data_t;
 
 
 /** 
@@ -176,7 +187,7 @@ typedef struct
 /* data send (forward) */
 /* data receive */
 extern receive_judge_t judge_rece_mesg;
-
+extern real_power_data_t real_power_data;
 void  judgement_data_handle(uint8_t *p_frame);
 
 #endif

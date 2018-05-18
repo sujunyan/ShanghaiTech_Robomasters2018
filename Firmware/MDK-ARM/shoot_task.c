@@ -38,6 +38,7 @@
 #include "cmsis_os.h"
 #include "string.h"
 #include "pid.h"
+#include "judgement_info.h"
 /* stack usage monitor */
 UBaseType_t shoot_stack_surplus;
 #define TRIG_RUN (remote_info.rc.s1 == RC_UP || remote_info.rc.s1 == RC_MI)
@@ -59,10 +60,16 @@ enum
 	KEY_SHOOT = 2,
 	KEY_SHOOT_STOP = 3,
 };
+
+#define LLL 
 /*
-	For LLL
-	
+	For LLL 2000 2500 3500
+	For WHC 1500
+	1550 - 2000
 */
+int shoot_available = 1;
+float MAX_HEAT = 90;
+int TRIG_SPEED = 1500; // level one 1500; 
 void shoot_task(void const *argu)
 {
   osEvent event;
@@ -70,7 +77,6 @@ void shoot_task(void const *argu)
 	int last_shoot_pos = 0;
   int flag =1; 
 	int user_mode = REMOTE_SHOOT_MODE;
-	int TRIG_SPEED = 5000; // level one 1500;  
 	int FRIC_SPEED = 1000;
 	int init_cnt = 0;
 	const static int init_finished = 10;
@@ -97,19 +103,31 @@ void shoot_task(void const *argu)
         {
 					if (KEY_Z) {
 						user_mode = KEY_SHOOT;
-						TRIG_SPEED = 1000;
+						TRIG_SPEED = 1500;
 						FRIC_SPEED = 1550;
+						MAX_HEAT = 90;
 					}
 					else if (KEY_X) {
 						user_mode = KEY_SHOOT;
-						TRIG_SPEED = 2000;
+						TRIG_SPEED = 1500;
 						FRIC_SPEED = 1550;
+						MAX_HEAT = 180;
 					}
+					else if(KEY_V)
+					{
+						user_mode = KEY_SHOOT;
+						TRIG_SPEED = 1500;
+						FRIC_SPEED = 1550;
+						MAX_HEAT = 3000; // unlimited
+					}
+					else if (KEY_F) FRIC_SPEED = 2000;
 					else if (KEY_C) user_mode = KEY_SHOOT_STOP;
 					
 					if (remote_info.mouse.press_l || remote_info.mouse.press_r) {
 						close_bullet();
 					}
+					
+					limit_the_shoot_heat();
 					
 					//if(PC_SHOOT)turn_on_friction_wheel(pc_rece_mesg.shoot_control_data.fric_wheel_spd);
 					if (user_mode == KEY_SHOOT) {
@@ -125,7 +143,7 @@ void shoot_task(void const *argu)
 						init_cnt = 0;
 						turn_off_friction_wheel();
 					}
-					else if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(1550);
+					else if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(2000);
 					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1550);
 					else turn_off_friction_wheel();
 					turn_on_laser();
@@ -139,7 +157,7 @@ void shoot_task(void const *argu)
 					if(remote_info.rc.last_s2 != remote_info.rc.s2 || remote_info.mouse.press_l != last_l || CONTINUOUS_SHOOT)
 						shoot.one_shoot_status = 0;
 					
-					if (!shoot.one_shoot_status) // reserve the direction 
+					if (!shoot.one_shoot_status && shoot_available) // trig start
 					{
 
 						if (HAL_GetTick() - last_shoot_time > SHOOT_TIME_OUT) 
@@ -197,8 +215,8 @@ void test_shoot_task(void){
        
         if (shoot.fric_wheel_run || TRIG_RUN )
         {
-					if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(1500);
-					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1200);
+					if(remote_info.rc.s1 == RC_UP )turn_on_friction_wheel(1600);
+					else if (remote_info.rc.s1 == RC_MI)turn_on_friction_wheel(1500);
 					else turn_off_friction_wheel();
 					turn_on_laser();
 					 
@@ -257,7 +275,21 @@ void block_bullet_handle(void){
 
 
 
-
-
-
-
+void limit_the_shoot_heat(void){
+	uint16_t shoot1_heat = real_power_data.shooter1_heat;
+	uint16_t shoot2_heat = real_power_data.shooter2_heat;
+	static float limit_up =  0.7;
+	static float limit_low =  0.5;
+	float percentage = (float)shoot1_heat / MAX_HEAT;
+	
+	if(percentage > limit_up)
+	{
+		shoot_available =0;
+		LED5_ON;
+	}
+	else if (percentage < limit_low)
+	{
+		shoot_available =1;
+		LED5_OFF;
+	}
+}

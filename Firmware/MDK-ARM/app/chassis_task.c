@@ -157,11 +157,11 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[]){
   int16_t wheel_rpm[4];
   float   max = 0;
   
-  wheel_rpm[2] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
-  wheel_rpm[3] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
+  wheel_rpm[3] = ( vx + vy + vw * rotate_ratio_fr) * wheel_rpm_ratio;   //  back- left
+  wheel_rpm[0] = ( -vx + vy + vw * rotate_ratio_fl) * wheel_rpm_ratio;	 // forward- left
 	// these wheels are reversed due to sysmetry
-  wheel_rpm[0] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
-  wheel_rpm[1] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
+  wheel_rpm[1] = ( -vx - vy + vw * rotate_ratio_bl) * wheel_rpm_ratio;  // forward right
+  wheel_rpm[2] = ( vx - vy + vw * rotate_ratio_br) * wheel_rpm_ratio;		// back -right
 
   //find max item 
   for (uint8_t i = 0; i < 4; i++)

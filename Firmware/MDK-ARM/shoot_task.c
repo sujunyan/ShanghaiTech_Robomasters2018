@@ -41,7 +41,7 @@
 /* stack usage monitor */
 UBaseType_t shoot_stack_surplus;
 #define TRIG_RUN (remote_info.rc.s2 == RC_UP || remote_info.rc.s2 == RC_MI || remote_info.rc.s2 == RC_DN)
-#define SMART_SHOOT
+//#define SMART_SHOOT
 #define CONTINUOUS_SHOOT (remote_info.rc.s2 == RC_UP  || remote_info.mouse.press_l)
 /* shot task global parameter */
 shoot_t   shoot;
@@ -51,13 +51,13 @@ uint32_t shoot_time_last;
 int shoot_time_ms;
 #define SHOOT_TIME_OUT  1500 // wait for 1.5 second  
 #define ONE_SHOOT_POS  (8192/8)
-#define TRIG_SPEED 4000
+#define TRIG_SPEED 8000
 void shoot_task(void const *argu)
 {
   osEvent event;
 	uint32_t last_shoot_time = HAL_GetTick();
 	int last_shoot_pos = 0;
-  int flag =1; 
+  int flag = -1; 
 	int shoot_one_bullet_success = 0;
   while (1)
   {

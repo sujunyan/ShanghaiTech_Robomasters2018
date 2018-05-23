@@ -84,14 +84,14 @@ void send_all_pack_to_pc(void){
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1;
 	
-	size=data_pack_handle(GIMBAL_DATA_ID,(uint8_t*)&pc_send_mesg.gimbal_information,sizeof(pc_send_mesg.gimbal_information));
-	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
-	index+=size+1; // add interval bewteen frame
-	
 	size=data_pack_handle(CHASSIS_DATA_ID,(uint8_t*)&pc_send_mesg.chassis_information,sizeof(pc_send_mesg.chassis_information));
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
 	index+=size+1; // add interval bewteen frame
 #endif
+	
+	size=data_pack_handle(GIMBAL_DATA_ID,(uint8_t*)&pc_send_mesg.gimbal_information,sizeof(pc_send_mesg.gimbal_information));
+	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
+	index+=size+1; // add interval bewteen frame
 	
 	size=data_pack_handle(CALI_DATA_ID,(uint8_t*)&pc_send_mesg.cali_information,sizeof(pc_send_mesg.cali_information));
 	memcpy(&computer_tx_buf[index], computer_data_pack_buffer, size);
@@ -106,6 +106,7 @@ extern int YAW_ECD_CENTER_OFFSET;
 void PC_send_msg_update(void){
 	// update gimbal
 	// TODO send ecd and imu massage
+	update_gimbal_sensor();
 	pc_send_mesg.gimbal_information.pit_absolute_angle=0;
 	pc_send_mesg.gimbal_information.pit_palstance= gim.sensor.pit_palstance;
 	pc_send_mesg.gimbal_information.pit_relative_angle= gim.sensor.pit_relative_angle_ecd;

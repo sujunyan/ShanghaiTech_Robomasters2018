@@ -225,7 +225,6 @@ void StartDefaultTask(void const * argument)
 	read_gimbal_cali(); // read from the flash, if the gimbal cali data is 0, set the default value
 	for(;;)
 	{
-		
 		if(LAUNCH_INFANTRY)
 		{
 			break;

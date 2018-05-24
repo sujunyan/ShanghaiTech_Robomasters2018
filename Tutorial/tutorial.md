@@ -1,10 +1,17 @@
 # Tutorial
-## 1. Environment
+## 0. Environment
 可以从百度云盘上下载需要用到的软件：
 
 链接：https://pan.baidu.com/s/17SSUVGQZozwbELNAPX0c8g 密码：lv78
 
 安装教程可见其中的README.txt
+## 1. 程序逻辑：
+### 1.1 main/main.c
+#### 其中存在 main() 函数， 主要负责各种初始化， 用户自定义的初始化定义见main/init.c
+
+### 1.2 main/freertos.c
+#### 各线程初始化见函数 MX_FREERTOS_Init()， 具体定义勤用 “右键->go to defination”
+
 
 ## 2.电机控制
 ### 2.1 PID control (RmLib/pid.c)

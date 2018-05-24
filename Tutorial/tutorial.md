@@ -6,10 +6,14 @@
 
 安装教程可见其中的README.txt
 ## 1. 程序逻辑：
-### 1.1 main/main.c
+
+### 1.1 学习建议
+#### 个人崇尚造轮子，初始学习时可以把主要的控制程序（gimbal_task.c 和 chassis_task.c）删掉自己一行一行搬运。更暴力的可以直接把所用线程都删了再搬运。
+
+### 1.2 main/main.c
 #### 其中存在 main() 函数， 主要负责各种初始化， 用户自定义的初始化定义见main/init.c
 
-### 1.2 main/freertos.c
+### 1.3 main/freertos.c
 #### 各线程初始化见函数 MX_FREERTOS_Init()， 具体定义勤用 “右键->go to defination”
 
 
